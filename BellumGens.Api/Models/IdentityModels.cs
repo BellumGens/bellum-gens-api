@@ -13,44 +13,7 @@ namespace BellumGens.Api.Models
     {
 		public ApplicationUser() : base()
 		{
-			this.Availability = new HashSet<UserAvailability>()
-			{
-				new UserAvailability
-				{
-					User = this,
-					Day = DayOfWeek.Monday
-				},
-				new UserAvailability
-				{
-					User = this,
-					Day = DayOfWeek.Tuesday
-				},
-				new UserAvailability
-				{
-					User = this,
-					Day = DayOfWeek.Wednesday
-				},
-				new UserAvailability
-				{
-					User = this,
-					Day = DayOfWeek.Thursday
-				},
-				new UserAvailability
-				{
-					User = this,
-					Day = DayOfWeek.Friday
-				},
-				new UserAvailability
-				{
-					User = this,
-					Day = DayOfWeek.Saturday
-				},
-				new UserAvailability
-				{
-					User = this,
-					Day = DayOfWeek.Sunday
-				}
-			};
+			this.Availability = new HashSet<UserAvailability>();
 		}
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)

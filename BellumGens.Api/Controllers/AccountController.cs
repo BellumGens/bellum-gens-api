@@ -370,7 +370,44 @@ namespace BellumGens.Api.Controllers
 		{
 			string username = this.SteamUserId(info.ProviderKey);
 
-			var user = new ApplicationUser() { Id = username, UserName = User.Identity.Name };
+			var user = new ApplicationUser() { Id = username, UserName = User.Identity.Name, Availability = {
+					new UserAvailability
+					{
+						UserId = username,
+						Day = DayOfWeek.Monday
+					},
+					new UserAvailability
+					{
+						UserId = username,
+						Day = DayOfWeek.Tuesday
+					},
+					new UserAvailability
+					{
+						UserId = username,
+						Day = DayOfWeek.Wednesday
+					},
+					new UserAvailability
+					{
+						UserId = username,
+						Day = DayOfWeek.Thursday
+					},
+					new UserAvailability
+					{
+						UserId = username,
+						Day = DayOfWeek.Friday
+					},
+					new UserAvailability
+					{
+						UserId = username,
+						Day = DayOfWeek.Saturday
+					},
+					new UserAvailability
+					{
+						UserId = username,
+						Day = DayOfWeek.Sunday
+					}
+				}
+			};
 
 			IdentityResult result = await UserManager.CreateAsync(user);
 			if (!result.Succeeded)

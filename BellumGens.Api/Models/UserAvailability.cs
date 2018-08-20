@@ -16,6 +16,8 @@ namespace BellumGens.Api.Models
 		[Column(Order = 1)]
 		public DayOfWeek Day { get; set; }
 
+		public bool Available { get; set; }
+
 		public DateTimeOffset From { get; set; }
 
 		public DateTimeOffset To { get; set; }

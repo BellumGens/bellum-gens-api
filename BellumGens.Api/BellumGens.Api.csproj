@@ -258,6 +258,10 @@
     <Compile Include="Migrations\201808201227571_Availability.Designer.cs">
       <DependentUpon>201808201227571_Availability.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808201315009_Availability1.cs" />
+    <Compile Include="Migrations\201808201315009_Availability1.Designer.cs">
+      <DependentUpon>201808201315009_Availability1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -336,6 +340,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808201227571_Availability.resx">
       <DependentUpon>201808201227571_Availability.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808201315009_Availability1.resx">
+      <DependentUpon>201808201315009_Availability1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
