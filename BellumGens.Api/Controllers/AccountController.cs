@@ -17,10 +17,12 @@ using BellumGens.Api.Results;
 using SteamModels;
 using System.Web.Caching;
 using Microsoft.Owin.Security.Cookies;
+using System.Web.Http.Cors;
 
 namespace BellumGens.Api.Controllers
 {
-    [Authorize]
+	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+	[Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
@@ -57,7 +59,7 @@ namespace BellumGens.Api.Controllers
         [Route("UserInfo")]
         public SteamUser GetUserInfo()
         {
-            return SteamServiceProvider.GetSteamUserDetails(this.SteamUserId(User.Identity.GetUserId())).steamUser;
+            return SteamServiceProvider.GetSteamUserDetails(SteamServiceProvider.SteamUserId(User.Identity.GetUserId())).steamUser;
         }
 
 		// POST api/Account/Logout
@@ -247,7 +249,7 @@ namespace BellumGens.Api.Controllers
                 return new ChallengeResult(provider, this);
             }
 
-			string steamId = this.SteamUserId(externalLogin.ProviderKey);
+			string steamId = SteamServiceProvider.SteamUserId(externalLogin.ProviderKey);
 
 			ApplicationUser user = await UserManager.FindByIdAsync(steamId);
 
@@ -361,14 +363,9 @@ namespace BellumGens.Api.Controllers
 
         #region Helpers
 
-		private string SteamUserId(string userUri)
-		{
-			return userUri.Split('/')[5];
-		}
-
 		private async Task<IdentityResult> Register(ExternalLoginData info)
 		{
-			string username = this.SteamUserId(info.ProviderKey);
+			string username = SteamServiceProvider.SteamUserId(info.ProviderKey);
 
 			var user = new ApplicationUser() { Id = username, UserName = User.Identity.Name, Availability = {
 					new UserAvailability

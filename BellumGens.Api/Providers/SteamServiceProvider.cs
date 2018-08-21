@@ -79,5 +79,10 @@ namespace BellumGens.Api.Providers
 		{
 			return name.Contains("http://") ? name : string.Format(_playerDetailsUrl, name);
 		}
+
+		public static string SteamUserId(string userUri)
+		{
+			return userUri.Split('/')[5];
+		}
 	}
 }

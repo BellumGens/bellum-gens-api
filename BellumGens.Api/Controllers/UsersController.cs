@@ -1,12 +1,18 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.Cookies;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace BellumGens.Api.Controllers
 {
+	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
 	[RoutePrefix("api/Users")]
 	public class UsersController : ApiController
     {
@@ -33,6 +39,26 @@ namespace BellumGens.Api.Controllers
 			UserStatsViewModel user = SteamServiceProvider.GetSteamUserDetails(userid);
 			user.availability = _dbContext.Users.Find(user.steamUser.steamID64).Availability;
 			return user;
+		}
+
+		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		[Route("Availability")]
+		[HttpPut]
+		public IHttpActionResult SetAvailability(UserAvailability newAvailability)
+		{
+			UserAvailability user = _dbContext.UserAvailabilities.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), newAvailability.Day);
+			newAvailability.UserId = user.UserId;
+			_dbContext.Entry(user).CurrentValues.SetValues(newAvailability);
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
 		}
 	}
 }

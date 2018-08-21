@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace BellumGens.Api.Models
 {
@@ -29,6 +28,8 @@ namespace BellumGens.Api.Models
 
     public class BellumGensDbContext : IdentityDbContext<ApplicationUser>
     {
+		public DbSet<UserAvailability> UserAvailabilities { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
