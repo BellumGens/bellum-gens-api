@@ -254,6 +254,7 @@ namespace BellumGens.Api.Controllers
 			ApplicationUser user = await UserManager.FindByIdAsync(steamId);
 
 			bool hasRegistered = user != null;
+			string returnUrl = "";
 
             if (!hasRegistered)
             {
@@ -265,6 +266,8 @@ namespace BellumGens.Api.Controllers
 						return InternalServerError();
 					}
 					user = await UserManager.FindByIdAsync(steamId);
+					// Upon registration, redirect to the user's profile for information setup.
+					returnUrl = "player-details/" + steamId;
 				}
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
@@ -273,7 +276,7 @@ namespace BellumGens.Api.Controllers
             Authentication.SignIn(identity);
 			this.MarkUserOnline(steamId);
 
-			return Redirect("http://localhost:4200/player-details/" + steamId); //Ok();
+			return Redirect("http://localhost:4200/" + returnUrl); //Ok();
 
 		}
 		// GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true

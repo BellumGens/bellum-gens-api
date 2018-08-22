@@ -23,12 +23,19 @@ namespace BellumGens.Api.Models
             return userIdentity;
         }
 
+		public PlaystyleRole PreferredPrimaryRole { get; set; }
+
+		public PlaystyleRole PreferredSecondaryRole { get; set; }
+
+		public virtual ICollection<Languages> LanguagesSpoken { get; set; }
+
 		public virtual ICollection<UserAvailability> Availability { get; set; }
     }
 
     public class BellumGensDbContext : IdentityDbContext<ApplicationUser>
     {
 		public DbSet<UserAvailability> UserAvailabilities { get; set; }
+		public DbSet<Languages> Languages { get; set; }
 
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
@@ -39,5 +46,20 @@ namespace BellumGens.Api.Models
         {
             return new BellumGensDbContext();
         }
-    }
+
+		protected override void OnModelCreating(DbModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<ApplicationUser>()
+						.HasMany(e => e.LanguagesSpoken)
+						.WithMany(e => e.Users)
+						.Map(e =>
+						{
+							e.MapLeftKey("UserId");
+							e.MapRightKey("LanguageId");
+							e.ToTable("UserLanguages");
+						});
+		}
+	}
 }

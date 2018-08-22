@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.Collections.Generic;
 using SteamModels.CSGO;
 using BellumGens.Api.Models;
+using System;
 
 namespace BellumGens.Api.Providers
 {
@@ -36,17 +37,38 @@ namespace BellumGens.Api.Providers
 			}
 			HttpClient client = new HttpClient();
 			var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
+			SteamUser steamUser = null;
+			string steamUserException = null;
 			XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
-			SteamUser steamUser = (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
+			try
+			{
+				steamUser = (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
+			}
+			catch (Exception e)
+			{
+				steamUserException = e.Message;
+			}
 			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, SteamInfo.Config.gameId, SteamInfo.Config.steamApiKey, steamUser.steamID64));
-			CSGOPlayerStats statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse.Result);
+			CSGOPlayerStats statsForUser = null;
+			string userStatsException = null;
+			try
+			{
+				statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse.Result);
+			}
+			catch (Exception e)
+			{
+				userStatsException = e.Message;
+			}
 
 			UserStatsViewModel user = new UserStatsViewModel()
 			{
 				steamUser = steamUser,
-				userStats = statsForUser
+				steamUserException = steamUserException,
+				userStats = statsForUser,
+				userStatsException = userStatsException
 			};
-			_cachedUsers[name] = user;
+			if (steamUserException == null && userStatsException == null)
+				_cachedUsers[name] = user;
 			return user;
 		}
 

@@ -29,7 +29,7 @@ namespace BellumGens.Api.Controllers
 			{
 				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
 			}
-				
+
 			return steamUsers;
 		}
 
@@ -37,7 +37,11 @@ namespace BellumGens.Api.Controllers
 		public UserStatsViewModel GetUser(string userid)
 		{
 			UserStatsViewModel user = SteamServiceProvider.GetSteamUserDetails(userid);
-			user.availability = _dbContext.Users.Find(user.steamUser.steamID64).Availability;
+			var registered = _dbContext.Users.Find(user.steamUser.steamID64);
+			if (registered != null)
+			{
+				user.availability = registered.Availability;
+			}
 			return user;
 		}
 
