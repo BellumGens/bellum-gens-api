@@ -67,12 +67,12 @@ namespace BellumGens.Api.Controllers
 
 		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
 		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
-		[Route("primaryrole")]
+		[Route("PrimaryRole")]
 		[HttpPut]
-		public IHttpActionResult SetPrimaryRole(PlaystyleRole role)
+		public IHttpActionResult SetPrimaryRole(Role role)
 		{
 			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
-			user.PreferredPrimaryRole = role;
+			user.PreferredPrimaryRole = role.Id;
 			//_dbContext.Entry(user).Property("PreferredPrimaryRole").IsModified = true;
 			try
 			{
@@ -87,12 +87,12 @@ namespace BellumGens.Api.Controllers
 
 		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
 		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
-		[Route("secondaryrole")]
+		[Route("SecondaryRole")]
 		[HttpPut]
-		public IHttpActionResult SetSecondaryRole(PlaystyleRole role)
+		public IHttpActionResult SetSecondaryRole(Role role)
 		{
 			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
-			user.PreferredSecondaryRole = role;
+			user.PreferredSecondaryRole = role.Id;
 			//_dbContext.Entry(user).Property("PreferredPrimaryRole").IsModified = true;
 			try
 			{
