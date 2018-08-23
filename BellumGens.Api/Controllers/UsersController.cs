@@ -64,5 +64,45 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok();
 		}
+
+		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		[Route("primaryrole")]
+		[HttpPut]
+		public IHttpActionResult SetPrimaryRole(PlaystyleRole role)
+		{
+			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			user.PreferredPrimaryRole = role;
+			//_dbContext.Entry(user).Property("PreferredPrimaryRole").IsModified = true;
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
+		}
+
+		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		[Route("secondaryrole")]
+		[HttpPut]
+		public IHttpActionResult SetSecondaryRole(PlaystyleRole role)
+		{
+			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			user.PreferredSecondaryRole = role;
+			//_dbContext.Entry(user).Property("PreferredPrimaryRole").IsModified = true;
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
+		}
 	}
 }
