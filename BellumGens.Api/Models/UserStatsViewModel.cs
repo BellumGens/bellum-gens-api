@@ -47,6 +47,7 @@ namespace BellumGens.Api.Models
 		public ICollection<UserAvailability> availability;
 		public PlaystyleRole primaryRole;
 		public PlaystyleRole secondaryRole;
+		public ICollection<UserMapPool> mapPool;
 		public List<Role> roles {
 			get
 			{

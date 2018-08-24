@@ -370,7 +370,10 @@ namespace BellumGens.Api.Controllers
 		{
 			string username = SteamServiceProvider.SteamUserId(info.ProviderKey);
 
-			var user = new ApplicationUser() { Id = username, UserName = User.Identity.Name, Availability = {
+			var user = new ApplicationUser() {
+				Id = username,
+				UserName = User.Identity.Name,
+				Availability = {
 					new UserAvailability
 					{
 						UserId = username,
@@ -405,6 +408,43 @@ namespace BellumGens.Api.Controllers
 					{
 						UserId = username,
 						Day = DayOfWeek.Sunday
+					}
+				},
+				MapPool = {
+					new UserMapPool
+					{
+						UserId = username,
+						Map = CSGOMaps.Cache
+					},
+					new UserMapPool
+					{
+						UserId = username,
+						Map = CSGOMaps.Dust2
+					},
+					new UserMapPool
+					{
+						UserId = username,
+						Map = CSGOMaps.Inferno
+					},
+					new UserMapPool
+					{
+						UserId = username,
+						Map = CSGOMaps.Mirage
+					},
+					new UserMapPool
+					{
+						UserId = username,
+						Map = CSGOMaps.Nuke
+					},
+					new UserMapPool
+					{
+						UserId = username,
+						Map = CSGOMaps.Overpass
+					},
+					new UserMapPool
+					{
+						UserId = username,
+						Map = CSGOMaps.Train
 					}
 				}
 			};

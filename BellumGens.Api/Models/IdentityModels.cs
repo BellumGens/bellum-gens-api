@@ -13,6 +13,7 @@ namespace BellumGens.Api.Models
 		public ApplicationUser() : base()
 		{
 			this.Availability = new HashSet<UserAvailability>();
+			this.MapPool = new HashSet<UserMapPool>();
 		}
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
@@ -30,12 +31,17 @@ namespace BellumGens.Api.Models
 		public virtual ICollection<Languages> LanguagesSpoken { get; set; }
 
 		public virtual ICollection<UserAvailability> Availability { get; set; }
+
+		public virtual ICollection<UserMapPool> MapPool { get; set; }
     }
 
     public class BellumGensDbContext : IdentityDbContext<ApplicationUser>
     {
 		public DbSet<UserAvailability> UserAvailabilities { get; set; }
+
 		public DbSet<Languages> Languages { get; set; }
+
+		public DbSet<UserMapPool> UserMapPool { get; set; }
 
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

@@ -41,6 +41,9 @@ namespace BellumGens.Api.Controllers
 			if (registered != null)
 			{
 				user.availability = registered.Availability;
+				user.primaryRole = registered.PreferredPrimaryRole;
+				user.secondaryRole = registered.PreferredSecondaryRole;
+				user.mapPool = registered.MapPool;
 			}
 			return user;
 		}
@@ -54,6 +57,26 @@ namespace BellumGens.Api.Controllers
 			UserAvailability user = _dbContext.UserAvailabilities.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), newAvailability.Day);
 			newAvailability.UserId = user.UserId;
 			_dbContext.Entry(user).CurrentValues.SetValues(newAvailability);
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
+		}
+
+		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		[Route("mapPool")]
+		[HttpPut]
+		public IHttpActionResult SetMapPool(UserMapPool mapPool)
+		{
+			UserMapPool userMap = _dbContext.UserMapPool.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), mapPool.Map);
+			mapPool.UserId = userMap.UserId;
+			_dbContext.Entry(userMap).CurrentValues.SetValues(mapPool);
 			try
 			{
 				_dbContext.SaveChanges();

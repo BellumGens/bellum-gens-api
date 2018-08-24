@@ -272,11 +272,16 @@
     <Compile Include="Migrations\201808221413321_RolesAndLanguages.Designer.cs">
       <DependentUpon>201808221413321_RolesAndLanguages.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808241322264_Map-Pool.cs" />
+    <Compile Include="Migrations\201808241322264_Map-Pool.Designer.cs">
+      <DependentUpon>201808241322264_Map-Pool.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Languages.cs" />
+    <Compile Include="Models\UserMapPool.cs" />
     <Compile Include="Models\PlayerRoles.cs" />
     <Compile Include="Models\UserAvailability.cs" />
     <Compile Include="Models\UserStatsViewModel.cs" />
@@ -358,6 +363,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808221413321_RolesAndLanguages.resx">
       <DependentUpon>201808221413321_RolesAndLanguages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808241322264_Map-Pool.resx">
+      <DependentUpon>201808241322264_Map-Pool.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
