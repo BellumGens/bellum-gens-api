@@ -14,6 +14,7 @@ namespace BellumGens.Api.Models
 		{
 			this.Availability = new HashSet<UserAvailability>();
 			this.MapPool = new HashSet<UserMapPool>();
+			this.Teams = new HashSet<CSGOTeam>();
 		}
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
@@ -33,6 +34,8 @@ namespace BellumGens.Api.Models
 		public virtual ICollection<UserAvailability> Availability { get; set; }
 
 		public virtual ICollection<UserMapPool> MapPool { get; set; }
+
+		public virtual ICollection<CSGOTeam> Teams { get; set; }
     }
 
     public class BellumGensDbContext : IdentityDbContext<ApplicationUser>
@@ -42,6 +45,8 @@ namespace BellumGens.Api.Models
 		public DbSet<Languages> Languages { get; set; }
 
 		public DbSet<UserMapPool> UserMapPool { get; set; }
+
+		public DbSet<CSGOTeam> Teams { get; set; }
 
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
