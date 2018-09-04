@@ -21,5 +21,11 @@ namespace BellumGens.Api.Controllers
 			List<CSGOTeam> teams = _dbContext.Teams.ToList();
 			return teams;
 		}
+
+		[Route("Team")]
+		public CSGOTeam GetTeam(string teamId)
+		{
+			return _dbContext.Teams.Find(teamId);
+		}
 	}
 }
