@@ -293,13 +293,25 @@
     <Compile Include="Migrations\201809101450468_Team-Member2.Designer.cs">
       <DependentUpon>201809101450468_Team-Member2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809101532055_Team-PK.cs" />
+    <Compile Include="Migrations\201809101532055_Team-PK.Designer.cs">
+      <DependentUpon>201809101532055_Team-PK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809101553023_Team-PK-1.cs" />
+    <Compile Include="Migrations\201809101553023_Team-PK-1.Designer.cs">
+      <DependentUpon>201809101553023_Team-PK-1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809101553459_Team-PK-Autogenerate.cs" />
+    <Compile Include="Migrations\201809101553459_Team-PK-Autogenerate.Designer.cs">
+      <DependentUpon>201809101553459_Team-PK-Autogenerate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CSGOTeam.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Languages.cs" />
-    <Compile Include="Models\TeamMembers.cs" />
+    <Compile Include="Models\TeamMember.cs" />
     <Compile Include="Models\UserMapPool.cs" />
     <Compile Include="Models\PlayerRoles.cs" />
     <Compile Include="Models\UserAvailability.cs" />
@@ -397,6 +409,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809101450468_Team-Member2.resx">
       <DependentUpon>201809101450468_Team-Member2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809101532055_Team-PK.resx">
+      <DependentUpon>201809101532055_Team-PK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809101553023_Team-PK-1.resx">
+      <DependentUpon>201809101553023_Team-PK-1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809101553459_Team-PK-Autogenerate.resx">
+      <DependentUpon>201809101553459_Team-PK-Autogenerate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

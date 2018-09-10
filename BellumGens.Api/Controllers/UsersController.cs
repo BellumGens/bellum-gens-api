@@ -10,7 +10,7 @@ using System.Web.Http.Cors;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
+	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
 	[Authorize]
 	[RoutePrefix("api/Users")]
 	public class UsersController : ApiController

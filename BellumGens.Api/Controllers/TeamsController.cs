@@ -6,10 +6,12 @@ using System.Web.Http.Cors;
 using SteamModels;
 using Microsoft.Owin.Security.Cookies;
 using System;
+using Microsoft.AspNet.Identity;
+using BellumGens.Api.Providers;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
+	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
 	[Authorize]
 	[RoutePrefix("api/Teams")]
 	public class TeamsController : ApiController
@@ -36,12 +38,24 @@ namespace BellumGens.Api.Controllers
 		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		public IHttpActionResult TeamFromSteamGroup(SteamUserGroup group)
 		{
-			CSGOTeam team = _dbContext.Teams.Add(new CSGOTeam()
+			CSGOTeam team = new CSGOTeam()
 			{
 				SteamGroupId = group.groupID64,
 				TeamName = group.groupName,
 				TeamAvatar = group.avatarMedium
-			});
+			};
+
+            ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+
+            _dbContext.Teams.Attach(team);
+
+            team.Members.Add(new TeamMember()
+            {
+                Member = user,
+                IsActive = true,
+                IsAdmin = true
+            });
+
 			try
 			{
 				_dbContext.SaveChanges();
