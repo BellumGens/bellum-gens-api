@@ -11,12 +11,14 @@ using System.Web.Http.Cors;
 namespace BellumGens.Api.Controllers
 {
 	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
+	[Authorize]
 	[RoutePrefix("api/Users")]
 	public class UsersController : ApiController
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
 
 		[Route("ActiveUsers")]
+		[AllowAnonymous]
 		public List<UserStatsViewModel> GetActiveUsers()
 		{
 			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
@@ -32,6 +34,7 @@ namespace BellumGens.Api.Controllers
 		}
 
 		[Route("User")]
+		[AllowAnonymous]
 		public UserStatsViewModel GetUser(string userid)
 		{
 			UserStatsViewModel user = SteamServiceProvider.GetSteamUserDetails(userid);

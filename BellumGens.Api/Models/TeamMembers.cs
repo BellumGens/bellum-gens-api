@@ -14,6 +14,8 @@ namespace BellumGens.Api.Models
 
 		public bool IsActive { get; set; }
 
+		public bool IsAdmin { get; set; }
+
 		public PlaystyleRole Role { get; set; }
 
 		[ForeignKey("TeamId")]
