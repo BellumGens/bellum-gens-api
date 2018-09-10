@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace BellumGens.Api.Models
 {
@@ -18,6 +15,6 @@ namespace BellumGens.Api.Models
 		public string TeamName { get; set; }
 		public string TeamAvatar { get; set; }
 
-		public virtual ICollection<ApplicationUser> Members { get; set; }
+		public virtual ICollection<TeamMembers> Members { get; set; }
 	}
 }

@@ -54,7 +54,7 @@
     </Reference>
     <Reference Include="SteamModels, Version=1.0.6331.33905, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\GitHub\SteamModels-DotNet\src\bin\Debug\SteamModels.dll</HintPath>
+      <HintPath>..\..\SteamModels-DotNet\src\bin\Debug\SteamModels.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -281,6 +281,18 @@
     <Compile Include="Migrations\201808291503424_Teams.Designer.cs">
       <DependentUpon>201808291503424_Teams.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809101434375_Team-Admin.cs" />
+    <Compile Include="Migrations\201809101434375_Team-Admin.Designer.cs">
+      <DependentUpon>201809101434375_Team-Admin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809101445093_Team-Members.cs" />
+    <Compile Include="Migrations\201809101445093_Team-Members.Designer.cs">
+      <DependentUpon>201809101445093_Team-Members.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809101450468_Team-Member2.cs" />
+    <Compile Include="Migrations\201809101450468_Team-Member2.Designer.cs">
+      <DependentUpon>201809101450468_Team-Member2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -376,6 +388,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808291503424_Teams.resx">
       <DependentUpon>201808291503424_Teams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809101434375_Team-Admin.resx">
+      <DependentUpon>201809101434375_Team-Admin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809101445093_Team-Members.resx">
+      <DependentUpon>201809101445093_Team-Members.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809101450468_Team-Member2.resx">
+      <DependentUpon>201809101450468_Team-Member2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
