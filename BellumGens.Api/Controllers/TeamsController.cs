@@ -27,7 +27,7 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Team")]
 		[AllowAnonymous]
-		public CSGOTeam GetTeam(string teamId)
+		public CSGOTeam GetTeam(Guid teamId)
 		{
 			return _dbContext.Teams.Find(teamId);
 		}
@@ -59,7 +59,7 @@ namespace BellumGens.Api.Controllers
 			}
 			catch (Exception e)
 			{
-				return BadRequest(e.Message);
+				return BadRequest(group.groupName + " Steam Group has already been registered.");
 			}
 			return Ok(team);
 		}

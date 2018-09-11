@@ -305,6 +305,10 @@
     <Compile Include="Migrations\201809101553459_Team-PK-Autogenerate.Designer.cs">
       <DependentUpon>201809101553459_Team-PK-Autogenerate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809111451378_Teams-Unique-SteamGroupId.cs" />
+    <Compile Include="Migrations\201809111451378_Teams-Unique-SteamGroupId.Designer.cs">
+      <DependentUpon>201809111451378_Teams-Unique-SteamGroupId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -418,6 +422,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809101553459_Team-PK-Autogenerate.resx">
       <DependentUpon>201809101553459_Team-PK-Autogenerate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809111451378_Teams-Unique-SteamGroupId.resx">
+      <DependentUpon>201809111451378_Teams-Unique-SteamGroupId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

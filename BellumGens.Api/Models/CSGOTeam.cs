@@ -16,7 +16,9 @@ namespace BellumGens.Api.Models
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid TeamId { get; set; }
 
-		public string SteamGroupId { get; set; }
+        [MaxLength(64)]
+        [Index(IsUnique = true)]
+        public string SteamGroupId { get; set; }
 
 		public string TeamName { get; set; }
 		public string TeamAvatar { get; set; }
