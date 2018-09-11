@@ -84,22 +84,22 @@ namespace BellumGens.Api.Providers
 			}
 		}
 
-		public static SteamAppNews GetSteamAppNews(int appid)
-		{
-			HttpClient client = new HttpClient();
-			var playerDetailsResponse = client.GetStreamAsync(_steamAppNewsUrl);
-			XmlSerializer serializer = new XmlSerializer(typeof(SteamAppNews));
-			SteamAppNews news = (SteamAppNews)serializer.Deserialize(playerDetailsResponse.Result);
-			return news;
-		}
+		//public static SteamAppNews GetSteamAppNews(int appid)
+		//{
+		//	HttpClient client = new HttpClient();
+		//	var playerDetailsResponse = client.GetStreamAsync(_steamAppNewsUrl);
+		//	XmlSerializer serializer = new XmlSerializer(typeof(SteamAppNews));
+		//	SteamAppNews news = (SteamAppNews)serializer.Deserialize(playerDetailsResponse.Result);
+		//	return news;
+		//}
 
-		public static SteamNews GetSteamAppNewsJSON(int appid)
-		{
-			HttpClient client = new HttpClient();
-			var steamnews = client.GetStringAsync(_steamAppNewsUrl);
-			SteamNews news = JsonConvert.DeserializeObject<SteamNews>(steamnews.Result);
-			return news;
-		}
+		//public static SteamNews GetSteamAppNewsJSON(int appid)
+		//{
+		//	HttpClient client = new HttpClient();
+		//	var steamnews = client.GetStringAsync(_steamAppNewsUrl);
+		//	SteamNews news = JsonConvert.DeserializeObject<SteamNews>(steamnews.Result);
+		//	return news;
+		//}
 
 		public static string NormalizeUsername(string name)
 		{

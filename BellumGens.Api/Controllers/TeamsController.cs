@@ -22,9 +22,8 @@ namespace BellumGens.Api.Controllers
 		[AllowAnonymous]
 		public List<CSGOTeam> GetTeams()
 		{
-			List<CSGOTeam> teams = _dbContext.Teams.ToList();
-			return teams;
-		}
+			return _dbContext.Teams.ToList();
+        }
 
 		[Route("Team")]
 		[AllowAnonymous]
@@ -38,16 +37,14 @@ namespace BellumGens.Api.Controllers
 		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		public IHttpActionResult TeamFromSteamGroup(SteamUserGroup group)
 		{
-			CSGOTeam team = new CSGOTeam()
+			CSGOTeam team = _dbContext.Teams.Add(new CSGOTeam()
 			{
 				SteamGroupId = group.groupID64,
 				TeamName = group.groupName,
 				TeamAvatar = group.avatarMedium
-			};
+			});
 
             ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
-
-            _dbContext.Teams.Attach(team);
 
             team.Members.Add(new TeamMember()
             {

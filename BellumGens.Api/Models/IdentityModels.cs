@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace BellumGens.Api.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        private List<CSGOTeam> _teams;
+
 		public ApplicationUser() : base()
 		{
 			this.Availability = new HashSet<UserAvailability>();
@@ -36,6 +39,23 @@ namespace BellumGens.Api.Models
 		public virtual ICollection<UserMapPool> MapPool { get; set; }
 
 		public virtual ICollection<TeamMember> MemberOf { get; set; }
+
+        [NotMapped]
+        public List<CSGOTeam> Teams
+        {
+            get
+            {
+                if (_teams == null)
+                {
+                    _teams = new List<CSGOTeam>();
+                    foreach (TeamMember memberof in MemberOf)
+                    {
+                        _teams.Add(memberof.Team);
+                    }
+                }
+                return _teams;
+            }
+        }
     }
 
     public class BellumGensDbContext : IdentityDbContext<ApplicationUser>

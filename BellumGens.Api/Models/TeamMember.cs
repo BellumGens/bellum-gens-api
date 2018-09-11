@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,9 +22,11 @@ namespace BellumGens.Api.Models
 		public PlaystyleRole Role { get; set; }
 
 		[ForeignKey("TeamId")]
+        [JsonIgnore]
 		public virtual CSGOTeam Team { get; set; } 
 
 		[ForeignKey("UserId")]
+        [JsonIgnore]
 		public virtual ApplicationUser Member { get; set; }
 	}
 }
