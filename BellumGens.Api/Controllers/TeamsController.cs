@@ -11,9 +11,10 @@ using BellumGens.Api.Providers;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
-	[Authorize]
-	[RoutePrefix("api/Teams")]
+    [EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
+    [Authorize]
+    [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+    [RoutePrefix("api/Teams")]
 	public class TeamsController : ApiController
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
@@ -34,14 +35,13 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Team")]
 		[HttpPost]
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		public IHttpActionResult TeamFromSteamGroup(SteamUserGroup group)
 		{
 			CSGOTeam team = _dbContext.Teams.Add(new CSGOTeam()
 			{
 				SteamGroupId = group.groupID64,
 				TeamName = group.groupName,
-				TeamAvatar = group.avatarMedium
+				TeamAvatar = group.avatarFull
 			});
 
             ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));

@@ -29,6 +29,20 @@ namespace BellumGens.Api.Providers
 			return statsForUser;
 		}
 
+        public static SteamUser GetSteamUser(string name)
+        {
+            if (_cachedUsers.ContainsKey(name))
+            {
+                return _cachedUsers[name].steamUser;
+            }
+            HttpClient client = new HttpClient();
+            var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
+            SteamUser steamUser = null;
+            XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
+            steamUser = (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
+            return steamUser;
+        }
+
 		public static UserStatsViewModel GetSteamUserDetails(string name)
 		{
 			if (_cachedUsers.ContainsKey(name))

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Newtonsoft.Json;
 
 namespace BellumGens.Api.Models
 {
@@ -38,6 +39,7 @@ namespace BellumGens.Api.Models
 
 		public virtual ICollection<UserMapPool> MapPool { get; set; }
 
+        [JsonIgnore]
 		public virtual ICollection<TeamMember> MemberOf { get; set; }
 
         [NotMapped]

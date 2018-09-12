@@ -10,9 +10,10 @@ using System.Web.Http.Cors;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
 	[Authorize]
-	[RoutePrefix("api/Users")]
+    [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+    [RoutePrefix("api/Users")]
 	public class UsersController : ApiController
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
@@ -70,7 +71,6 @@ namespace BellumGens.Api.Controllers
 		}
 
 		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[Route("mapPool")]
 		[HttpPut]
 		public IHttpActionResult SetMapPool(UserMapPool mapPool)
@@ -90,7 +90,6 @@ namespace BellumGens.Api.Controllers
 		}
 
 		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[Route("PrimaryRole")]
 		[HttpPut]
 		public IHttpActionResult SetPrimaryRole(Role role)
@@ -110,7 +109,6 @@ namespace BellumGens.Api.Controllers
 		}
 
 		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[Route("SecondaryRole")]
 		[HttpPut]
 		public IHttpActionResult SetSecondaryRole(Role role)

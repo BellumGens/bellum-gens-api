@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using BellumGens.Api.Providers;
+using Newtonsoft.Json;
+using SteamModels;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,6 +22,15 @@ namespace BellumGens.Api.Models
 		public bool IsAdmin { get; set; }
 
 		public PlaystyleRole Role { get; set; }
+
+        [NotMapped]
+        public SteamUser SteamUser
+        {
+            get
+            {
+                return SteamServiceProvider.GetSteamUser(UserId);
+            }
+        }
 
 		[ForeignKey("TeamId")]
         [JsonIgnore]
