@@ -90,6 +90,11 @@ namespace BellumGens.Api.Providers
 			return user;
 		}
 
+		public static bool VerifyUserIsGroupAdmin(string userid, string groupid)
+		{
+			return true;
+		}
+
 		public static void InvalidateUserCache(string name)
 		{
 			if (_cachedUsers.ContainsKey(name))

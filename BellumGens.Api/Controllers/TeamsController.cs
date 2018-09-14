@@ -37,14 +37,20 @@ namespace BellumGens.Api.Controllers
 		[HttpPost]
 		public IHttpActionResult TeamFromSteamGroup(SteamUserGroup group)
 		{
+			string userid = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
+			if (!SteamServiceProvider.VerifyUserIsGroupAdmin(userid, group.groupID64))
+			{
+				return BadRequest("User is not a steam group admin for " + group.groupName);
+			}
+
+			ApplicationUser user = _dbContext.Users.Find(userid);
+
 			CSGOTeam team = _dbContext.Teams.Add(new CSGOTeam()
 			{
 				SteamGroupId = group.groupID64,
 				TeamName = group.groupName,
 				TeamAvatar = group.avatarFull
 			});
-
-            ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
 
             team.Members.Add(new TeamMember()
             {
