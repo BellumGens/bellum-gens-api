@@ -40,7 +40,7 @@ namespace BellumGens.Api.Controllers
 			string userid = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
 			if (!SteamServiceProvider.VerifyUserIsGroupAdmin(userid, group.groupID64))
 			{
-				return BadRequest("User is not a steam group admin for " + group.groupName);
+				return BadRequest("User is not a steam group owner for " + group.groupName);
 			}
 
 			ApplicationUser user = _dbContext.Users.Find(userid);
