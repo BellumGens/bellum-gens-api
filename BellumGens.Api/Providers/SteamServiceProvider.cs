@@ -96,10 +96,9 @@ namespace BellumGens.Api.Providers
 		{
 			HttpClient client = new HttpClient();
 			var playerDetailsResponse = client.GetStreamAsync(string.Format(_groupMembersUrl, groupid));
-			SteamGroup group = null;
 			XmlSerializer serializer = new XmlSerializer(typeof(SteamGroup));
-			group = (SteamGroup)serializer.Deserialize(playerDetailsResponse.Result);
-			return group.members[0].steamID64 == userid;
+			SteamGroup group = (SteamGroup)serializer.Deserialize(playerDetailsResponse.Result);
+			return group.members[0] == userid;
 		}
 
 		public static void InvalidateUserCache(string name)

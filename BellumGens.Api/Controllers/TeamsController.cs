@@ -65,9 +65,85 @@ namespace BellumGens.Api.Controllers
 			}
 			catch (Exception e)
 			{
-				return BadRequest(group.groupName + " Steam Group has already been registered.");
+				return BadRequest(group.groupName + " Steam group has already been registered.");
 			}
 			return Ok(team);
+		}
+
+		[Route("NewTeam")]
+		[HttpPost]
+		public IHttpActionResult TeamFromSteamGroup(CSGOTeam team)
+		{
+			string userid = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
+
+			ApplicationUser user = _dbContext.Users.Find(userid);
+
+			_dbContext.Teams.Add(team);
+
+			team.Members.Add(new TeamMember()
+			{
+				Member = user,
+				IsActive = true,
+				IsAdmin = true
+			});
+
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+			return Ok(team);
+		}
+
+		[Route("Member")]
+		[HttpPut]
+		public IHttpActionResult UpdateTeamMember(TeamMember member)
+		{
+			if (!UserIsTeamAdmin(member.TeamId))
+			{
+				return BadRequest("User is not team admin...");
+			}
+			TeamMember entity = _dbContext.TeamMembers.Find(member.TeamId, member.UserId);
+			_dbContext.Entry(entity).CurrentValues.SetValues(member);
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+			return Ok(member);
+		}
+
+		[Route("RemoveMember")]
+		[HttpDelete]
+		public IHttpActionResult RemoveTeamMember(Guid teamId, string userId)
+		{
+			if (!UserIsTeamAdmin(teamId))
+			{
+				return BadRequest("User is not team admin...");
+			}
+			TeamMember entity = _dbContext.TeamMembers.Find(teamId, userId);
+			_dbContext.TeamMembers.Remove(entity);
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+			return Ok();
+		}
+
+		private bool UserIsTeamAdmin(Guid teamId)
+		{
+			CSGOTeam team = _dbContext.Teams.Find(teamId);
+			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
 		}
 	}
 }

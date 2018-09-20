@@ -70,6 +70,8 @@ namespace BellumGens.Api.Models
 
 		public DbSet<CSGOTeam> Teams { get; set; }
 
+		public DbSet<TeamMember> TeamMembers { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

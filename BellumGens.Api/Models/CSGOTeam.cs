@@ -21,6 +21,7 @@ namespace BellumGens.Api.Models
         public string SteamGroupId { get; set; }
 
 		public string TeamName { get; set; }
+
 		public string TeamAvatar { get; set; }
 
 		public virtual ICollection<TeamMember> Members { get; set; }
