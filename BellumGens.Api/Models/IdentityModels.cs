@@ -3,9 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
+using SteamModels;
 
 namespace BellumGens.Api.Models
 {
@@ -13,6 +15,7 @@ namespace BellumGens.Api.Models
     public class ApplicationUser : IdentityUser
     {
         private List<CSGOTeam> _teams;
+		private SteamUser _user;
 
 		public ApplicationUser() : base()
 		{
@@ -42,7 +45,20 @@ namespace BellumGens.Api.Models
         [JsonIgnore]
 		public virtual ICollection<TeamMember> MemberOf { get; set; }
 
-        [NotMapped]
+		[NotMapped]
+		public SteamUser SteamUser
+		{
+			get
+			{
+				if (_user == null)
+				{
+					_user = SteamServiceProvider.GetSteamUser(this.Id);
+				}
+				return _user;
+			}
+		}
+
+		[NotMapped]
         public List<CSGOTeam> Teams
         {
             get

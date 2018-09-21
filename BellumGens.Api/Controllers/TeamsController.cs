@@ -72,7 +72,7 @@ namespace BellumGens.Api.Controllers
 
 		[Route("NewTeam")]
 		[HttpPost]
-		public IHttpActionResult TeamFromSteamGroup(CSGOTeam team)
+		public IHttpActionResult NewTeam(CSGOTeam team)
 		{
 			string userid = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
 

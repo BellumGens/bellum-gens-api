@@ -28,7 +28,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return SteamServiceProvider.GetSteamUser(UserId);
+				return Member.SteamUser;
             }
         }
 

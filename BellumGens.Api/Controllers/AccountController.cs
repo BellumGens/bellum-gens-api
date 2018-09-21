@@ -28,8 +28,9 @@ namespace BellumGens.Api.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+		private BellumGensDbContext _dbContext = new BellumGensDbContext();
 
-        public AccountController()
+		public AccountController()
         {
         }
 
@@ -57,9 +58,9 @@ namespace BellumGens.Api.Controllers
         // GET api/Account/UserInfo
         [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
         [Route("UserInfo")]
-        public SteamUser GetUserInfo()
+        public ApplicationUser GetUserInfo()
         {
-            return SteamServiceProvider.GetSteamUserDetails(SteamServiceProvider.SteamUserId(User.Identity.GetUserId())).steamUser;
+            return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
         }
 
 		// POST api/Account/Logout
