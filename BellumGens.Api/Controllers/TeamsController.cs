@@ -140,6 +140,29 @@ namespace BellumGens.Api.Controllers
 			return Ok();
 		}
 
+		[Route("Abandon")]
+		[HttpDelete]
+		public IHttpActionResult AbandonTeam(Guid teamId)
+		{
+			string userId = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
+			CSGOTeam team = _dbContext.Teams.Find(teamId);
+			TeamMember entity = team.Members.SingleOrDefault(e => e.UserId == userId);
+			team.Members.Remove(entity);
+			if (team.Members.Count == 0)
+			{
+				_dbContext.Teams.Remove(team);
+			}
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+			return Ok();
+		}
+
 		private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
