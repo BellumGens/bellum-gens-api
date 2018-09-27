@@ -310,12 +310,17 @@
     <Compile Include="Migrations\201809111451378_Teams-Unique-SteamGroupId.Designer.cs">
       <DependentUpon>201809111451378_Teams-Unique-SteamGroupId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809271341115_TeamInvites.cs" />
+    <Compile Include="Migrations\201809271341115_TeamInvites.Designer.cs">
+      <DependentUpon>201809271341115_TeamInvites.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CSGOTeam.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Languages.cs" />
+    <Compile Include="Models\TeamInvites.cs" />
     <Compile Include="Models\TeamMember.cs" />
     <Compile Include="Models\UserMapPool.cs" />
     <Compile Include="Models\PlayerRoles.cs" />
@@ -426,6 +431,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809111451378_Teams-Unique-SteamGroupId.resx">
       <DependentUpon>201809111451378_Teams-Unique-SteamGroupId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271341115_TeamInvites.resx">
+      <DependentUpon>201809271341115_TeamInvites.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

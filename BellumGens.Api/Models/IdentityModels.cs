@@ -15,6 +15,7 @@ namespace BellumGens.Api.Models
     public class ApplicationUser : IdentityUser
     {
         private List<CSGOTeam> _teams;
+		private List<CSGOTeam> _teamAdmin;
 		private SteamUser _user;
 
 		public ApplicationUser() : base()
@@ -41,6 +42,8 @@ namespace BellumGens.Api.Models
 		public virtual ICollection<UserAvailability> Availability { get; set; }
 
 		public virtual ICollection<UserMapPool> MapPool { get; set; }
+
+		public virtual ICollection<TeamInvites> Invites { get; set; }
 
         [JsonIgnore]
 		public virtual ICollection<TeamMember> MemberOf { get; set; }
@@ -74,6 +77,24 @@ namespace BellumGens.Api.Models
                 return _teams;
             }
         }
+
+		[NotMapped]
+		public List<CSGOTeam> TeamAdmin
+		{
+			get
+			{
+				if (_teamAdmin == null)
+				{
+					_teamAdmin = new List<CSGOTeam>();
+					foreach (TeamMember memberof in MemberOf)
+					{
+						if (memberof.IsAdmin)
+							_teamAdmin.Add(memberof.Team);
+					}
+				}
+				return _teamAdmin;
+			}
+		}
     }
 
     public class BellumGensDbContext : IdentityDbContext<ApplicationUser>
@@ -111,6 +132,10 @@ namespace BellumGens.Api.Models
 							e.MapRightKey("LanguageId");
 							e.ToTable("UserLanguages");
 						});
+
+			modelBuilder.Entity<ApplicationUser>()
+						.HasMany(e => e.Invites)
+						.WithRequired(e => e.InvitedUser);
 		}
 	}
 }

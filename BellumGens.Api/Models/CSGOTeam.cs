@@ -10,6 +10,7 @@ namespace BellumGens.Api.Models
         public CSGOTeam() : base()
         {
             this.Members = new HashSet<TeamMember>();
+			this.Invites = new HashSet<TeamInvites>();
         }
 
         [Key]
@@ -25,5 +26,7 @@ namespace BellumGens.Api.Models
 		public string TeamAvatar { get; set; }
 
 		public virtual ICollection<TeamMember> Members { get; set; }
+
+		public virtual ICollection<TeamInvites> Invites { get; set; }
 	}
 }

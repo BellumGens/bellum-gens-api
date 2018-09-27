@@ -69,7 +69,6 @@ namespace BellumGens.Api.Controllers
         public IHttpActionResult Logout()
         {
 			this.MarkUserOffline(User.Identity.GetUserId());
-			//Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
