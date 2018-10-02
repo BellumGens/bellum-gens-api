@@ -163,6 +163,34 @@ namespace BellumGens.Api.Controllers
 			return Ok();
 		}
 
+		[Route("Invite")]
+		[HttpPost]
+		public IHttpActionResult InviteToTeam(string userId, CSGOTeam team)
+		{
+			if (!UserIsTeamAdmin(team.TeamId))
+			{
+				return BadRequest("User is not team admin for " + team.TeamName);
+			}
+
+			CSGOTeam teamEntity = _dbContext.Teams.Find(team.TeamId);
+			ApplicationUser invitedUserEntity = _dbContext.Users.Find(userId);
+			ApplicationUser invitingUserEntity = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			teamEntity.Invites.Add(new TeamInvite()
+			{
+				InvitedUser = invitedUserEntity,
+				InvitingUser = invitingUserEntity
+			});
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+			return Ok();
+		}
+
 		private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);

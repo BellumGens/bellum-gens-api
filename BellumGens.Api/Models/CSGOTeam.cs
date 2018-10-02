@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,7 +11,7 @@ namespace BellumGens.Api.Models
         public CSGOTeam() : base()
         {
             this.Members = new HashSet<TeamMember>();
-			this.Invites = new HashSet<TeamInvites>();
+			this.Invites = new HashSet<TeamInvite>();
         }
 
         [Key]
@@ -27,6 +28,7 @@ namespace BellumGens.Api.Models
 
 		public virtual ICollection<TeamMember> Members { get; set; }
 
-		public virtual ICollection<TeamInvites> Invites { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<TeamInvite> Invites { get; set; }
 	}
 }

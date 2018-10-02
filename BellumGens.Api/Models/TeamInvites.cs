@@ -1,11 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Models
 {
-	public class TeamInvites
+	public class TeamInvite
 	{
+		private CSGOTeam _teamInfo;
+
 		[Key]
 		[Column(Order = 0)]
 		public string InvitingUserId { get; set; }
@@ -20,15 +24,38 @@ namespace BellumGens.Api.Models
 
 		public InviteState State { get; set; }
 
+		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+		[DefaultValue("getutcdate()")]
 		public DateTimeOffset Sent { get; set; }
 
+		[NotMapped]
+		public CSGOTeam TeamInfo
+		{
+			get
+			{
+				if (_teamInfo == null)
+				{
+					_teamInfo = new CSGOTeam()
+					{
+						TeamId = Team.TeamId,
+						TeamName = Team.TeamName,
+						TeamAvatar = Team.TeamAvatar
+					};
+				}
+				return _teamInfo;
+			}
+		}
+
 		[ForeignKey("TeamId")]
+		[JsonIgnore]
 		public virtual CSGOTeam Team { get; set; }
 
 		[ForeignKey("InvitingUserId")]
+		[JsonIgnore]
 		public virtual ApplicationUser InvitingUser { get; set; }
 
 		[ForeignKey("InvitedUserId")]
+		[JsonIgnore]
 		public virtual ApplicationUser InvitedUser { get; set; }
 	}
 

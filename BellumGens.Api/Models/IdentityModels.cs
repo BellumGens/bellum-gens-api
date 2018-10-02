@@ -43,7 +43,7 @@ namespace BellumGens.Api.Models
 
 		public virtual ICollection<UserMapPool> MapPool { get; set; }
 
-		public virtual ICollection<TeamInvites> Invites { get; set; }
+		public virtual ICollection<TeamInvite> Notifications { get; set; }
 
         [JsonIgnore]
 		public virtual ICollection<TeamMember> MemberOf { get; set; }
@@ -134,7 +134,7 @@ namespace BellumGens.Api.Models
 						});
 
 			modelBuilder.Entity<ApplicationUser>()
-						.HasMany(e => e.Invites)
+						.HasMany(e => e.Notifications)
 						.WithRequired(e => e.InvitedUser);
 		}
 	}
