@@ -33,7 +33,7 @@ namespace BellumGens.Api.Models
 		{
 			get
 			{
-				if (_teamInfo == null)
+				if (_teamInfo == null && Team != null)
 				{
 					_teamInfo = new CSGOTeam()
 					{

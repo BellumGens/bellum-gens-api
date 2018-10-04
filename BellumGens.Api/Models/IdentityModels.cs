@@ -97,8 +97,8 @@ namespace BellumGens.Api.Models
 		}
     }
 
-    public class BellumGensDbContext : IdentityDbContext<ApplicationUser>
-    {
+	public class BellumGensDbContext : IdentityDbContext<ApplicationUser>
+	{
 		public DbSet<UserAvailability> UserAvailabilities { get; set; }
 
 		public DbSet<Languages> Languages { get; set; }
@@ -108,6 +108,8 @@ namespace BellumGens.Api.Models
 		public DbSet<CSGOTeam> Teams { get; set; }
 
 		public DbSet<TeamMember> TeamMembers { get; set; }
+
+		public DbSet<TeamInvite> TeamInvites { get; set; }
 
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

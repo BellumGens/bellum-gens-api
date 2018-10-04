@@ -49,9 +49,7 @@ namespace BellumGens.Api.Controllers
 			}
 			return user;
 		}
-
-		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		
 		[Route("Availability")]
 		[HttpPut]
 		public IHttpActionResult SetAvailability(UserAvailability newAvailability)
@@ -69,8 +67,7 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok();
 		}
-
-		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+		
 		[Route("mapPool")]
 		[HttpPut]
 		public IHttpActionResult SetMapPool(UserMapPool mapPool)
@@ -88,13 +85,12 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok();
 		}
-
-		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+		
 		[Route("PrimaryRole")]
 		[HttpPut]
 		public IHttpActionResult SetPrimaryRole(Role role)
 		{
-			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			ApplicationUser user = GetAuthUser();
 			user.PreferredPrimaryRole = role.Id;
 			//_dbContext.Entry(user).Property("PreferredPrimaryRole").IsModified = true;
 			try
@@ -107,13 +103,12 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok();
 		}
-
-		[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+		
 		[Route("SecondaryRole")]
 		[HttpPut]
 		public IHttpActionResult SetSecondaryRole(Role role)
 		{
-			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			ApplicationUser user = GetAuthUser();
 			user.PreferredSecondaryRole = role.Id;
 			//_dbContext.Entry(user).Property("PreferredPrimaryRole").IsModified = true;
 			try
@@ -125,6 +120,66 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("Something went wrong...");
 			}
 			return Ok();
+		}
+
+		[Route("AcceptTeamInvite")]
+		[HttpPut]
+		public IHttpActionResult AcceptTeamInvite(TeamInvite invite)
+		{
+			TeamInvite entity = _dbContext.TeamInvites.Find(invite.InvitingUserId, invite.InvitedUserId, invite.TeamId);
+			if (entity == null)
+			{
+				return BadRequest("Invite couldn't be found");
+			}
+
+			ApplicationUser user = GetAuthUser();
+			if (invite.InvitedUserId != user.Id)
+			{
+				return BadRequest("This invite was not sent to you...");
+			}
+			CSGOTeam team = _dbContext.Teams.Find(invite.TeamId);
+			team.Members.Add(new TeamMember()
+			{
+				Member = user,
+				IsActive = true
+			});
+			entity.State = InviteState.Accepted;
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
+		}
+
+		[Route("RejectTeamInvite")]
+		[HttpPut]
+		public IHttpActionResult RejectTeamInvite(TeamInvite invite)
+		{
+			TeamInvite entity = _dbContext.TeamInvites.Find(invite.InvitingUserId, invite.InvitedUserId, invite.TeamId);
+			if (entity == null)
+			{
+				return BadRequest("Invite couldn't be found");
+			}
+
+			entity.State = InviteState.Rejected;
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
+		}
+
+		private ApplicationUser GetAuthUser()
+		{
+			return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
 		}
 	}
 }
