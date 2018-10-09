@@ -30,5 +30,8 @@ namespace BellumGens.Api.Models
 
 		[JsonIgnore]
 		public virtual ICollection<TeamInvite> Invites { get; set; }
+
+		[JsonIgnore]
+		public virtual ICollection<TeamApplication> Applications { get; set; }
 	}
 }

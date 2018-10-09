@@ -2,6 +2,7 @@
 using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Caching;
@@ -26,11 +27,11 @@ namespace BellumGens.Api.Controllers
 			Cache cache = HttpContext.Current.Cache;
 			if (!(cache["activeUsers"] is List<string> activeUsers))
 				activeUsers = new List<string>();
+
 			foreach (string user in activeUsers)
 			{
 				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
 			}
-
 			return steamUsers;
 		}
 
@@ -115,7 +116,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
 				return BadRequest("Something went wrong...");
 			}
@@ -148,7 +149,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
 				return BadRequest("Something went wrong...");
 			}
@@ -170,7 +171,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
 				return BadRequest("Something went wrong...");
 			}
