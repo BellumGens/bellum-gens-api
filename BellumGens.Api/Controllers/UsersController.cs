@@ -144,7 +144,7 @@ namespace BellumGens.Api.Controllers
 				Member = user,
 				IsActive = true
 			});
-			entity.State = InviteState.Accepted;
+			entity.State = NotificationState.Accepted;
 			try
 			{
 				_dbContext.SaveChanges();
@@ -166,7 +166,7 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("Invite couldn't be found");
 			}
 
-			entity.State = InviteState.Rejected;
+			entity.State = NotificationState.Rejected;
 			try
 			{
 				_dbContext.SaveChanges();

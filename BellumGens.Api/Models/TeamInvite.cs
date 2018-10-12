@@ -22,7 +22,7 @@ namespace BellumGens.Api.Models
 		[Column(Order = 2)]
 		public Guid TeamId { get; set; }
 
-		public InviteState State { get; set; }
+		public NotificationState State { get; set; }
 
 		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
 		[DefaultValue("getutcdate()")]
@@ -59,7 +59,7 @@ namespace BellumGens.Api.Models
 		public virtual ApplicationUser InvitedUser { get; set; }
 	}
 
-	public enum InviteState
+	public enum NotificationState
 	{
 		NotSeen,
 		Seen,

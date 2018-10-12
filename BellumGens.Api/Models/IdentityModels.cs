@@ -48,6 +48,8 @@ namespace BellumGens.Api.Models
         [JsonIgnore]
 		public virtual ICollection<TeamMember> MemberOf { get; set; }
 
+		public virtual ICollection<TeamApplication> TeamApplications { get; set; }
+
 		[NotMapped]
 		public SteamUser SteamUser
 		{
@@ -111,6 +113,8 @@ namespace BellumGens.Api.Models
 
 		public DbSet<TeamInvite> TeamInvites { get; set; }
 
+		public DbSet<TeamApplication> TeamApplications { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
@@ -138,6 +142,10 @@ namespace BellumGens.Api.Models
 			modelBuilder.Entity<ApplicationUser>()
 						.HasMany(e => e.Notifications)
 						.WithRequired(e => e.InvitedUser);
+
+			modelBuilder.Entity<ApplicationUser>()
+						.HasMany(e => e.TeamApplications)
+						.WithRequired(e => e.User);
 		}
 	}
 }
