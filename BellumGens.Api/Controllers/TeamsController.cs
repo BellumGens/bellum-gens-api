@@ -191,6 +191,26 @@ namespace BellumGens.Api.Controllers
 			return Ok();
 		}
 
+		[Route("Apply")]
+		[HttpPost]
+		public IHttpActionResult ApplyToTeam(TeamApplication application)
+		{
+			if (ModelState.IsValid)
+			{
+				_dbContext.TeamApplications.Add(application);
+				try
+				{
+					_dbContext.SaveChanges();
+				}
+				catch (Exception e)
+				{
+					return BadRequest("Something went wrong...");
+				}
+				return Ok();
+			}
+			return BadRequest("Something went wrong with your application validation");
+		}
+
 		private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
