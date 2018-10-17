@@ -26,6 +26,8 @@ namespace BellumGens.Api.Models
 
 		public string TeamAvatar { get; set; }
 
+		public virtual ICollection<TeamStrategy> Strategies { get; set; }
+
 		public virtual ICollection<TeamMember> Members { get; set; }
 
 		[JsonIgnore]

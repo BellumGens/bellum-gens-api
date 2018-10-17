@@ -115,6 +115,8 @@ namespace BellumGens.Api.Models
 
 		public DbSet<TeamApplication> TeamApplications { get; set; }
 
+		public DbSet<TeamStrategy> Strategies { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
@@ -146,6 +148,10 @@ namespace BellumGens.Api.Models
 			modelBuilder.Entity<ApplicationUser>()
 						.HasMany(e => e.TeamApplications)
 						.WithRequired(e => e.User);
+
+			modelBuilder.Entity<CSGOTeam>()
+						.HasMany(e => e.Strategies)
+						.WithRequired(e => e.Team);
 		}
 	}
 }

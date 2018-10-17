@@ -52,9 +52,8 @@
     <Reference Include="Owin.Security.Providers.Steam, Version=2.0.0.0, Culture=neutral, PublicKeyToken=1328b8c16b108c43, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.Security.Providers.Steam.2.24.0\lib\net45\Owin.Security.Providers.Steam.dll</HintPath>
     </Reference>
-    <Reference Include="SteamModels, Version=1.0.6331.33905, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SteamModels-DotNet\src\bin\Debug\SteamModels.dll</HintPath>
+    <Reference Include="SteamModels, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SteamModels.1.2.1\lib\portable45-net45+win8+wp8+wpa81\SteamModels.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -322,6 +321,10 @@
     <Compile Include="Migrations\201810101441304_TeamApplications.Designer.cs">
       <DependentUpon>201810101441304_TeamApplications.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810170803346_TeamStrats.cs" />
+    <Compile Include="Migrations\201810170803346_TeamStrats.Designer.cs">
+      <DependentUpon>201810170803346_TeamStrats.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -331,6 +334,7 @@
     <Compile Include="Models\TeamApplication.cs" />
     <Compile Include="Models\TeamInvite.cs" />
     <Compile Include="Models\TeamMember.cs" />
+    <Compile Include="Models\TeamStrategy.cs" />
     <Compile Include="Models\UserMapPool.cs" />
     <Compile Include="Models\PlayerRoles.cs" />
     <Compile Include="Models\UserAvailability.cs" />
@@ -449,6 +453,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810101441304_TeamApplications.resx">
       <DependentUpon>201810101441304_TeamApplications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810170803346_TeamStrats.resx">
+      <DependentUpon>201810170803346_TeamStrats.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
