@@ -28,7 +28,11 @@ namespace BellumGens.Api.Models
         {
             get
             {
-				return Member.SteamUser;
+				if (Member != null)
+				{
+					return Member.SteamUser;
+				}
+				return null;
             }
         }
 
