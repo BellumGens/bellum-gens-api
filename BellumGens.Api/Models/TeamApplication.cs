@@ -19,6 +19,9 @@ namespace BellumGens.Api.Models
 
 		public NotificationState State { get; set; }
 
+		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+		public DateTimeOffset Sent { get; set; }
+
 		[ForeignKey("ApplicantId")]
 		[JsonIgnore]
 		public virtual ApplicationUser User { get; set; }

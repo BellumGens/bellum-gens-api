@@ -325,6 +325,10 @@
     <Compile Include="Migrations\201810170803346_TeamStrats.Designer.cs">
       <DependentUpon>201810170803346_TeamStrats.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810221434380_ApplicationSentDate.cs" />
+    <Compile Include="Migrations\201810221434380_ApplicationSentDate.Designer.cs">
+      <DependentUpon>201810221434380_ApplicationSentDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -456,6 +460,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810170803346_TeamStrats.resx">
       <DependentUpon>201810170803346_TeamStrats.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810221434380_ApplicationSentDate.resx">
+      <DependentUpon>201810221434380_ApplicationSentDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

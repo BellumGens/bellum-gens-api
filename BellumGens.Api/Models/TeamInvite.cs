@@ -25,7 +25,6 @@ namespace BellumGens.Api.Models
 		public NotificationState State { get; set; }
 
 		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-		[DefaultValue("getutcdate()")]
 		public DateTimeOffset Sent { get; set; }
 
 		[NotMapped]
