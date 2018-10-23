@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SteamModels;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,6 +22,19 @@ namespace BellumGens.Api.Models
 
 		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
 		public DateTimeOffset Sent { get; set; }
+
+		[NotMapped]
+		public SteamUser UserInfo
+		{
+			get
+			{
+				if (User != null)
+				{
+					return User.SteamUser;
+				}
+				return null;
+			}
+		}
 
 		[ForeignKey("ApplicantId")]
 		[JsonIgnore]
