@@ -93,7 +93,6 @@ namespace BellumGens.Api.Controllers
 		{
 			ApplicationUser user = GetAuthUser();
 			user.PreferredPrimaryRole = role.Id;
-			//_dbContext.Entry(user).Property("PreferredPrimaryRole").IsModified = true;
 			try
 			{
 				_dbContext.SaveChanges();
@@ -111,7 +110,6 @@ namespace BellumGens.Api.Controllers
 		{
 			ApplicationUser user = GetAuthUser();
 			user.PreferredSecondaryRole = role.Id;
-			//_dbContext.Entry(user).Property("PreferredPrimaryRole").IsModified = true;
 			try
 			{
 				_dbContext.SaveChanges();
@@ -142,7 +140,8 @@ namespace BellumGens.Api.Controllers
 			team.Members.Add(new TeamMember()
 			{
 				Member = user,
-				IsActive = true
+				IsActive = true,
+                IsAdmin = false
 			});
 			entity.State = NotificationState.Accepted;
 			try

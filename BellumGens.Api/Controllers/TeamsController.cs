@@ -222,6 +222,8 @@ namespace BellumGens.Api.Controllers
 			return Ok(_dbContext.TeamApplications.Where(i => i.TeamId == teamId).ToList());
 		}
 
+        [Route("ApproveApplication")]
+        [HttpPut]
 		public IHttpActionResult ApproveApplication(TeamApplication application)
 		{
 			if (!UserIsTeamAdmin(application.TeamId))
@@ -231,6 +233,14 @@ namespace BellumGens.Api.Controllers
 
 			TeamApplication entity = _dbContext.TeamApplications.Find(application.ApplicantId, application.TeamId);
 			entity.State = NotificationState.Accepted;
+
+            ApplicationUser user = _dbContext.Users.Find(application.ApplicantId);
+            entity.Team.Members.Add(new TeamMember()
+            {
+                Member = user,
+                IsActive = true,
+                IsAdmin = false
+            });
 			try
 			{
 				_dbContext.SaveChanges();
@@ -242,7 +252,29 @@ namespace BellumGens.Api.Controllers
 			return Ok();
 		}
 
-		private bool UserIsTeamAdmin(Guid teamId)
+        [Route("RejectApplication")]
+        [HttpPut]
+        public IHttpActionResult RejectApplication(TeamApplication application)
+        {
+            if (!UserIsTeamAdmin(application.TeamId))
+            {
+                return BadRequest("You need to be team admin.");
+            }
+
+            TeamApplication entity = _dbContext.TeamApplications.Find(application.ApplicantId, application.TeamId);
+            entity.State = NotificationState.Rejected;
+            try
+            {
+                _dbContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Something went wrong...");
+            }
+            return Ok();
+        }
+
+        private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
 			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
