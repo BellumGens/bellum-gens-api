@@ -329,6 +329,10 @@
     <Compile Include="Migrations\201810221434380_ApplicationSentDate.Designer.cs">
       <DependentUpon>201810221434380_ApplicationSentDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810300840021_AppSentNull.cs" />
+    <Compile Include="Migrations\201810300840021_AppSentNull.Designer.cs">
+      <DependentUpon>201810300840021_AppSentNull.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -463,6 +467,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810221434380_ApplicationSentDate.resx">
       <DependentUpon>201810221434380_ApplicationSentDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810300840021_AppSentNull.resx">
+      <DependentUpon>201810300840021_AppSentNull.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

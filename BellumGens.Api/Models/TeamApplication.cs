@@ -21,7 +21,7 @@ namespace BellumGens.Api.Models
 		public NotificationState State { get; set; }
 
 		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-		public DateTimeOffset Sent { get; set; }
+		public DateTimeOffset? Sent { get; set; }
 
 		[NotMapped]
 		public SteamUser UserInfo
