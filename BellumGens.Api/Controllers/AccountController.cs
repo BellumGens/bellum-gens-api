@@ -267,7 +267,7 @@ namespace BellumGens.Api.Controllers
 					}
 					user = await UserManager.FindByIdAsync(steamId);
 					// Upon registration, redirect to the user's profile for information setup.
-					returnUrl = "player-details/" + steamId;
+					returnUrl = "player-details/" + steamId + "/true";
 				}
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
@@ -372,82 +372,9 @@ namespace BellumGens.Api.Controllers
 
 			var user = new ApplicationUser() {
 				Id = username,
-				UserName = User.Identity.Name,
-				Availability = {
-					new UserAvailability
-					{
-						UserId = username,
-						Day = DayOfWeek.Monday
-					},
-					new UserAvailability
-					{
-						UserId = username,
-						Day = DayOfWeek.Tuesday
-					},
-					new UserAvailability
-					{
-						UserId = username,
-						Day = DayOfWeek.Wednesday
-					},
-					new UserAvailability
-					{
-						UserId = username,
-						Day = DayOfWeek.Thursday
-					},
-					new UserAvailability
-					{
-						UserId = username,
-						Day = DayOfWeek.Friday
-					},
-					new UserAvailability
-					{
-						UserId = username,
-						Day = DayOfWeek.Saturday
-					},
-					new UserAvailability
-					{
-						UserId = username,
-						Day = DayOfWeek.Sunday
-					}
-				},
-				MapPool = {
-					new UserMapPool
-					{
-						UserId = username,
-						Map = CSGOMaps.Cache
-					},
-					new UserMapPool
-					{
-						UserId = username,
-						Map = CSGOMaps.Dust2
-					},
-					new UserMapPool
-					{
-						UserId = username,
-						Map = CSGOMaps.Inferno
-					},
-					new UserMapPool
-					{
-						UserId = username,
-						Map = CSGOMaps.Mirage
-					},
-					new UserMapPool
-					{
-						UserId = username,
-						Map = CSGOMaps.Nuke
-					},
-					new UserMapPool
-					{
-						UserId = username,
-						Map = CSGOMaps.Overpass
-					},
-					new UserMapPool
-					{
-						UserId = username,
-						Map = CSGOMaps.Train
-					}
-				}
+				UserName = User.Identity.Name
 			};
+			user.InitializeDefaults();
 
 			IdentityResult result = await UserManager.CreateAsync(user);
 			if (!result.Succeeded)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
@@ -23,6 +24,72 @@ namespace BellumGens.Api.Models
 			this.Availability = new HashSet<UserAvailability>();
 			this.MapPool = new HashSet<UserMapPool>();
 			this.MemberOf = new HashSet<TeamMember>();
+		}
+
+		public void InitializeDefaults()
+		{
+
+			this.Availability = new HashSet<UserAvailability>() {
+				new UserAvailability
+				{
+					Day = DayOfWeek.Monday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Tuesday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Wednesday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Thursday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Friday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Saturday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Sunday
+				}
+			};
+			this.MapPool = new HashSet<UserMapPool>()
+			{
+				new UserMapPool
+				{
+					Map = CSGOMaps.Cache
+				},
+				new UserMapPool
+				{
+					Map = CSGOMaps.Dust2
+				},
+				new UserMapPool
+				{
+					Map = CSGOMaps.Inferno
+				},
+				new UserMapPool
+				{
+					Map = CSGOMaps.Mirage
+				},
+				new UserMapPool
+				{
+					Map = CSGOMaps.Nuke
+				},
+				new UserMapPool
+				{
+					Map = CSGOMaps.Overpass
+				},
+				new UserMapPool
+				{
+					Map = CSGOMaps.Train
+				}
+			};
 		}
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
