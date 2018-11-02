@@ -7,7 +7,7 @@ namespace BellumGens.Api.Migrations
     {
         public override void Up()
         {
-            AlterColumn("dbo.TeamApplications", "Sent", c => c.DateTimeOffset(precision: 7, defaultValueSql: "getutcdate()"));
+            AlterColumn("dbo.TeamApplications", "Sent", c => c.DateTimeOffset(precision: 7, nullable: false, defaultValueSql: "getutcdate()"));
         }
         
         public override void Down()
