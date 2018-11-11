@@ -19,7 +19,7 @@ namespace BellumGens.Api.Providers
 
 		private static readonly string _groupMembersUrl = "https://steamcommunity.com/gid/{0}/memberslistxml/?xml=1";
 
-		private static readonly string _steamAppNewsUrl = "http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid={0}&maxlength=300&format=json";
+		//private static readonly string _steamAppNewsUrl = "http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid={0}&maxlength=300&format=json";
 
 		private static Dictionary<string, UserStatsViewModel> _cachedUsers = new Dictionary<string, UserStatsViewModel>();
 

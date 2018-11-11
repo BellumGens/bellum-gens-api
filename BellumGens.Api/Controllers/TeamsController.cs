@@ -33,7 +33,17 @@ namespace BellumGens.Api.Controllers
 			return _dbContext.Teams.Find(teamId);
 		}
 
-		[Route("Team")]
+        [Route("Strats")]
+        public IHttpActionResult GetTeamStrats(Guid teamId)
+        {
+            if (!this.UserIsTeamMember(teamId))
+            {
+                return BadRequest("You're not a member of this team.");
+            }
+            return Ok(_dbContext.Strategies.Where(t => t.TeamId == teamId).ToList());
+        }
+
+        [Route("Team")]
 		[HttpPost]
 		public IHttpActionResult TeamFromSteamGroup(SteamUserGroup group)
 		{
@@ -279,5 +289,11 @@ namespace BellumGens.Api.Controllers
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
 			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
 		}
+
+        private bool UserIsTeamMember(Guid teamId)
+        {
+            CSGOTeam team = _dbContext.Teams.Find(teamId);
+            return team != null && team.Members.Any(m => m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+        }
 	}
 }
