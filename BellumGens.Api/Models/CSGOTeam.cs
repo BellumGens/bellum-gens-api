@@ -14,7 +14,42 @@ namespace BellumGens.Api.Models
 			this.Invites = new HashSet<TeamInvite>();
         }
 
-        [Key]
+		public void InitializeDefaults()
+		{
+			this.MapPool = new HashSet<TeamMapPool>()
+			{
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Cache
+				},
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Dust2
+				},
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Inferno
+				},
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Mirage
+				},
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Nuke
+				},
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Overpass
+				},
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Train
+				}
+			};
+		}
+
+		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid TeamId { get; set; }
 
@@ -26,6 +61,8 @@ namespace BellumGens.Api.Models
 
 		public string TeamAvatar { get; set; }
 
+		public string Description { get; set; }
+
 		public virtual ICollection<TeamStrategy> Strategies { get; set; }
 
 		public virtual ICollection<TeamMember> Members { get; set; }
@@ -35,5 +72,8 @@ namespace BellumGens.Api.Models
 
 		[JsonIgnore]
 		public virtual ICollection<TeamApplication> Applications { get; set; }
+
+		[JsonIgnore]
+		public virtual ICollection<TeamMapPool> MapPool { get; set; }
 	}
 }

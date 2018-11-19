@@ -43,7 +43,18 @@ namespace BellumGens.Api.Controllers
             return Ok(_dbContext.Strategies.Where(t => t.TeamId == teamId).ToList());
         }
 
-        [Route("Team")]
+		[Route("MapPool")]
+		public IHttpActionResult GetTeamMapPool(Guid teamId)
+		{
+			if (!this.UserIsTeamMember(teamId))
+			{
+				return BadRequest("You're not a member of this team.");
+			}
+			List<TeamMapPool> mapPool = _dbContext.TeamMapPool.Where(t => t.TeamId == teamId).ToList();
+			return Ok(mapPool);
+		}
+
+		[Route("Team")]
 		[HttpPost]
 		public IHttpActionResult TeamFromSteamGroup(SteamUserGroup group)
 		{
@@ -61,6 +72,7 @@ namespace BellumGens.Api.Controllers
 				TeamName = group.groupName,
 				TeamAvatar = group.avatarFull
 			});
+			team.InitializeDefaults();
 
             team.Members.Add(new TeamMember()
             {
@@ -96,6 +108,7 @@ namespace BellumGens.Api.Controllers
 				IsActive = true,
 				IsAdmin = true
 			});
+			team.InitializeDefaults();
 
 			try
 			{
@@ -284,7 +297,24 @@ namespace BellumGens.Api.Controllers
             return Ok();
         }
 
-        private bool UserIsTeamAdmin(Guid teamId)
+		[Route("MapPool")]
+		[HttpPut]
+		public IHttpActionResult SetTeamMapPool(TeamMapPool mapPool)
+		{
+			TeamMapPool entity = _dbContext.TeamMapPool.Find(mapPool.TeamId, mapPool.Map);
+			_dbContext.Entry(entity).CurrentValues.SetValues(mapPool);
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
+		}
+
+		private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
 			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));

@@ -333,6 +333,14 @@
     <Compile Include="Migrations\201810300840021_AppSentNull.Designer.cs">
       <DependentUpon>201810300840021_AppSentNull.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811140803490_TeamMapPool.cs" />
+    <Compile Include="Migrations\201811140803490_TeamMapPool.Designer.cs">
+      <DependentUpon>201811140803490_TeamMapPool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201811140915144_TeamDescription.cs" />
+    <Compile Include="Migrations\201811140915144_TeamDescription.Designer.cs">
+      <DependentUpon>201811140915144_TeamDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -341,6 +349,7 @@
     <Compile Include="Models\Languages.cs" />
     <Compile Include="Models\TeamApplication.cs" />
     <Compile Include="Models\TeamInvite.cs" />
+    <Compile Include="Models\TeamMapPool.cs" />
     <Compile Include="Models\TeamMember.cs" />
     <Compile Include="Models\TeamStrategy.cs" />
     <Compile Include="Models\UserMapPool.cs" />
@@ -470,6 +479,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810300840021_AppSentNull.resx">
       <DependentUpon>201810300840021_AppSentNull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811140803490_TeamMapPool.resx">
+      <DependentUpon>201811140803490_TeamMapPool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811140915144_TeamDescription.resx">
+      <DependentUpon>201811140915144_TeamDescription.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

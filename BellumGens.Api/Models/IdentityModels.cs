@@ -184,6 +184,8 @@ namespace BellumGens.Api.Models
 
 		public DbSet<TeamStrategy> Strategies { get; set; }
 
+		public DbSet<TeamMapPool> TeamMapPool { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
