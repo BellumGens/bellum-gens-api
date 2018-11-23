@@ -17,6 +17,8 @@ namespace BellumGens.Api.Models
 
 		public string Title { get; set; }
 
+		public CSGOMaps Map { get; set; }
+
 		public string Description { get; set; }
 
 		public string Url { get; set; }

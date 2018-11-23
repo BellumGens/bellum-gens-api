@@ -341,6 +341,10 @@
     <Compile Include="Migrations\201811140915144_TeamDescription.Designer.cs">
       <DependentUpon>201811140915144_TeamDescription.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811220918527_AddMapToStrats.cs" />
+    <Compile Include="Migrations\201811220918527_AddMapToStrats.Designer.cs">
+      <DependentUpon>201811220918527_AddMapToStrats.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -485,6 +489,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811140915144_TeamDescription.resx">
       <DependentUpon>201811140915144_TeamDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811220918527_AddMapToStrats.resx">
+      <DependentUpon>201811220918527_AddMapToStrats.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

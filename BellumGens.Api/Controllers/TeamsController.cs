@@ -314,6 +314,36 @@ namespace BellumGens.Api.Controllers
 			return Ok();
 		}
 
+		[Route("Strategy")]
+		[HttpPost]
+		public IHttpActionResult SubmitStrategy(TeamStrategy strategy)
+		{
+			if (!UserIsTeamMember(strategy.TeamId))
+			{
+				return BadRequest("You need to be team member.");
+			}
+
+			TeamStrategy entity = _dbContext.Strategies.Find(strategy.Id);
+			if (entity == null)
+			{
+				_dbContext.Strategies.Add(strategy);
+			}
+			else
+			{
+				_dbContext.Entry(entity).CurrentValues.SetValues(strategy);
+			}
+
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
+		}
+
 		private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
