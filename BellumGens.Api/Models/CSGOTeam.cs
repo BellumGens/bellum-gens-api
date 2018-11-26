@@ -63,6 +63,7 @@ namespace BellumGens.Api.Models
 
 		public string Description { get; set; }
 
+		[JsonIgnore]
 		public virtual ICollection<TeamStrategy> Strategies { get; set; }
 
 		public virtual ICollection<TeamMember> Members { get; set; }
