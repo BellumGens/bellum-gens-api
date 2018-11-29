@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Models
 {
-	public class TeamInvite
+	public class TeamInvite : Application
 	{
 		private CSGOTeam _teamInfo;
 
@@ -21,11 +21,6 @@ namespace BellumGens.Api.Models
 		[Key]
 		[Column(Order = 2)]
 		public Guid TeamId { get; set; }
-
-		public NotificationState State { get; set; }
-
-		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-		public DateTimeOffset Sent { get; set; }
 
 		[NotMapped]
 		public CSGOTeam TeamInfo
@@ -56,13 +51,5 @@ namespace BellumGens.Api.Models
 		[ForeignKey("InvitedUserId")]
 		[JsonIgnore]
 		public virtual ApplicationUser InvitedUser { get; set; }
-	}
-
-	public enum NotificationState
-	{
-		NotSeen,
-		Seen,
-		Rejected,
-		Accepted
 	}
 }

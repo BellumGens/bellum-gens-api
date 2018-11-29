@@ -345,13 +345,20 @@
     <Compile Include="Migrations\201811220918527_AddMapToStrats.Designer.cs">
       <DependentUpon>201811220918527_AddMapToStrats.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201811290918375_TeamPracticeSchedule.cs" />
+    <Compile Include="Migrations\201811290918375_TeamPracticeSchedule.Designer.cs">
+      <DependentUpon>201811290918375_TeamPracticeSchedule.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Application.cs" />
+    <Compile Include="Models\Availability.cs" />
     <Compile Include="Models\CSGOTeam.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Languages.cs" />
     <Compile Include="Models\TeamApplication.cs" />
+    <Compile Include="Models\TeamAvailability.cs" />
     <Compile Include="Models\TeamInvite.cs" />
     <Compile Include="Models\TeamMapPool.cs" />
     <Compile Include="Models\TeamMember.cs" />
@@ -492,6 +499,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201811220918527_AddMapToStrats.resx">
       <DependentUpon>201811220918527_AddMapToStrats.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201811290918375_TeamPracticeSchedule.resx">
+      <DependentUpon>201811290918375_TeamPracticeSchedule.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

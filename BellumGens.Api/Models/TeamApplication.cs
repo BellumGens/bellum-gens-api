@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Models
 {
-	public class TeamApplication
+	public class TeamApplication : Application
 	{
 		[Key]
 		[Column(Order = 0)]
@@ -15,13 +15,6 @@ namespace BellumGens.Api.Models
 		[Key]
 		[Column(Order = 1)]
 		public Guid TeamId { get; set; }
-
-		public string Message { get; set; }
-
-		public NotificationState State { get; set; }
-
-		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-		public DateTimeOffset? Sent { get; set; }
 
 		[NotMapped]
 		public SteamUser UserInfo

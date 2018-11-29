@@ -12,10 +12,41 @@ namespace BellumGens.Api.Models
         {
             this.Members = new HashSet<TeamMember>();
 			this.Invites = new HashSet<TeamInvite>();
-        }
+			this.PracticeSchedule = new HashSet<TeamAvailability>();
+		}
 
 		public void InitializeDefaults()
 		{
+			this.PracticeSchedule = new HashSet<TeamAvailability>() {
+				new TeamAvailability
+				{
+					Day = DayOfWeek.Monday
+				},
+				new TeamAvailability
+				{
+					Day = DayOfWeek.Tuesday
+				},
+				new TeamAvailability
+				{
+					Day = DayOfWeek.Wednesday
+				},
+				new TeamAvailability
+				{
+					Day = DayOfWeek.Thursday
+				},
+				new TeamAvailability
+				{
+					Day = DayOfWeek.Friday
+				},
+				new TeamAvailability
+				{
+					Day = DayOfWeek.Saturday
+				},
+				new TeamAvailability
+				{
+					Day = DayOfWeek.Sunday
+				}
+			};
 			this.MapPool = new HashSet<TeamMapPool>()
 			{
 				new TeamMapPool
@@ -65,6 +96,8 @@ namespace BellumGens.Api.Models
 
 		[JsonIgnore]
 		public virtual ICollection<TeamStrategy> Strategies { get; set; }
+
+		public virtual ICollection<TeamAvailability> PracticeSchedule { get; set; }
 
 		public virtual ICollection<TeamMember> Members { get; set; }
 

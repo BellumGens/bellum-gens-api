@@ -5,19 +5,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Models
 {
-	public class UserAvailability : Availability
+	public class TeamAvailability : Availability
 	{
 		[JsonIgnore]
 		[Key]
 		[Column(Order = 0)]
-		public string UserId { get; set; }
+		public Guid TeamId { get; set; }
 
 		[Key]
 		[Column(Order = 1)]
 		public DayOfWeek Day { get; set; }
 
 		[JsonIgnore]
-		[ForeignKey("UserId")]
-		public virtual ApplicationUser User { get; set; }
+		[ForeignKey("TeamId")]
+		public virtual CSGOTeam Team { get; set; }
 	}
 }
