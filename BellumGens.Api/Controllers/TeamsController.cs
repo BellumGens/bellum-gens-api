@@ -299,10 +299,18 @@ namespace BellumGens.Api.Controllers
 
 		[Route("MapPool")]
 		[HttpPut]
-		public IHttpActionResult SetTeamMapPool(TeamMapPool mapPool)
+		public IHttpActionResult SetTeamMapPool(List<TeamMapPool> maps)
 		{
-			TeamMapPool entity = _dbContext.TeamMapPool.Find(mapPool.TeamId, mapPool.Map);
-			_dbContext.Entry(entity).CurrentValues.SetValues(mapPool);
+			if (!this.UserIsTeamAdmin(maps[0].TeamId))
+			{
+				return BadRequest("You need to be team admin.");
+			}
+
+			foreach (TeamMapPool mapPool in maps)
+			{
+				TeamMapPool entity = _dbContext.TeamMapPool.Find(mapPool.TeamId, mapPool.Map);
+				_dbContext.Entry(entity).CurrentValues.SetValues(mapPool);
+			}
 			try
 			{
 				_dbContext.SaveChanges();
