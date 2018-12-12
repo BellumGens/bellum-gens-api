@@ -7,7 +7,6 @@ namespace BellumGens.Api.Models
 {
 	public class TeamAvailability : Availability
 	{
-		[JsonIgnore]
 		[Key]
 		[Column(Order = 0)]
 		public Guid TeamId { get; set; }

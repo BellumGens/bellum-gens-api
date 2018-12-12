@@ -322,6 +322,28 @@ namespace BellumGens.Api.Controllers
 			return Ok();
 		}
 
+		[Route("availability")]
+		[HttpPut]
+		public IHttpActionResult SetTeamAvailability(TeamAvailability day)
+		{
+			if (!this.UserIsTeamAdmin(day.TeamId))
+			{
+				return BadRequest("You need to be team admin.");
+			}
+
+			TeamAvailability entity = _dbContext.TeamPracticeSchedule.Find(day.TeamId, day.Day);
+			_dbContext.Entry(entity).CurrentValues.SetValues(day);
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok();
+		}
+
 		[Route("Strategy")]
 		[HttpPost]
 		public IHttpActionResult SubmitStrategy(TeamStrategy strategy)
