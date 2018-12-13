@@ -362,6 +362,7 @@
     <Compile Include="Models\TeamInvite.cs" />
     <Compile Include="Models\TeamMapPool.cs" />
     <Compile Include="Models\TeamMember.cs" />
+    <Compile Include="Models\TeamSearchModel.cs" />
     <Compile Include="Models\TeamStrategy.cs" />
     <Compile Include="Models\UserMapPool.cs" />
     <Compile Include="Models\PlayerRoles.cs" />

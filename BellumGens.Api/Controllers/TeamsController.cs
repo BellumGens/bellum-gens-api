@@ -374,6 +374,18 @@ namespace BellumGens.Api.Controllers
 			return Ok();
 		}
 
+		[Route("Search")]
+		[HttpPost]
+		[AllowAnonymous]
+		public IHttpActionResult SearchTeams(TeamSearchModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				return Ok();
+			}
+			return BadRequest("Something went wrong...");
+		}
+
 		private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
