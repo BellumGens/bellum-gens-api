@@ -355,6 +355,7 @@
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Availability.cs" />
     <Compile Include="Models\CSGOTeam.cs" />
+    <Compile Include="Models\Extensions\ModelExtensions.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Languages.cs" />
     <Compile Include="Models\TeamApplication.cs" />
