@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Http;
@@ -19,14 +20,28 @@ namespace BellumGens.Api.Controllers
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
 
-		[Route("ActiveUsers")]
+		//[Route("ActiveUsers")]
+		//[AllowAnonymous]
+		//public List<UserStatsViewModel> GetActiveUsers()
+		//{
+		//	List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
+		//	Cache cache = HttpContext.Current.Cache;
+		//	if (!(cache["activeUsers"] is List<string> activeUsers))
+		//		activeUsers = new List<string>();
+
+		//	foreach (string user in activeUsers)
+		//	{
+		//		steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+		//	}
+		//	return steamUsers;
+		//}
+
+		[Route("Users")]
 		[AllowAnonymous]
-		public List<UserStatsViewModel> GetActiveUsers()
+		public List<UserStatsViewModel> GetUsers(int page = 0)
 		{
 			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
-			Cache cache = HttpContext.Current.Cache;
-			if (!(cache["activeUsers"] is List<string> activeUsers))
-				activeUsers = new List<string>();
+			List<string> activeUsers = _dbContext.Users.OrderBy(e => e.Id).Skip(page * 10).Take(10).Select(e => e.Id).ToList();
 
 			foreach (string user in activeUsers)
 			{

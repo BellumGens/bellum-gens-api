@@ -14,6 +14,8 @@ namespace BellumGens.Api.Providers
 		private static readonly string _statsForGameUrl =
 				"http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={0}&key={1}&steamid={2}&format=json";
 
+		//private static readonly string _playersUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={0}&steamids={1}";
+
 		private static readonly string _playerDetailsUrl =
 			"http://steamcommunity.com/profiles/{0}/?xml=1";
 
