@@ -58,8 +58,8 @@ namespace BellumGens.Api.Models.Extensions
 					else if (practice.From >= availability.From && practice.To <= availability.To)
 						total += (practice.To - practice.From).TotalHours;
 					/* CASE 3
-					 * user				|---------| 
-					 * team    |------------|
+					 * user	            |---------| 
+					 * team   |------------|
 					 */
 					else if (practice.To > availability.From)
 						total += (practice.To - availability.From).TotalHours;
