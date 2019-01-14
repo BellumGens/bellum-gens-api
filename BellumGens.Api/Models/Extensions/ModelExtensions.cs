@@ -73,5 +73,52 @@ namespace BellumGens.Api.Models.Extensions
 			}
 			return total;
 		}
+
+		public static double GetTotalOverlap(this ApplicationUser player, ApplicationUser user)
+		{
+			double total = 0;
+			foreach (UserAvailability practice in player.Availability.Where(d => d.Available))
+			{
+				UserAvailability availability = user.Availability.SingleOrDefault(a => a.Day == practice.Day && a.Available);
+				if (availability != null)
+				{
+					/* CASE 0
+					 * user     |------------|
+					 * team	                     |----------------------|
+					 * OR
+					 * user                           |------------|
+					 * team	   |----------------------|
+					 */
+					if (practice.To <= availability.From || practice.From >= availability.To)
+						continue;
+
+					/* CASE 1
+					 * user     |------------|
+					 * team	|----------------------|	
+					 */
+					if (practice.From <= availability.From && practice.To >= availability.To)
+						total += (availability.To - availability.From).TotalHours;
+					/* CASE 2
+					 * user |----------------------| 
+					 * team    |------------|
+					 */
+					else if (practice.From >= availability.From && practice.To <= availability.To)
+						total += (practice.To - practice.From).TotalHours;
+					/* CASE 3
+					 * user	            |---------| 
+					 * team   |------------|
+					 */
+					else if (practice.To > availability.From)
+						total += (practice.To - availability.From).TotalHours;
+					/* CASE 4
+					 * user	  |---------| 
+					 * team         |------------|
+					 */
+					else if (practice.From < availability.To)
+						total += (availability.To - practice.From).TotalHours;
+				}
+			}
+			return total;
+		}
 	}
 }

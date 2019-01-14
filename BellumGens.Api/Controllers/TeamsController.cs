@@ -375,40 +375,6 @@ namespace BellumGens.Api.Controllers
 			return Ok();
 		}
 
-		[Route("Search")]
-		[HttpPost]
-		[AllowAnonymous]
-		public IHttpActionResult SearchTeams(TeamSearchModel model)
-		{
-			if (model.scheduleOverlap <= 0 && model.role == null && model.name == null)
-			{
-				return BadRequest("No search criteria provided...");
-			}
-			if (!string.IsNullOrEmpty(model.name))
-			{
-				return Ok(_dbContext.Teams.Where(t => t.TeamName.Contains(model.name)).ToList());
-			}
-			List<CSGOTeam> teams;
-			if (model.role != null)
-			{
-				teams = _dbContext.Teams.Where(t => !t.Members.Any(m => m.Role == (PlaystyleRole)model.role) && t.PracticeSchedule.Any(d => d.Available)).ToList();
-			}
-			else
-			{
-				teams = _dbContext.Teams.Where(t => t.PracticeSchedule.Any(d => d.Available)).ToList();
-			}
-			if (model.scheduleOverlap > 0)
-			{
-				ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
-				if (!user.Availability.Any(a => a.Available))
-				{
-					return BadRequest("You must provide your availability in your user profile...");
-				}
-				return Ok(ReduceByAvailability(user, teams, Math.Min(model.scheduleOverlap, user.GetTotalAvailability())));
-			}
-			return Ok(teams);
-		}
-
 		private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
@@ -420,17 +386,5 @@ namespace BellumGens.Api.Controllers
             CSGOTeam team = _dbContext.Teams.Find(teamId);
             return team != null && team.Members.Any(m => m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
         }
-
-		private List<CSGOTeam> ReduceByAvailability(ApplicationUser user, List<CSGOTeam> teams, double threshold)
-		{
-			List<CSGOTeam> reduced = new List<CSGOTeam>();
-			foreach(CSGOTeam team in teams)
-			{
-				if (team.GetTotalAvailability() < threshold || team.GetTotalOverlap(user) < threshold)
-					continue;
-				reduced.Add(team);
-			}
-			return reduced;
-		}
 	}
 }

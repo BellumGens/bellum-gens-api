@@ -20,22 +20,6 @@ namespace BellumGens.Api.Controllers
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
 
-		//[Route("ActiveUsers")]
-		//[AllowAnonymous]
-		//public List<UserStatsViewModel> GetActiveUsers()
-		//{
-		//	List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
-		//	Cache cache = HttpContext.Current.Cache;
-		//	if (!(cache["activeUsers"] is List<string> activeUsers))
-		//		activeUsers = new List<string>();
-
-		//	foreach (string user in activeUsers)
-		//	{
-		//		steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
-		//	}
-		//	return steamUsers;
-		//}
-
 		[Route("Users")]
 		[AllowAnonymous]
 		public List<UserStatsViewModel> GetUsers(int page = 0)
@@ -65,7 +49,7 @@ namespace BellumGens.Api.Controllers
 			}
 			return user;
 		}
-		
+
 		[Route("Availability")]
 		[HttpPut]
 		public IHttpActionResult SetAvailability(UserAvailability newAvailability)
