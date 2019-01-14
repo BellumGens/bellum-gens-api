@@ -84,35 +84,35 @@ namespace BellumGens.Api.Models.Extensions
 				{
 					/* CASE 0
 					 * user     |------------|
-					 * team	                     |----------------------|
+					 * player	                     |----------------------|
 					 * OR
 					 * user                           |------------|
-					 * team	   |----------------------|
+					 * player  |----------------------|
 					 */
 					if (practice.To <= availability.From || practice.From >= availability.To)
 						continue;
 
 					/* CASE 1
 					 * user     |------------|
-					 * team	|----------------------|	
+					 * player |----------------------|	
 					 */
 					if (practice.From <= availability.From && practice.To >= availability.To)
 						total += (availability.To - availability.From).TotalHours;
 					/* CASE 2
-					 * user |----------------------| 
-					 * team    |------------|
+					 * user    |----------------------| 
+					 * player    |------------|
 					 */
 					else if (practice.From >= availability.From && practice.To <= availability.To)
 						total += (practice.To - practice.From).TotalHours;
 					/* CASE 3
 					 * user	            |---------| 
-					 * team   |------------|
+					 * player   |------------|
 					 */
 					else if (practice.To > availability.From)
 						total += (practice.To - availability.From).TotalHours;
 					/* CASE 4
 					 * user	  |---------| 
-					 * team         |------------|
+					 * player      |------------|
 					 */
 					else if (practice.From < availability.To)
 						total += (availability.To - practice.From).TotalHours;
