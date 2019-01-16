@@ -273,7 +273,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok(entity);
 		}
 
         [Route("RejectApplication")]
@@ -295,7 +295,7 @@ namespace BellumGens.Api.Controllers
             {
                 return BadRequest("Something went wrong...");
             }
-            return Ok();
+            return Ok(entity);
         }
 
 		[Route("MapPool")]
@@ -342,7 +342,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok(entity);
 		}
 
 		[Route("Strategy")]
@@ -372,7 +372,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok(entity);
 		}
 
 		private bool UserIsTeamAdmin(Guid teamId)

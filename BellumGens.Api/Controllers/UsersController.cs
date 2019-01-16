@@ -151,7 +151,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok(entity);
 		}
 
 		[Route("RejectTeamInvite")]
@@ -173,7 +173,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok(entity);
 		}
 
 		private ApplicationUser GetAuthUser()
