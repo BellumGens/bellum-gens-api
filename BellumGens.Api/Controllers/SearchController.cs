@@ -10,10 +10,12 @@ using System.Web.Http.Cors;
 using BellumGens.Api.Models.Extensions;
 using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.Cookies;
 
 namespace BellumGens.Api.Controllers
 {
 	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
+	[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 	[RoutePrefix("api/Search")]
 	public class SearchController : ApiController
 	{
@@ -99,7 +101,7 @@ namespace BellumGens.Api.Controllers
 				{
 					CSGOTeam team = _dbContext.Teams.Find(model.teamId);
 					overlap = Math.Min(model.scheduleOverlap, team.GetTotalAvailability());
-					userIds = _dbContext.Users.Where(u => u.GetTotalAvailability() >= overlap && team.GetTotalOverlap(u) >= overlap).Select(u => u.Id).ToList();
+					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && team.GetTotalOverlap(u) >= overlap).Select(u => u.Id).ToList();
 				}
 				else
 				{
