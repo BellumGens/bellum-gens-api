@@ -5,8 +5,6 @@ using Microsoft.Owin.Security.Cookies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Caching;
 using System.Web.Http;
 using System.Web.Http.Cors;
 

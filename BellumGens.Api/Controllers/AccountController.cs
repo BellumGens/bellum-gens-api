@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.OAuth;
 using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
 using BellumGens.Api.Results;
-using SteamModels;
-using System.Web.Caching;
 using Microsoft.Owin.Security.Cookies;
 using System.Web.Http.Cors;
 
@@ -68,7 +64,6 @@ namespace BellumGens.Api.Controllers
 		[Route("Logout")]
         public IHttpActionResult Logout()
         {
-			this.MarkUserOffline(User.Identity.GetUserId());
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
@@ -274,7 +269,6 @@ namespace BellumGens.Api.Controllers
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
 			Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignIn(identity);
-			this.MarkUserOnline(steamId);
 
 			return Redirect("http://localhost:4200/" + returnUrl); //Ok();
 
@@ -385,33 +379,33 @@ namespace BellumGens.Api.Controllers
 			return await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(info.LoginProvider, info.ProviderKey));
 		}
 
-		private void MarkUserOnline(string username)
-		{
-			Cache cache = HttpContext.Current.Cache;
-			lock (cache)
-			{
-				if (!(cache["activeUsers"] is List<string> activeUsers))
-					activeUsers = new List<string>();
-				if (!activeUsers.Contains(username))
-				{
-					activeUsers.Add(username);
-					cache["activeUsers"] = activeUsers;
-				}
-			}
-		}
+		//private void MarkUserOnline(string username)
+		//{
+		//	Cache cache = HttpContext.Current.Cache;
+		//	lock (cache)
+		//	{
+		//		if (!(cache["activeUsers"] is List<string> activeUsers))
+		//			activeUsers = new List<string>();
+		//		if (!activeUsers.Contains(username))
+		//		{
+		//			activeUsers.Add(username);
+		//			cache["activeUsers"] = activeUsers;
+		//		}
+		//	}
+		//}
 
-		private void MarkUserOffline(string username)
-		{
-			Cache cache = HttpContext.Current.Cache;
-			lock(cache)
-			{
-				if (!(cache["activeUsers"] is List<string> activeUsers))
-					activeUsers = new List<string>();
-				activeUsers.Remove(username);
-				cache["activeUsers"] = activeUsers;
-			}
-			SteamServiceProvider.InvalidateUserCache(username);
-		}
+		//private void MarkUserOffline(string username)
+		//{
+		//	Cache cache = HttpContext.Current.Cache;
+		//	lock(cache)
+		//	{
+		//		if (!(cache["activeUsers"] is List<string> activeUsers))
+		//			activeUsers = new List<string>();
+		//		activeUsers.Remove(username);
+		//		cache["activeUsers"] = activeUsers;
+		//	}
+		//	SteamServiceProvider.InvalidateUserCache(username);
+		//}
 
 		private IAuthenticationManager Authentication
         {
