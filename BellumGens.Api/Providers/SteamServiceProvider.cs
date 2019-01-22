@@ -6,11 +6,14 @@ using System.Collections.Generic;
 using SteamModels.CSGO;
 using BellumGens.Api.Models;
 using System;
+using System.Web.Caching;
+using System.Web;
 
 namespace BellumGens.Api.Providers
 {
 	public static class SteamServiceProvider
 	{
+		private static Cache _cache = HttpContext.Current.Cache;
 		private static readonly string _statsForGameUrl =
 				"http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={0}&key={1}&steamid={2}&format=json";
 
@@ -23,8 +26,6 @@ namespace BellumGens.Api.Providers
 
 		//private static readonly string _steamAppNewsUrl = "http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid={0}&maxlength=300&format=json";
 
-		private static Dictionary<string, UserStatsViewModel> _cachedUsers = new Dictionary<string, UserStatsViewModel>();
-
 		public static CSGOPlayerStats GetStatsForGame(string username)
 		{
 			HttpClient client = new HttpClient();
@@ -35,9 +36,10 @@ namespace BellumGens.Api.Providers
 
         public static SteamUser GetSteamUser(string name)
         {
-            if (_cachedUsers.ContainsKey(name))
+            if (_cache[name] is UserStatsViewModel)
             {
-                return _cachedUsers[name].steamUser;
+				UserStatsViewModel viewModel = _cache[name] as UserStatsViewModel;
+				return viewModel.steamUser;
             }
             HttpClient client = new HttpClient();
             var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
@@ -49,9 +51,9 @@ namespace BellumGens.Api.Providers
 
 		public static UserStatsViewModel GetSteamUserDetails(string name)
 		{
-			if (_cachedUsers.ContainsKey(name))
+			if (_cache[name] is UserStatsViewModel)
 			{
-				return _cachedUsers[name];
+				return _cache[name] as UserStatsViewModel;
 			}
 			HttpClient client = new HttpClient();
 			var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
@@ -90,7 +92,7 @@ namespace BellumGens.Api.Providers
 				steamUser = steamUser,
 				userStats = statsForUser
 			};
-			_cachedUsers[name] = user;
+			_cache.Add(name, user, null, Cache.NoAbsoluteExpiration, new TimeSpan(48, 0, 0), CacheItemPriority.Normal, null);
 			return user;
 		}
 
@@ -105,9 +107,9 @@ namespace BellumGens.Api.Providers
 
 		public static void InvalidateUserCache(string name)
 		{
-			if (_cachedUsers.ContainsKey(name))
+			if (_cache[name] is UserStatsViewModel)
 			{
-				_cachedUsers.Remove(name);
+				_cache.Remove(name);
 			}
 		}
 
