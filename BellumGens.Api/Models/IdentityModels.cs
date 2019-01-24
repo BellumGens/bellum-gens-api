@@ -188,6 +188,8 @@ namespace BellumGens.Api.Models
 
 		public DbSet<TeamAvailability> TeamPracticeSchedule { get; set; }
 
+		public DbSet<UserMessage> Messages { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
