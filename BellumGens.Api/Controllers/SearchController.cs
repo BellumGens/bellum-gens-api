@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using BellumGens.Api.Models.Extensions;
@@ -20,6 +17,24 @@ namespace BellumGens.Api.Controllers
 	public class SearchController : ApiController
 	{
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+
+		[Route("Search")]
+		[HttpGet]
+		public IHttpActionResult Search(string name)
+		{
+			SearchResultViewModel results = new SearchResultViewModel();
+			if (!string.IsNullOrEmpty(name))
+			{
+				results.Teams = _dbContext.Teams.Where(t => t.TeamName.Contains(name)).ToList();
+				List<string> activeUsers = _dbContext.Users.Where(u => u.UserName.Contains(name)).Select(e => e.Id).ToList();
+				foreach (string user in activeUsers)
+				{
+					results.Players.Add(SteamServiceProvider.GetSteamUserDetails(user));
+				}
+				return Ok(results);
+			}
+			return Ok(results);
+		}
 
 		[Route("Teams")]
 		[HttpPost]
