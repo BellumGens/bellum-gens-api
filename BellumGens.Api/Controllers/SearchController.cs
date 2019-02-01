@@ -40,13 +40,9 @@ namespace BellumGens.Api.Controllers
 		[HttpPost]
 		public IHttpActionResult SearchTeams(TeamSearchModel model)
 		{
-			if (model.scheduleOverlap <= 0 && model.role == null && string.IsNullOrEmpty(model.name))
+			if (model.scheduleOverlap <= 0 && model.role == null)
 			{
 				return BadRequest("No search criteria provided...");
-			}
-			if (!string.IsNullOrEmpty(model.name))
-			{
-				return Ok(_dbContext.Teams.Where(t => t.TeamName.Contains(model.name)).ToList());
 			}
 			List<CSGOTeam> teams;
 			if (model.role != null)
@@ -78,21 +74,12 @@ namespace BellumGens.Api.Controllers
 		[HttpPost]
 		public IHttpActionResult SearchPlayers(PlayerSearchModel model)
 		{
-			if (model.scheduleOverlap <= 0 && model.role == null && string.IsNullOrEmpty(model.name))
+			if (model.scheduleOverlap <= 0 && model.role == null)
 			{
 				return BadRequest("No search criteria provided...");
 			}
 
 			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
-			if (!string.IsNullOrEmpty(model.name))
-			{
-				List<string> activeUsers = _dbContext.Users.Where(u => u.UserName.Contains(model.name)).Select(e => e.Id).ToList();
-				foreach (string user in activeUsers)
-				{
-					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
-				}
-				return Ok(steamUsers);
-			}
 			List<ApplicationUser> users;
 
 			if (model.role != null)
