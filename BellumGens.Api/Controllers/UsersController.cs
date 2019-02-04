@@ -52,9 +52,8 @@ namespace BellumGens.Api.Controllers
 		[HttpPut]
 		public IHttpActionResult SetAvailability(UserAvailability newAvailability)
 		{
-			UserAvailability user = _dbContext.UserAvailabilities.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), newAvailability.Day);
-			newAvailability.UserId = user.UserId;
-			_dbContext.Entry(user).CurrentValues.SetValues(newAvailability);
+			UserAvailability entity = _dbContext.UserAvailabilities.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), newAvailability.Day);
+			_dbContext.Entry(entity).CurrentValues.SetValues(newAvailability);
 			try
 			{
 				_dbContext.SaveChanges();
@@ -63,7 +62,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok(entity);
 		}
 		
 		[Route("mapPool")]
@@ -71,7 +70,6 @@ namespace BellumGens.Api.Controllers
 		public IHttpActionResult SetMapPool(UserMapPool mapPool)
 		{
 			UserMapPool userMap = _dbContext.UserMapPool.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), mapPool.Map);
-			mapPool.UserId = userMap.UserId;
 			_dbContext.Entry(userMap).CurrentValues.SetValues(mapPool);
 			try
 			{
