@@ -79,7 +79,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok(userMap);
 		}
 		
 		[Route("PrimaryRole")]
@@ -96,7 +96,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok("success");
 		}
 		
 		[Route("SecondaryRole")]
@@ -113,7 +113,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok("success");
 		}
 
 		[Route("AcceptTeamInvite")]

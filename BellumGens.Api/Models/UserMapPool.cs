@@ -6,7 +6,6 @@ namespace BellumGens.Api.Models
 {
 	public class UserMapPool
 	{
-		[JsonIgnore]
 		[Key]
 		[Column(Order = 0)]
 		public string UserId { get; set; }
