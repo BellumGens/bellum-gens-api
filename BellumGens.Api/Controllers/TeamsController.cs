@@ -8,7 +8,6 @@ using Microsoft.Owin.Security.Cookies;
 using System;
 using Microsoft.AspNet.Identity;
 using BellumGens.Api.Providers;
-using BellumGens.Api.Models.Extensions;
 
 namespace BellumGens.Api.Controllers
 {

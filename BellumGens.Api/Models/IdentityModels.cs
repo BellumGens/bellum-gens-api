@@ -100,6 +100,8 @@ namespace BellumGens.Api.Models
             return userIdentity;
         }
 
+		public string ESEA { get; set; }
+
 		public PlaystyleRole PreferredPrimaryRole { get; set; }
 
 		public PlaystyleRole PreferredSecondaryRole { get; set; }

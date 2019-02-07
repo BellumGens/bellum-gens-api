@@ -37,23 +37,23 @@ namespace BellumGens.Api.Controllers
 		}
 
 		[Route("Teams")]
-		[HttpPost]
-		public IHttpActionResult SearchTeams(TeamSearchModel model)
+		[HttpGet]
+		public IHttpActionResult SearchTeams(PlaystyleRole? role, double overlap)
 		{
-			if (model.scheduleOverlap <= 0 && model.role == null)
+			if (overlap <= 0 && role == null)
 			{
 				return BadRequest("No search criteria provided...");
 			}
 			List<CSGOTeam> teams;
-			if (model.role != null)
+			if (role != null)
 			{
-				teams = _dbContext.Teams.Where(t => !t.Members.Any(m => m.Role == (PlaystyleRole)model.role) && t.PracticeSchedule.Any(d => d.Available)).ToList();
+				teams = _dbContext.Teams.Where(t => !t.Members.Any(m => m.Role == role) && t.PracticeSchedule.Any(d => d.Available)).ToList();
 			}
 			else
 			{
 				teams = _dbContext.Teams.Where(t => t.PracticeSchedule.Any(d => d.Available)).ToList();
 			}
-			if (model.scheduleOverlap > 0)
+			if (overlap > 0)
 			{
 				if (!User.Identity.IsAuthenticated)
 				{
@@ -64,17 +64,17 @@ namespace BellumGens.Api.Controllers
 				{
 					return BadRequest("You must provide your availability in your user profile...");
 				}
-				double overlap = Math.Min(model.scheduleOverlap, user.GetTotalAvailability());
+				overlap = Math.Min(overlap, user.GetTotalAvailability());
 				return Ok(teams.Where(t => t.GetTotalAvailability() >= overlap && t.GetTotalOverlap(user) >= overlap));
 			}
 			return Ok(teams);
 		}
 
 		[Route("Players")]
-		[HttpPost]
-		public IHttpActionResult SearchPlayers(PlayerSearchModel model)
+		[HttpGet]
+		public IHttpActionResult SearchPlayers(PlaystyleRole? role, double overlap, Guid? teamid)
 		{
-			if (model.scheduleOverlap <= 0 && model.role == null)
+			if (overlap <= 0 && role == null)
 			{
 				return BadRequest("No search criteria provided...");
 			}
@@ -82,33 +82,32 @@ namespace BellumGens.Api.Controllers
 			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
 			List<ApplicationUser> users;
 
-			if (model.role != null)
+			if (role != null)
 			{
-				users = _dbContext.Users.Where(u => u.PreferredPrimaryRole == model.role || u.PreferredSecondaryRole == model.role).ToList();
+				users = _dbContext.Users.Where(u => u.PreferredPrimaryRole == role || u.PreferredSecondaryRole == role).ToList();
 			}
 			else
 			{
 				users = _dbContext.Users.Where(u => u.Availability.Any(d => d.Available)).ToList();
 			}
-			if (model.scheduleOverlap > 0)
+			if (overlap > 0)
 			{
 				if (!User.Identity.IsAuthenticated)
 				{
 					return BadRequest("You must sign in to perform search by availability...");
 				}
-
-				double overlap = 0;
+				
 				List<string> userIds;
-				if (model.teamId != null)
+				if (teamid != null)
 				{
-					CSGOTeam team = _dbContext.Teams.Find(model.teamId);
-					overlap = Math.Min(model.scheduleOverlap, team.GetTotalAvailability());
+					CSGOTeam team = _dbContext.Teams.Find(teamid);
+					overlap = Math.Min(overlap, team.GetTotalAvailability());
 					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && team.GetTotalOverlap(u) >= overlap).Select(u => u.Id).ToList();
 				}
 				else
 				{
 					ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
-					overlap = Math.Min(model.scheduleOverlap, user.GetTotalAvailability());
+					overlap = Math.Min(overlap, user.GetTotalAvailability());
 					if (!user.Availability.Any(a => a.Available))
 					{
 						return BadRequest("You must provide your availability in your user profile...");

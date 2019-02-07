@@ -354,6 +354,10 @@
     <Compile Include="Migrations\201901231613346_UserMessages.Designer.cs">
       <DependentUpon>201901231613346_UserMessages.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902070820340_ESEA_Discord.cs" />
+    <Compile Include="Migrations\201902070820340_ESEA_Discord.Designer.cs">
+      <DependentUpon>201902070820340_ESEA_Discord.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
@@ -514,6 +518,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901231613346_UserMessages.resx">
       <DependentUpon>201901231613346_UserMessages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902070820340_ESEA_Discord.resx">
+      <DependentUpon>201902070820340_ESEA_Discord.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

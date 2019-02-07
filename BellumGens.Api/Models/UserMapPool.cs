@@ -30,10 +30,4 @@ namespace BellumGens.Api.Models
 		Overpass,
 		Train
 	}
-
-	//public class CSGOMap
-	//{
-	//	public CSGOMaps Id { get; set; }
-	//	public string Name { get; set; }
-	//}
 }
