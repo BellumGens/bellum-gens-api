@@ -14,10 +14,12 @@ using BellumGens.Api.Providers;
 using BellumGens.Api.Results;
 using Microsoft.Owin.Security.Cookies;
 using System.Web.Http.Cors;
+using System.Web.Mvc;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+	[RequireHttps]
+	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
 	[Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
@@ -270,7 +272,7 @@ namespace BellumGens.Api.Controllers
 			Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignIn(identity);
 
-			return Redirect("http://localhost:4200/" + returnUrl); //Ok();
+			return Redirect(CORSConfig.allowedOrigins + '/' + returnUrl); //Ok();
 
 		}
 		// GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
