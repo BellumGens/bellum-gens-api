@@ -14,11 +14,9 @@ using BellumGens.Api.Providers;
 using BellumGens.Api.Results;
 using Microsoft.Owin.Security.Cookies;
 using System.Web.Http.Cors;
-using System.Web.Mvc;
 
 namespace BellumGens.Api.Controllers
 {
-	[RequireHttps]
 	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
 	[Authorize]
     [RoutePrefix("api/Account")]
