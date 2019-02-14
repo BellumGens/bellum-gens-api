@@ -2,8 +2,15 @@
 {
     public static class CORSConfig
     {
-        public const string allowedOrigins = "http://localhost:4200";
-        public const string allowedHeaders = "*";
+#if DEBUG
+		public const string allowedOrigins = "https://localhost:4200";
+#endif
+
+#if !DEBUG
+		public const string allowedOrigins = "https://bellumgens.com";
+#endif
+
+		public const string allowedHeaders = "*";
         public const string allowedMethods = "*";
     }
 }
