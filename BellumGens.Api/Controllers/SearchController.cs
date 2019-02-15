@@ -42,8 +42,9 @@ namespace BellumGens.Api.Controllers
 		{
 			if (overlap <= 0 && role == null)
 			{
-				return BadRequest("No search criteria provided...");
+				return Ok(_dbContext.Teams.OrderBy(t => t.TeamId).Take(50).ToList());
 			}
+
 			List<CSGOTeam> teams;
 			if (role != null)
 			{
@@ -74,12 +75,18 @@ namespace BellumGens.Api.Controllers
 		[HttpGet]
 		public IHttpActionResult SearchPlayers(PlaystyleRole? role, double overlap, Guid? teamid)
 		{
+			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
+
 			if (overlap <= 0 && role == null)
 			{
-				return BadRequest("No search criteria provided...");
+				var ids = _dbContext.Users.OrderBy(u => u.Id).Select(u => u.Id).Take(50).ToList();
+				foreach (string user in ids)
+				{
+					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+				}
+				return Ok(steamUsers);
 			}
 
-			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
 			List<ApplicationUser> users;
 
 			if (role != null)
