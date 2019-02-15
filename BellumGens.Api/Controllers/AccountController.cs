@@ -262,7 +262,7 @@ namespace BellumGens.Api.Controllers
 					}
 					user = await UserManager.FindByIdAsync(steamId);
 					// Upon registration, redirect to the user's profile for information setup.
-					returnUrl = "player-details/" + steamId + "/true";
+					returnUrl = "players/" + steamId + "/true";
 				}
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();

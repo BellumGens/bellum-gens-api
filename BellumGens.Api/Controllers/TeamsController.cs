@@ -139,7 +139,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest(e.Message);
 			}
-			return Ok(member);
+			return Ok("ok");
 		}
 
 		[Route("RemoveMember")]
@@ -160,7 +160,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest(e.Message);
 			}
-			return Ok();
+			return Ok("ok");
 		}
 
 		[Route("Abandon")]
@@ -183,7 +183,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest(e.Message);
 			}
-			return Ok();
+			return Ok("ok");
 		}
 
 		[Route("Invite")]
@@ -211,7 +211,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest(e.Message);
 			}
-			return Ok();
+			return Ok(userId);
 		}
 
 		[Route("Apply")]
@@ -229,7 +229,7 @@ namespace BellumGens.Api.Controllers
 				{
 					return BadRequest("Something went wrong...");
 				}
-				return Ok();
+				return Ok(application);
 			}
 			return BadRequest("Something went wrong with your application validation");
 		}
@@ -294,7 +294,7 @@ namespace BellumGens.Api.Controllers
             {
                 return BadRequest("Something went wrong...");
             }
-            return Ok(entity);
+            return Ok("ok");
         }
 
 		[Route("MapPool")]
@@ -319,7 +319,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok();
+			return Ok("ok");
 		}
 
 		[Route("availability")]
