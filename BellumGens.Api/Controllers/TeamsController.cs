@@ -11,12 +11,12 @@ using BellumGens.Api.Providers;
 
 namespace BellumGens.Api.Controllers
 {
-    [EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-    [Authorize]
-    [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
-    [RoutePrefix("api/Teams")]
+	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
+	[Authorize]
+	[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+	[RoutePrefix("api/Teams")]
 	public class TeamsController : ApiController
-    {
+	{
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
 
 		[Route("Teams")]
@@ -24,7 +24,7 @@ namespace BellumGens.Api.Controllers
 		public List<CSGOTeam> GetTeams()
 		{
 			return _dbContext.Teams.ToList();
-        }
+		}
 
 		[Route("Team")]
 		[AllowAnonymous]
@@ -33,15 +33,15 @@ namespace BellumGens.Api.Controllers
 			return _dbContext.Teams.Find(teamId);
 		}
 
-        [Route("Strats")]
-        public IHttpActionResult GetTeamStrats(Guid teamId)
-        {
-            if (!this.UserIsTeamMember(teamId))
-            {
-                return BadRequest("You're not a member of this team.");
-            }
-            return Ok(_dbContext.Strategies.Where(t => t.TeamId == teamId).ToList());
-        }
+		[Route("Strats")]
+		public IHttpActionResult GetTeamStrats(Guid teamId)
+		{
+			if (!this.UserIsTeamMember(teamId))
+			{
+				return BadRequest("You're not a member of this team.");
+			}
+			return Ok(_dbContext.Strategies.Where(t => t.TeamId == teamId).ToList());
+		}
 
 		[Route("MapPool")]
 		public IHttpActionResult GetTeamMapPool(Guid teamId)
@@ -74,12 +74,12 @@ namespace BellumGens.Api.Controllers
 			});
 			team.InitializeDefaults();
 
-            team.Members.Add(new TeamMember()
-            {
-                Member = user,
-                IsActive = true,
-                IsAdmin = true
-            });
+			team.Members.Add(new TeamMember()
+			{
+				Member = user,
+				IsActive = true,
+				IsAdmin = true
+			});
 
 			try
 			{
@@ -245,8 +245,8 @@ namespace BellumGens.Api.Controllers
 			return Ok(_dbContext.TeamApplications.Where(i => i.TeamId == teamId).ToList());
 		}
 
-        [Route("ApproveApplication")]
-        [HttpPut]
+		[Route("ApproveApplication")]
+		[HttpPut]
 		public IHttpActionResult ApproveApplication(TeamApplication application)
 		{
 			if (!UserIsTeamAdmin(application.TeamId))
@@ -257,13 +257,13 @@ namespace BellumGens.Api.Controllers
 			TeamApplication entity = _dbContext.TeamApplications.Find(application.ApplicantId, application.TeamId);
 			entity.State = NotificationState.Accepted;
 
-            ApplicationUser user = _dbContext.Users.Find(application.ApplicantId);
-            entity.Team.Members.Add(new TeamMember()
-            {
-                Member = user,
-                IsActive = true,
-                IsAdmin = false
-            });
+			ApplicationUser user = _dbContext.Users.Find(application.ApplicantId);
+			entity.Team.Members.Add(new TeamMember()
+			{
+				Member = user,
+				IsActive = true,
+				IsAdmin = false
+			});
 			try
 			{
 				_dbContext.SaveChanges();
@@ -275,27 +275,27 @@ namespace BellumGens.Api.Controllers
 			return Ok(entity);
 		}
 
-        [Route("RejectApplication")]
-        [HttpPut]
-        public IHttpActionResult RejectApplication(TeamApplication application)
-        {
-            if (!UserIsTeamAdmin(application.TeamId))
-            {
-                return BadRequest("You need to be team admin.");
-            }
+		[Route("RejectApplication")]
+		[HttpPut]
+		public IHttpActionResult RejectApplication(TeamApplication application)
+		{
+			if (!UserIsTeamAdmin(application.TeamId))
+			{
+				return BadRequest("You need to be team admin.");
+			}
 
-            TeamApplication entity = _dbContext.TeamApplications.Find(application.ApplicantId, application.TeamId);
-            entity.State = NotificationState.Rejected;
-            try
-            {
-                _dbContext.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                return BadRequest("Something went wrong...");
-            }
-            return Ok("ok");
-        }
+			TeamApplication entity = _dbContext.TeamApplications.Find(application.ApplicantId, application.TeamId);
+			entity.State = NotificationState.Rejected;
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok("ok");
+		}
 
 		[Route("MapPool")]
 		[HttpPut]
@@ -326,7 +326,7 @@ namespace BellumGens.Api.Controllers
 		[HttpPut]
 		public IHttpActionResult SetTeamAvailability(TeamAvailability day)
 		{
-			if (!this.UserIsTeamAdmin(day.TeamId))
+			if (!UserIsTeamAdmin(day.TeamId))
 			{
 				return BadRequest("You need to be team admin.");
 			}
@@ -356,7 +356,7 @@ namespace BellumGens.Api.Controllers
 			TeamStrategy entity = _dbContext.Strategies.Find(strategy.Id);
 			if (entity == null)
 			{
-				_dbContext.Strategies.Add(strategy);
+				entity = _dbContext.Strategies.Add(strategy);
 			}
 			else
 			{
@@ -372,6 +372,32 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("Something went wrong...");
 			}
 			return Ok(entity);
+		}
+
+		[Route("Strategy")]
+		[HttpDelete]
+		public IHttpActionResult DeleteStrategy(Guid id, Guid teamid)
+		{
+			if (!UserIsTeamAdmin(teamid))
+			{
+				return BadRequest("You need to be team member.");
+			}
+
+			TeamStrategy entity = _dbContext.Strategies.Find(id);
+			if (entity != null)
+			{
+				_dbContext.Strategies.Remove(entity);
+			}
+
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok("Ok");
 		}
 
 		private bool UserIsTeamAdmin(Guid teamId)
