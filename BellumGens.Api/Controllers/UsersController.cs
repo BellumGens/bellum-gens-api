@@ -44,6 +44,7 @@ namespace BellumGens.Api.Controllers
 				user.primaryRole = registered.PreferredPrimaryRole;
 				user.secondaryRole = registered.PreferredSecondaryRole;
 				user.mapPool = registered.MapPool;
+				user.teams = registered.Teams;
 			}
 			return user;
 		}

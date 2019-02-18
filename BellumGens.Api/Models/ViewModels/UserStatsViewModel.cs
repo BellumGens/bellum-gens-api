@@ -48,6 +48,7 @@ namespace BellumGens.Api.Models
 		public PlaystyleRole primaryRole;
 		public PlaystyleRole secondaryRole;
 		public ICollection<UserMapPool> mapPool;
+		public ICollection<CSGOTeam> teams;
 		public List<Role> roles {
 			get
 			{
