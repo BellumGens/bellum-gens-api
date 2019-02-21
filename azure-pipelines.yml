@@ -32,3 +32,13 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+# Publish Build Artifacts to Azure Pipelines
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'drop' 
+    publishLocation: 'Container'
+    targetPath: 'dist/bellum-gens-api'
+    #parallel: false # Optional
+    #parallelCount: # Optional
