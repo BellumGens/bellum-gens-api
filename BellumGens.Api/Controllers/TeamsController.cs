@@ -85,7 +85,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
 				return BadRequest(group.groupName + " Steam group has already been registered.");
 			}
@@ -114,9 +114,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
-				return BadRequest(e.Message);
+				return BadRequest("Something went wrong...");
 			}
 			return Ok(team);
 		}
@@ -135,9 +135,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
-				return BadRequest(e.Message);
+				return BadRequest("Something went wrong...");
 			}
 			return Ok("ok");
 		}
@@ -156,9 +156,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
-				return BadRequest(e.Message);
+				return BadRequest("Something went wrong...");
 			}
 			return Ok("ok");
 		}
@@ -179,9 +179,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
-				return BadRequest(e.Message);
+				return BadRequest("Something went wrong...");
 			}
 			return Ok("ok");
 		}
@@ -207,9 +207,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
-				return BadRequest(e.Message);
+				return BadRequest("Something went wrong...");
 			}
 			return Ok(userId);
 		}
@@ -225,7 +225,7 @@ namespace BellumGens.Api.Controllers
 				{
 					_dbContext.SaveChanges();
 				}
-				catch (Exception e)
+				catch
 				{
 					return BadRequest("Something went wrong...");
 				}
@@ -268,7 +268,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
 				return BadRequest("Something went wrong...");
 			}
@@ -290,9 +290,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... ");
 			}
 			return Ok("ok");
 		}

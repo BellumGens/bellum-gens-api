@@ -96,6 +96,17 @@ namespace BellumGens.Api.Providers
 			return user;
 		}
 
+        public static UserStatsViewModel GetSteamUserDetails(ApplicationUser user)
+        {
+            UserStatsViewModel model = SteamServiceProvider.GetSteamUserDetails(user.Id);
+            model.availability = user.Availability;
+            model.primaryRole = user.PreferredPrimaryRole;
+            model.secondaryRole = user.PreferredSecondaryRole;
+            model.mapPool = user.MapPool;
+            model.teams = user.Teams;
+            return model;
+        }
+
 		public static bool VerifyUserIsGroupAdmin(string userid, string groupid)
 		{
 			HttpClient client = new HttpClient();
