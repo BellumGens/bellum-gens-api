@@ -110,7 +110,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
 				return BadRequest("Something went wrong...");
 			}
@@ -144,7 +144,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
 				return BadRequest("Something went wrong...");
 			}
@@ -166,7 +166,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
 				return BadRequest("Something went wrong...");
 			}
