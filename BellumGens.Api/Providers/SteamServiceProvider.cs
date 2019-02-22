@@ -15,16 +15,16 @@ namespace BellumGens.Api.Providers
 	{
 		private static Cache _cache = HttpContext.Current.Cache;
 		private static readonly string _statsForGameUrl =
-				"http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={0}&key={1}&steamid={2}&format=json";
+				"https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={0}&key={1}&steamid={2}&format=json";
 
-		//private static readonly string _playersUrl = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={0}&steamids={1}";
+		//private static readonly string _playersUrl = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={0}&steamids={1}";
 
 		private static readonly string _playerDetailsUrl =
-			"http://steamcommunity.com/profiles/{0}/?xml=1";
+			"https://steamcommunity.com/profiles/{0}/?xml=1";
 
 		private static readonly string _groupMembersUrl = "https://steamcommunity.com/gid/{0}/memberslistxml/?xml=1";
 
-		//private static readonly string _steamAppNewsUrl = "http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid={0}&maxlength=300&format=json";
+		//private static readonly string _steamAppNewsUrl = "https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid={0}&maxlength=300&format=json";
 
 		public static CSGOPlayerStats GetStatsForGame(string username)
 		{
@@ -143,7 +143,7 @@ namespace BellumGens.Api.Providers
 
 		public static string NormalizeUsername(string name)
 		{
-			return name.Contains("http://") ? name : string.Format(_playerDetailsUrl, name);
+			return name.Contains("https://") ? name : string.Format(_playerDetailsUrl, name);
 		}
 
 		public static string SteamUserId(string userUri)
