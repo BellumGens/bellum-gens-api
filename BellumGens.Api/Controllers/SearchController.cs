@@ -26,8 +26,8 @@ namespace BellumGens.Api.Controllers
 			if (!string.IsNullOrEmpty(name))
 			{
 				results.Teams = _dbContext.Teams.Where(t => t.TeamName.Contains(name)).ToList();
-				List<string> activeUsers = _dbContext.Users.Where(u => u.UserName.Contains(name)).Select(e => e.Id).ToList();
-				foreach (string user in activeUsers)
+				List<ApplicationUser> activeUsers = _dbContext.Users.Where(u => u.UserName.Contains(name)).ToList();
+				foreach (ApplicationUser user in activeUsers)
 				{
 					results.Players.Add(SteamServiceProvider.GetSteamUserDetails(user));
 				}
@@ -79,8 +79,8 @@ namespace BellumGens.Api.Controllers
 
 			if (overlap <= 0 && role == null)
 			{
-				var ids = _dbContext.Users.OrderBy(u => u.Id).Select(u => u.Id).Take(50).ToList();
-				foreach (string user in ids)
+				var appusers = _dbContext.Users.OrderBy(u => u.Id).Take(50).ToList();
+				foreach (ApplicationUser user in appusers)
 				{
 					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
 				}
@@ -104,12 +104,12 @@ namespace BellumGens.Api.Controllers
 					return BadRequest("You must sign in to perform search by availability...");
 				}
 				
-				List<string> userIds;
+				List<ApplicationUser> userIds;
 				if (teamid != null)
 				{
 					CSGOTeam team = _dbContext.Teams.Find(teamid);
 					overlap = Math.Min(overlap, team.GetTotalAvailability());
-					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && team.GetTotalOverlap(u) >= overlap).Select(u => u.Id).ToList();
+					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && team.GetTotalOverlap(u) >= overlap).ToList();
 				}
 				else
 				{
@@ -119,16 +119,16 @@ namespace BellumGens.Api.Controllers
 					{
 						return BadRequest("You must provide your availability in your user profile...");
 					}
-					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && u.GetTotalOverlap(user) >= overlap).Select(u => u.Id).ToList();
+					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && u.GetTotalOverlap(user) >= overlap).ToList();
 				}
-				foreach (string user in userIds)
+				foreach (ApplicationUser user in userIds)
 				{
 					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
 				}
 				return Ok(steamUsers);
 			}
 			
-			foreach (string user in users.Select(u => u.Id))
+			foreach (ApplicationUser user in users)
 			{
 				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
 			}

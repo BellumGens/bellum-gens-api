@@ -9,7 +9,7 @@ namespace BellumGens.Api
     {
         public void Configuration(IAppBuilder app)
 		{
-			SteamInfo.Initialize("./steam.settings");
+			SteamInfo.Initialize();
 			ConfigureAuth(app);
 		}
     }

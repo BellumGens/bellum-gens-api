@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Configuration;
 
 namespace BellumGens.Api
 {
@@ -20,10 +20,16 @@ namespace BellumGens.Api
 			}
 		}
 
-		public static void Initialize(string path)
+		public static void Initialize()
 		{
 			if (SteamInfo._steamInfo == null)
-				SteamInfo._steamInfo = JsonConvert.DeserializeObject<SteamInfoDescriptior>(System.IO.File.ReadAllText(path));
+            {
+                SteamInfo._steamInfo = new SteamInfoDescriptior()
+                {
+                    steamApiKey = ConfigurationManager.AppSettings["steamApiKey"],
+                    gameId = ConfigurationManager.AppSettings["gameId"]
+                };
+            }
 		}
 
 	}
