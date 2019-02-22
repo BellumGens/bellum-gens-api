@@ -2,7 +2,6 @@
 using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;

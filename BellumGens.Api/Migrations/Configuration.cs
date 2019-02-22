@@ -1,15 +1,12 @@
 namespace BellumGens.Api.Migrations
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<BellumGens.Api.Models.BellumGensDbContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "BellumGens.Api.Models.BellumGensDbContext";
         }
 
