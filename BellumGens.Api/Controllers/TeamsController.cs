@@ -8,6 +8,7 @@ using Microsoft.Owin.Security.Cookies;
 using System;
 using Microsoft.AspNet.Identity;
 using BellumGens.Api.Providers;
+using System.Data.Entity;
 
 namespace BellumGens.Api.Controllers
 {
@@ -90,6 +91,33 @@ namespace BellumGens.Api.Controllers
 				return BadRequest(group.groupName + " Steam group has already been registered.");
 			}
 			return Ok(team);
+		}
+
+		[Route("Team")]
+		[HttpPut]
+		public IHttpActionResult UpdateTeam(CSGOTeam team)
+		{
+			if (!UserIsTeamAdmin(team.TeamId))
+			{
+				return BadRequest("User is not a team admin for " + team.TeamName);
+			}
+
+			if (ModelState.IsValid)
+			{
+				CSGOTeam entity = _dbContext.Teams.Find(team.TeamId);
+				_dbContext.Entry(entity).CurrentValues.SetValues(team);
+
+				try
+				{
+					_dbContext.SaveChanges();
+				}
+				catch
+				{
+					return BadRequest("Something went wrong!");
+				}
+				return Ok(team);
+			}
+			return BadRequest("Invalid state of the team " + team.TeamName);
 		}
 
 		[Route("NewTeam")]
