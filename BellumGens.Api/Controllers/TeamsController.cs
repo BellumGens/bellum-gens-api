@@ -79,7 +79,8 @@ namespace BellumGens.Api.Controllers
 			{
 				Member = user,
 				IsActive = true,
-				IsAdmin = true
+				IsAdmin = true,
+				IsEditor = true
 			});
 
 			try
@@ -134,7 +135,8 @@ namespace BellumGens.Api.Controllers
 			{
 				Member = user,
 				IsActive = true,
-				IsAdmin = true
+				IsAdmin = true,
+				IsEditor = true
 			});
 			team.InitializeDefaults();
 
@@ -290,7 +292,8 @@ namespace BellumGens.Api.Controllers
 			{
 				Member = user,
 				IsActive = true,
-				IsAdmin = false
+				IsAdmin = false,
+				IsEditor = false
 			});
 			try
 			{
@@ -376,7 +379,7 @@ namespace BellumGens.Api.Controllers
 		[HttpPost]
 		public IHttpActionResult SubmitStrategy(TeamStrategy strategy)
 		{
-			if (!UserIsTeamMember(strategy.TeamId))
+			if (!UserIsTeamEditor(strategy.TeamId))
 			{
 				return BadRequest("You need to be team member.");
 			}
@@ -406,7 +409,7 @@ namespace BellumGens.Api.Controllers
 		[HttpDelete]
 		public IHttpActionResult DeleteStrategy(Guid id, Guid teamid)
 		{
-			if (!UserIsTeamAdmin(teamid))
+			if (!UserIsTeamEditor(teamid))
 			{
 				return BadRequest("You need to be team member.");
 			}
@@ -434,7 +437,13 @@ namespace BellumGens.Api.Controllers
 			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
 		}
 
-        private bool UserIsTeamMember(Guid teamId)
+		private bool UserIsTeamEditor(Guid teamId)
+		{
+			CSGOTeam team = _dbContext.Teams.Find(teamId);
+			return team != null && team.Members.Any(m => m.IsEditor && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+		}
+
+		private bool UserIsTeamMember(Guid teamId)
         {
             CSGOTeam team = _dbContext.Teams.Find(teamId);
             return team != null && team.Members.Any(m => m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
