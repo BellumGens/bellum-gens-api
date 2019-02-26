@@ -381,7 +381,7 @@ namespace BellumGens.Api.Controllers
 		{
 			if (!UserIsTeamEditor(strategy.TeamId))
 			{
-				return BadRequest("You need to be team member.");
+				return BadRequest("You need to be team editor.");
 			}
 
 			TeamStrategy entity = _dbContext.Strategies.Find(strategy.Id);
@@ -411,7 +411,7 @@ namespace BellumGens.Api.Controllers
 		{
 			if (!UserIsTeamEditor(teamid))
 			{
-				return BadRequest("You need to be team member.");
+				return BadRequest("You need to be team editor.");
 			}
 
 			TeamStrategy entity = _dbContext.Strategies.Find(id);
@@ -440,7 +440,7 @@ namespace BellumGens.Api.Controllers
 		private bool UserIsTeamEditor(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
-			return team != null && team.Members.Any(m => m.IsEditor && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			return team != null && team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
 		}
 
 		private bool UserIsTeamMember(Guid teamId)
