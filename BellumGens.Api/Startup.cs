@@ -1,5 +1,7 @@
-﻿using Microsoft.Owin;
+﻿using BellumGens.Api.Migrations;
+using Microsoft.Owin;
 using Owin;
+using System.Data.Entity.Migrations;
 
 [assembly: OwinStartup(typeof(BellumGens.Api.Startup))]
 
@@ -10,6 +12,10 @@ namespace BellumGens.Api
         public void Configuration(IAppBuilder app)
 		{
 			SteamInfo.Initialize();
+			var configuration = new Configuration();
+			var migrator = new DbMigrator(configuration);
+			migrator.Update();
+
 			ConfigureAuth(app);
 		}
     }
