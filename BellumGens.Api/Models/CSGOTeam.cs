@@ -78,6 +78,8 @@ namespace BellumGens.Api.Models
 					Map = CSGOMaps.Train
 				}
 			};
+
+			Visible = true;
 		}
 
 		[Key]
@@ -95,6 +97,8 @@ namespace BellumGens.Api.Models
 		public string Description { get; set; }
 
 		public string Discord { get; set; }
+
+		public bool Visible { get; set; }
 
 		[JsonIgnore]
 		public virtual ICollection<TeamStrategy> Strategies { get; set; }

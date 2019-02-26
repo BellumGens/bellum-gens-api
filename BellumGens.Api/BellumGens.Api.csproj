@@ -362,6 +362,10 @@
     <Compile Include="Migrations\201902261342385_TeamMember-Editor.Designer.cs">
       <DependentUpon>201902261342385_TeamMember-Editor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902261506160_TeamVisility.cs" />
+    <Compile Include="Migrations\201902261506160_TeamVisility.Designer.cs">
+      <DependentUpon>201902261506160_TeamVisility.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
@@ -531,6 +535,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902261342385_TeamMember-Editor.resx">
       <DependentUpon>201902261342385_TeamMember-Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902261506160_TeamVisility.resx">
+      <DependentUpon>201902261506160_TeamVisility.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
