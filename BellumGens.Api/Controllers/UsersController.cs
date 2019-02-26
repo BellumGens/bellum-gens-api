@@ -136,7 +136,8 @@ namespace BellumGens.Api.Controllers
 			{
 				Member = user,
 				IsActive = true,
-                IsAdmin = false
+                IsAdmin = false,
+				IsEditor = false
 			});
 			entity.State = NotificationState.Accepted;
 			try

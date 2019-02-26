@@ -21,6 +21,8 @@ namespace BellumGens.Api.Models
 
 		public bool IsAdmin { get; set; }
 
+		public bool IsEditor { get; set; }
+
 		public PlaystyleRole Role { get; set; }
 
         [NotMapped]
