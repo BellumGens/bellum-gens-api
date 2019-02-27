@@ -8,6 +8,7 @@ using BellumGens.Api.Models;
 using System;
 using System.Web.Caching;
 using System.Web;
+using System.Text.RegularExpressions;
 
 namespace BellumGens.Api.Providers
 {
@@ -19,8 +20,11 @@ namespace BellumGens.Api.Providers
 
 		//private static readonly string _playersUrl = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={0}&steamids={1}";
 
-		private static readonly string _playerDetailsUrl =
+		private static readonly string _playerDetailsById =
 			"https://steamcommunity.com/profiles/{0}/?xml=1";
+
+		private static readonly string _playerDetailsByUrl =
+			"https://steamcommunity.com/id/{0}/?xml=1";
 
 		private static readonly string _groupMembersUrl = "https://steamcommunity.com/gid/{0}/memberslistxml/?xml=1";
 
@@ -143,7 +147,9 @@ namespace BellumGens.Api.Providers
 
 		public static string NormalizeUsername(string name)
 		{
-			return name.Contains("https://") ? name : string.Format(_playerDetailsUrl, name);
+			string pattern = "^[0-9]{17}$",
+				   url = "^http(s)?://steamcommunity.com";
+			return Regex.IsMatch(name, url) ? name + "/?xml=1" : Regex.IsMatch(name, pattern) ? string.Format(_playerDetailsById, name) : string.Format(_playerDetailsByUrl, name);
 		}
 
 		public static string SteamUserId(string userUri)
