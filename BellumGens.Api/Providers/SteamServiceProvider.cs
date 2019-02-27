@@ -147,8 +147,9 @@ namespace BellumGens.Api.Providers
 
 		public static string NormalizeUsername(string name)
 		{
-			string pattern = "^[0-9]{17}$";
-			return name.Contains("https://") ? name + "/?xml=1" : Regex.IsMatch(name, pattern) ? string.Format(_playerDetailsById, name) : string.Format(_playerDetailsByUrl, name);
+			string pattern = "^[0-9]{17}$",
+				   url = "^http(s)?://steamcommunity.com";
+			return Regex.IsMatch(name, url) ? name + "/?xml=1" : Regex.IsMatch(name, pattern) ? string.Format(_playerDetailsById, name) : string.Format(_playerDetailsByUrl, name);
 		}
 
 		public static string SteamUserId(string userUri)
