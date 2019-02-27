@@ -108,6 +108,7 @@ namespace BellumGens.Api.Providers
             model.secondaryRole = user.PreferredSecondaryRole;
             model.mapPool = user.MapPool;
             model.teams = user.Teams;
+			model.registered = true;
             return model;
         }
 

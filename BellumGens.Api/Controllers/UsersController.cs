@@ -46,10 +46,7 @@ namespace BellumGens.Api.Controllers
 					user.secondaryRole = registered.PreferredSecondaryRole;
 					user.mapPool = registered.MapPool;
 					user.teams = registered.Teams;
-				}
-				else
-				{
-					user.registered = false;
+					user.registered = true;
 				}
 			}
 			return user;

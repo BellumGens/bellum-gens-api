@@ -49,7 +49,7 @@ namespace BellumGens.Api.Models
 		public PlaystyleRole secondaryRole;
 		public ICollection<UserMapPool> mapPool;
 		public ICollection<CSGOTeam> teams;
-		public bool registered = true;
+		public bool registered = false;
 		public List<Role> roles {
 			get
 			{
