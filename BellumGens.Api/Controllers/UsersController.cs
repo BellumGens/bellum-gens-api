@@ -36,14 +36,21 @@ namespace BellumGens.Api.Controllers
 		public UserStatsViewModel GetUser(string userid)
 		{
 			UserStatsViewModel user = SteamServiceProvider.GetSteamUserDetails(userid);
-			var registered = _dbContext.Users.Find(user.steamUser.steamID64);
-			if (registered != null)
+			if (user.steamUser != null)
 			{
-				user.availability = registered.Availability;
-				user.primaryRole = registered.PreferredPrimaryRole;
-				user.secondaryRole = registered.PreferredSecondaryRole;
-				user.mapPool = registered.MapPool;
-				user.teams = registered.Teams;
+				var registered = _dbContext.Users.Find(user.steamUser.steamID64);
+				if (registered != null)
+				{
+					user.availability = registered.Availability;
+					user.primaryRole = registered.PreferredPrimaryRole;
+					user.secondaryRole = registered.PreferredSecondaryRole;
+					user.mapPool = registered.MapPool;
+					user.teams = registered.Teams;
+				}
+				else
+				{
+					user.registered = false;
+				}
 			}
 			return user;
 		}
