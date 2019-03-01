@@ -15,7 +15,7 @@ namespace BellumGens.Api.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        private List<CSGOTeam> _teams;
+        private List<CSGOTeamSummaryViewModel> _teams;
 		private List<CSGOTeam> _teamAdmin;
 		private SteamUser _user;
 
@@ -133,16 +133,16 @@ namespace BellumGens.Api.Models
 		}
 
 		[NotMapped]
-        public List<CSGOTeam> Teams
+        public List<CSGOTeamSummaryViewModel> Teams
         {
             get
             {
                 if (_teams == null)
                 {
-                    _teams = new List<CSGOTeam>();
+                    _teams = new List<CSGOTeamSummaryViewModel>();
                     foreach (TeamMember memberof in MemberOf)
                     {
-                        _teams.Add(memberof.Team);
+                        _teams.Add(new CSGOTeamSummaryViewModel(memberof.Team));
                     }
                 }
                 return _teams;
