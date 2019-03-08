@@ -371,6 +371,10 @@
     <Compile Include="Migrations\201903081300541_PushSubscriptions.Designer.cs">
       <DependentUpon>201903081300541_PushSubscriptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903081443432_PushWithUserID.cs" />
+    <Compile Include="Migrations\201903081443432_PushWithUserID.Designer.cs">
+      <DependentUpon>201903081443432_PushWithUserID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\PushSubscription.cs" />
@@ -548,6 +552,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903081300541_PushSubscriptions.resx">
       <DependentUpon>201903081300541_PushSubscriptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903081443432_PushWithUserID.resx">
+      <DependentUpon>201903081443432_PushWithUserID.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
