@@ -1,6 +1,8 @@
 ﻿using BellumGens.Api.Models;
+using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
+using System;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -18,21 +20,27 @@ namespace BellumGens.Api.Controllers
 		[Route("Subscribe")]
 		public IHttpActionResult Subscribe(PushSubscriptionViewModel sub)
 		{
-			PushSubscription push = new PushSubscription()
+			string userId = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
+			PushSubscription push = _dbContext.PushSubscriptions.Find(userId);
+			
+			if (push == null)
 			{
-				endpoint = sub.endpoint,
-				expirationTime = sub.expirationTime,
-				userId = User.Identity.GetUserId(),
-				p256dh = sub.keys.p256dh,
-				auth = sub.keys.auth
-			};
-			_dbContext.PushSubscriptions.Add(push);
+				push = new PushSubscription()
+				{
+					endpoint = sub.endpoint,
+					expirationTime = sub.expirationTime,
+					userId = userId,
+					p256dh = sub.keys.p256dh,
+					auth = sub.keys.auth
+				};
+				_dbContext.PushSubscriptions.Add(push);
+			}
 
 			try
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
 				return BadRequest("Error");
 			}
