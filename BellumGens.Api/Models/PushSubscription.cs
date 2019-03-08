@@ -19,4 +19,20 @@ namespace BellumGens.Api.Models
 		[ForeignKey("userId")]
 		public virtual ApplicationUser User { get; set; }
 	}
+
+	public class PushSubscriptionViewModel
+	{
+		public string endpoint { get; set; }
+
+		public TimeSpan expirationTime { get; set; }
+
+		public Keys keys { get; set; }
+
+		public class Keys
+		{
+			public string p256dh { get; set; }
+
+			public string auth { get; set; }
+		}
+	}
 }
