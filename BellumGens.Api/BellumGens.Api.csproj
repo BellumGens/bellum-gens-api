@@ -252,6 +252,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PushController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\TeamsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
@@ -366,8 +367,17 @@
     <Compile Include="Migrations\201902261506160_TeamVisility.Designer.cs">
       <DependentUpon>201902261506160_TeamVisility.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903081300541_PushSubscriptions.cs" />
+    <Compile Include="Migrations\201903081300541_PushSubscriptions.Designer.cs">
+      <DependentUpon>201903081300541_PushSubscriptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903081443432_PushWithUserID.cs" />
+    <Compile Include="Migrations\201903081443432_PushWithUserID.Designer.cs">
+      <DependentUpon>201903081443432_PushWithUserID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
+    <Compile Include="Models\PushSubscription.cs" />
     <Compile Include="Models\ViewModels\CSGOTeamSummaryView.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Application.cs" />
@@ -539,6 +549,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201902261506160_TeamVisility.resx">
       <DependentUpon>201902261506160_TeamVisility.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903081300541_PushSubscriptions.resx">
+      <DependentUpon>201903081300541_PushSubscriptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903081443432_PushWithUserID.resx">
+      <DependentUpon>201903081443432_PushWithUserID.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

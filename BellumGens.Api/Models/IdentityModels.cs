@@ -192,6 +192,8 @@ namespace BellumGens.Api.Models
 
 		public DbSet<UserMessage> Messages { get; set; }
 
+		public DbSet<PushSubscription> PushSubscriptions { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
