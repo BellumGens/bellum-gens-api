@@ -18,7 +18,7 @@ namespace BellumGens.Api.Providers
 		private static readonly string _statsForGameUrl =
 				"https://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid={0}&key={1}&steamid={2}&format=json";
 
-		//private static readonly string _playersUrl = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={0}&steamids={1}";
+		private static readonly string _steamUserUrl = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={0}&steamids={1}";
 
 		private static readonly string _playerDetailsById =
 			"https://steamcommunity.com/profiles/{0}/?xml=1";
@@ -52,6 +52,14 @@ namespace BellumGens.Api.Providers
             steamUser = (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
             return steamUser;
         }
+
+		public static List<SteamUserSummary> GetSteamUsersSummary(string users)
+		{
+			HttpClient client = new HttpClient();
+			var playerDetailsResponse = client.GetStringAsync(string.Format(_steamUserUrl, SteamInfo.Config.steamApiKey, users));
+			SteamUsersSummary result = JsonConvert.DeserializeObject<SteamUsersSummary>(playerDetailsResponse.Result);
+			return result.response.players;
+		}
 
 		public static UserStatsViewModel GetSteamUserDetails(string name)
 		{
@@ -112,12 +120,26 @@ namespace BellumGens.Api.Providers
             return model;
         }
 
-		public static bool VerifyUserIsGroupAdmin(string userid, string groupid)
+		public static SteamGroup GetSteamGroup(string groupid)
 		{
+			if (_cache[groupid] is SteamGroup)
+			{
+				return _cache[groupid] as SteamGroup;
+			}
+
 			HttpClient client = new HttpClient();
 			var playerDetailsResponse = client.GetStreamAsync(string.Format(_groupMembersUrl, groupid));
 			XmlSerializer serializer = new XmlSerializer(typeof(SteamGroup));
 			SteamGroup group = (SteamGroup)serializer.Deserialize(playerDetailsResponse.Result);
+
+			_cache.Add(groupid, group, null, Cache.NoAbsoluteExpiration, new TimeSpan(168, 0, 0), CacheItemPriority.BelowNormal, null);
+
+			return group;
+		}
+
+		public static bool VerifyUserIsGroupAdmin(string userid, string groupid)
+		{
+			SteamGroup group = SteamServiceProvider.GetSteamGroup(groupid);
 			return group.members[0] == userid;
 		}
 

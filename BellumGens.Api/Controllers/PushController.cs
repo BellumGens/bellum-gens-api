@@ -40,7 +40,7 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch
 			{
 				return BadRequest("Error");
 			}
