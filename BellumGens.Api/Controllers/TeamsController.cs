@@ -8,7 +8,6 @@ using Microsoft.Owin.Security.Cookies;
 using System;
 using Microsoft.AspNet.Identity;
 using BellumGens.Api.Providers;
-using System.Data.Entity;
 
 namespace BellumGens.Api.Controllers
 {
@@ -53,6 +52,17 @@ namespace BellumGens.Api.Controllers
 			}
 			List<TeamMapPool> mapPool = _dbContext.TeamMapPool.Where(t => t.TeamId == teamId).ToList();
 			return Ok(mapPool);
+		}
+
+		[Route("SteamMembers")]
+		public IHttpActionResult GetSteamGroupMembers(Guid teamId, string members)
+		{
+			if (!this.UserIsTeamAdmin(teamId))
+			{
+				return BadRequest("User is not an admin for this team...");
+			}
+			List<SteamUserSummary> groupMembers = SteamServiceProvider.GetSteamUsersSummary(members);
+			return Ok(groupMembers);
 		}
 
 		[Route("Team")]

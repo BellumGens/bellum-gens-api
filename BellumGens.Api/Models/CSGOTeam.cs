@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using BellumGens.Api.Providers;
+using Newtonsoft.Json;
+using SteamModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,6 +10,8 @@ namespace BellumGens.Api.Models
 {
 	public class CSGOTeam
 	{
+		private SteamGroup _steamGroup;
+
         public CSGOTeam() : base()
         {
             this.Members = new HashSet<TeamMember>();
@@ -115,5 +119,18 @@ namespace BellumGens.Api.Models
 
 		[JsonIgnore]
 		public virtual ICollection<TeamMapPool> MapPool { get; set; }
+
+		[NotMapped]
+		public virtual SteamGroup SteamGroup
+		{
+			get
+			{
+				if (SteamGroupId != null && _steamGroup == null)
+				{
+					_steamGroup = SteamServiceProvider.GetSteamGroup(SteamGroupId);
+				}
+				return _steamGroup;
+			}
+		}
 	}
 }

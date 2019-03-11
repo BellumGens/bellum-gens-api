@@ -52,8 +52,8 @@
     <Reference Include="Owin.Security.Providers.Steam, Version=2.0.0.0, Culture=neutral, PublicKeyToken=1328b8c16b108c43, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.Security.Providers.Steam.2.24.0\lib\net45\Owin.Security.Providers.Steam.dll</HintPath>
     </Reference>
-    <Reference Include="SteamModels, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SteamModels.1.2.1\lib\portable45-net45+win8+wp8+wpa81\SteamModels.dll</HintPath>
+    <Reference Include="SteamModels, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SteamModels.1.2.2\lib\portable45-net45+win8+wp8+wpa81\SteamModels.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
