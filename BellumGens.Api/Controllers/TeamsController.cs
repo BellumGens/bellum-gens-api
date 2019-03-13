@@ -238,16 +238,34 @@ namespace BellumGens.Api.Controllers
 			CSGOTeam teamEntity = _dbContext.Teams.Find(team.TeamId);
 			ApplicationUser invitedUserEntity = _dbContext.Users.Find(userId);
 			ApplicationUser invitingUserEntity = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
-			teamEntity.Invites.Add(new TeamInvite()
+			TeamInvite invite = _dbContext.TeamInvites.Find(invitingUserEntity.Id, invitedUserEntity.Id, teamEntity.TeamId);
+			
+			if (invite != null)
 			{
-				InvitedUser = invitedUserEntity,
-				InvitingUser = invitingUserEntity
-			});
+				if (invite.State != NotificationState.NotSeen)
+				{
+					invite.State = NotificationState.NotSeen;
+				}
+			}
+			else
+			{
+				invite = new TeamInvite()
+				{
+					InvitedUser = invitedUserEntity,
+					InvitingUser = invitingUserEntity
+				};
+				teamEntity.Invites.Add(invite);
+			}
 			try
 			{
 				_dbContext.SaveChanges();
+				BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(invitedUserEntity.Id);
+				if (sub != null)
+				{
+					NotificationsService.SendNotification(sub, invite);
+				}
 			}
-			catch
+			catch (Exception e)
 			{
 				return BadRequest("Something went wrong...");
 			}

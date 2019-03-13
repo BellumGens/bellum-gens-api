@@ -35,6 +35,13 @@ namespace BellumGens.Api.Controllers
 				};
 				_dbContext.PushSubscriptions.Add(push);
 			}
+			else
+			{
+				push.endpoint = sub.endpoint;
+				push.expirationTime = sub.expirationTime;
+				push.p256dh = sub.keys.p256dh;
+				push.auth = sub.keys.auth;
+			}
 
 			try
 			{
