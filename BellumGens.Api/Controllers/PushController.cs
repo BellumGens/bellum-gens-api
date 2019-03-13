@@ -18,14 +18,14 @@ namespace BellumGens.Api.Controllers
 
 		[HttpPost]
 		[Route("Subscribe")]
-		public IHttpActionResult Subscribe(PushSubscriptionViewModel sub)
+		public IHttpActionResult Subscribe(BellumGensPushSubscriptionViewModel sub)
 		{
 			string userId = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
-			PushSubscription push = _dbContext.PushSubscriptions.Find(userId);
+			BellumGensPushSubscription push = _dbContext.PushSubscriptions.Find(userId);
 			
 			if (push == null)
 			{
-				push = new PushSubscription()
+				push = new BellumGensPushSubscription()
 				{
 					endpoint = sub.endpoint,
 					expirationTime = sub.expirationTime,

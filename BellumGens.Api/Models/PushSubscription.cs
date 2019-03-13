@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Models
 {
-	public class PushSubscription
+	public class BellumGensPushSubscription
 	{
 		[Key]
 		public string userId { get; set; }
@@ -20,7 +20,7 @@ namespace BellumGens.Api.Models
 		public virtual ApplicationUser User { get; set; }
 	}
 
-	public class PushSubscriptionViewModel
+	public class BellumGensPushSubscriptionViewModel
 	{
 		public string endpoint { get; set; }
 
