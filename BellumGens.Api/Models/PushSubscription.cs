@@ -45,8 +45,8 @@ namespace BellumGens.Api.Models
 			notification = new BellumGensNotification()
 			{
 				title = $"You have been invited to join team {invite.TeamInfo.TeamName}",
-				image = invite.TeamInfo.TeamAvatar,
-				data = invite,
+				icon = invite.TeamInfo.TeamAvatar,
+				data = invite.TeamId,
 				renotify = true,
 				actions = new List<BellumGensNotificationAction>()
 				{
@@ -57,6 +57,69 @@ namespace BellumGens.Api.Models
 					}
 				}
 			};
+		}
+
+		public BellumGensNotificationWrapper(TeamInvite invite, NotificationState state)
+		{
+			if (state == NotificationState.Accepted)
+			{
+				notification = new BellumGensNotification()
+				{
+					title = $"{invite.InvitedUser.SteamUser.steamID} has accepted your invitation to join {invite.TeamInfo.TeamName}!",
+					icon = invite.InvitedUser.SteamUser.avatarFull,
+					data = invite.InvitedUserId,
+					renotify = true,
+					actions = new List<BellumGensNotificationAction>()
+					{
+						new BellumGensNotificationAction()
+						{
+							action = "viewuser",
+							title = "View player"
+						}
+					}
+				};
+			}
+		}
+
+		public BellumGensNotificationWrapper(TeamApplication application)
+		{
+			notification = new BellumGensNotification()
+			{
+				title = $"{application.UserInfo.steamID} has applied to join {application.Team.TeamName}",
+				icon = application.UserInfo.avatarFull,
+				data = application.UserInfo.steamID64,
+				renotify = true,
+				actions = new List<BellumGensNotificationAction>()
+				{
+					new BellumGensNotificationAction()
+					{
+						action = "viewuser",
+						title = "View player"
+					}
+				}
+			};
+		}
+
+		public BellumGensNotificationWrapper(TeamApplication application, NotificationState state)
+		{
+			if (state == NotificationState.Accepted)
+			{
+				notification = new BellumGensNotification()
+				{
+					title = $"You have been accepted to join team {application.Team.TeamName}",
+					icon = application.Team.TeamAvatar,
+					data = application.TeamId,
+					renotify = true,
+					actions = new List<BellumGensNotificationAction>()
+					{
+						new BellumGensNotificationAction()
+						{
+							action = "viewteam",
+							title = "View team"
+						}
+					}
+				};
+			}
 		}
 
 		public BellumGensNotification notification { get; set; }
@@ -77,11 +140,11 @@ namespace BellumGens.Api.Models
 
 		public string badge { get; set; } = "https://bellumgens.com/assets/icons/icon-72x72.png";
 
-		public string icon { get; set; } = "https://bellumgens.com/assets/icons/icon-144x144.png";
+		public string icon { get; set; }
 
 		public string tag { get; set; }
 
-		public string image { get; set; }
+		public string image { get; set; } = "https://bellumgens.com/assets/icons/icon-192x192.png";
 
 		public object data { get; set; }
 

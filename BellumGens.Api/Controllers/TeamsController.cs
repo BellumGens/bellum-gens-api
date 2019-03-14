@@ -259,15 +259,15 @@ namespace BellumGens.Api.Controllers
 			try
 			{
 				_dbContext.SaveChanges();
-				BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(invitedUserEntity.Id);
-				if (sub != null)
-				{
-					NotificationsService.SendNotification(sub, invite);
-				}
 			}
-			catch (Exception e)
+			catch
 			{
 				return BadRequest("Something went wrong...");
+			}
+			BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(invitedUserEntity.Id);
+			if (sub != null)
+			{
+				NotificationsService.SendNotification(sub, invite);
 			}
 			return Ok(userId);
 		}
@@ -286,6 +286,12 @@ namespace BellumGens.Api.Controllers
 				catch
 				{
 					return BadRequest("Something went wrong...");
+				}
+				List<TeamMember> admins = _dbContext.Teams.Find(application.TeamId).Members.Where(m => m.IsAdmin).ToList();
+				List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => admins.Any(a => a.UserId == s.userId)).ToList();
+				foreach (BellumGensPushSubscription sub in subs)
+				{
+					NotificationsService.SendNotification(sub, application);
 				}
 				return Ok(application);
 			}
@@ -330,6 +336,12 @@ namespace BellumGens.Api.Controllers
 			catch
 			{
 				return BadRequest("Something went wrong...");
+			}
+
+			BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(entity.ApplicantId);
+			if (sub != null)
+			{
+				NotificationsService.SendNotification(sub, application, NotificationState.Accepted);
 			}
 			return Ok(entity);
 		}
