@@ -55,31 +55,38 @@ namespace BellumGens.Api.Models
 			{
 				new TeamMapPool
 				{
-					Map = CSGOMaps.Cache
+					Map = CSGOMaps.Cache,
+					IsPlayed = true
 				},
 				new TeamMapPool
 				{
-					Map = CSGOMaps.Dust2
+					Map = CSGOMaps.Dust2,
+					IsPlayed = true
 				},
 				new TeamMapPool
 				{
-					Map = CSGOMaps.Inferno
+					Map = CSGOMaps.Inferno,
+					IsPlayed = true
 				},
 				new TeamMapPool
 				{
-					Map = CSGOMaps.Mirage
+					Map = CSGOMaps.Mirage,
+					IsPlayed = true
 				},
 				new TeamMapPool
 				{
-					Map = CSGOMaps.Nuke
+					Map = CSGOMaps.Nuke,
+					IsPlayed = true
 				},
 				new TeamMapPool
 				{
-					Map = CSGOMaps.Overpass
+					Map = CSGOMaps.Overpass,
+					IsPlayed = true
 				},
 				new TeamMapPool
 				{
-					Map = CSGOMaps.Train
+					Map = CSGOMaps.Train,
+					IsPlayed = true
 				}
 			};
 

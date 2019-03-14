@@ -238,11 +238,24 @@ namespace BellumGens.Api.Controllers
 			CSGOTeam teamEntity = _dbContext.Teams.Find(team.TeamId);
 			ApplicationUser invitedUserEntity = _dbContext.Users.Find(userId);
 			ApplicationUser invitingUserEntity = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
-			teamEntity.Invites.Add(new TeamInvite()
+			TeamInvite invite = _dbContext.TeamInvites.Find(invitingUserEntity.Id, invitedUserEntity.Id, teamEntity.TeamId);
+			
+			if (invite != null)
 			{
-				InvitedUser = invitedUserEntity,
-				InvitingUser = invitingUserEntity
-			});
+				if (invite.State != NotificationState.NotSeen)
+				{
+					invite.State = NotificationState.NotSeen;
+				}
+			}
+			else
+			{
+				invite = new TeamInvite()
+				{
+					InvitedUser = invitedUserEntity,
+					InvitingUser = invitingUserEntity
+				};
+				teamEntity.Invites.Add(invite);
+			}
 			try
 			{
 				_dbContext.SaveChanges();
@@ -250,6 +263,11 @@ namespace BellumGens.Api.Controllers
 			catch
 			{
 				return BadRequest("Something went wrong...");
+			}
+			BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(invitedUserEntity.Id);
+			if (sub != null)
+			{
+				NotificationsService.SendNotification(sub, invite);
 			}
 			return Ok(userId);
 		}
@@ -268,6 +286,12 @@ namespace BellumGens.Api.Controllers
 				catch
 				{
 					return BadRequest("Something went wrong...");
+				}
+				List<TeamMember> admins = _dbContext.Teams.Find(application.TeamId).Members.Where(m => m.IsAdmin).ToList();
+				List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => admins.Any(a => a.UserId == s.userId)).ToList();
+				foreach (BellumGensPushSubscription sub in subs)
+				{
+					NotificationsService.SendNotification(sub, application);
 				}
 				return Ok(application);
 			}
@@ -312,6 +336,12 @@ namespace BellumGens.Api.Controllers
 			catch
 			{
 				return BadRequest("Something went wrong...");
+			}
+
+			BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(entity.ApplicantId);
+			if (sub != null)
+			{
+				NotificationsService.SendNotification(sub, application, NotificationState.Accepted);
 			}
 			return Ok(entity);
 		}

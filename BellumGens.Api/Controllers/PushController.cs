@@ -18,14 +18,14 @@ namespace BellumGens.Api.Controllers
 
 		[HttpPost]
 		[Route("Subscribe")]
-		public IHttpActionResult Subscribe(PushSubscriptionViewModel sub)
+		public IHttpActionResult Subscribe(BellumGensPushSubscriptionViewModel sub)
 		{
 			string userId = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
-			PushSubscription push = _dbContext.PushSubscriptions.Find(userId);
+			BellumGensPushSubscription push = _dbContext.PushSubscriptions.Find(userId);
 			
 			if (push == null)
 			{
-				push = new PushSubscription()
+				push = new BellumGensPushSubscription()
 				{
 					endpoint = sub.endpoint,
 					expirationTime = sub.expirationTime,
@@ -34,6 +34,13 @@ namespace BellumGens.Api.Controllers
 					auth = sub.keys.auth
 				};
 				_dbContext.PushSubscriptions.Add(push);
+			}
+			else
+			{
+				push.endpoint = sub.endpoint;
+				push.expirationTime = sub.expirationTime;
+				push.p256dh = sub.keys.p256dh;
+				push.auth = sub.keys.auth;
 			}
 
 			try
