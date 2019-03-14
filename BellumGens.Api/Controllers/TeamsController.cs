@@ -278,7 +278,18 @@ namespace BellumGens.Api.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				_dbContext.TeamApplications.Add(application);
+				TeamApplication entity = _dbContext.TeamApplications.Find(application.ApplicantId, application.TeamId);
+				if (entity != null)
+				{
+					entity.Message = application.Message;
+					entity.Sent = DateTimeOffset.Now;
+					entity.State = NotificationState.NotSeen;
+				}
+				else
+				{
+					_dbContext.TeamApplications.Add(application);
+				}
+
 				try
 				{
 					_dbContext.SaveChanges();
