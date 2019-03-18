@@ -59,6 +59,25 @@ namespace BellumGens.Api.Controllers
             return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
         }
 
+		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		[Route("UserInfo")]
+		[HttpPut]
+		public IHttpActionResult UpdateUserInfo(UserPreferencesViewModel preferences)
+		{
+			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			user.Email = preferences.email;
+			user.SearchVisibile = preferences.searchVisible;
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok("Ok");
+		}
+
 		// POST api/Account/Logout
 		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[Route("Logout")]
