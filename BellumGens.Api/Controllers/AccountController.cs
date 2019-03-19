@@ -75,7 +75,7 @@ namespace BellumGens.Api.Controllers
 				{
 					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 					var callbackUrl = Url.Link("Default", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
-					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"To confirm your email address click on this <a href='{callbackUrl}'>link</a>.");
+					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"To confirm your email address click on this <a href='{callbackUrl}' target='_blank'>link</a>.");
 				}
 			}
 			catch
@@ -90,14 +90,14 @@ namespace BellumGens.Api.Controllers
 		{
 			if (userId == null || code == null)
 			{
-				return Redirect(CORSConfig.allowedOrigins + "/confirmerror");
+				return Redirect(CORSConfig.allowedOrigins + "/emailconfirm/error");
 			}
 			var result = UserManager.ConfirmEmail(userId, code);
 			if (result.Succeeded)
 			{
-				return Redirect(CORSConfig.allowedOrigins + "/emailconfirmed");
+				return Redirect(CORSConfig.allowedOrigins + "/emailconfirm");
 			}
-			return Redirect(CORSConfig.allowedOrigins + "/confirmerror");
+			return Redirect(CORSConfig.allowedOrigins + "/emailconfirm/error");
 		}
 
 		// POST api/Account/Logout
