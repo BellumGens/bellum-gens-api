@@ -18,16 +18,14 @@ namespace BellumGens.Api.Providers
 			msg.Body = message.Body;
 			msg.IsBodyHtml = true;
 
-			using (SmtpClient client = new SmtpClient())
-			{
-				client.UseDefaultCredentials = false;
-				client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["emailUsername"], ConfigurationManager.AppSettings["emailPassword"]);
-				client.Port = 587;
-				client.Host = "smtp.office365.com";
-				client.DeliveryMethod = SmtpDeliveryMethod.Network;
-				client.EnableSsl = true;
-				return client.SendMailAsync(msg);
-			}
+            SmtpClient client = new SmtpClient();
+			client.UseDefaultCredentials = false;
+			client.Credentials = new NetworkCredential(ConfigurationManager.AppSettings["emailUsername"], ConfigurationManager.AppSettings["emailPassword"]);
+			client.Port = 587;
+			client.Host = "smtp.office365.com";
+			client.DeliveryMethod = SmtpDeliveryMethod.Network;
+			client.EnableSsl = true;
+			return client.SendMailAsync(msg);
 		}
 	}
 }

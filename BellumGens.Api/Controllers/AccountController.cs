@@ -74,8 +74,8 @@ namespace BellumGens.Api.Controllers
 				if (newEmail)
 				{
 					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-					var callbackUrl = Url.Link("Default", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
-					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"To confirm your email address click on this <a href='{callbackUrl}' target='_blank'>link</a>.");
+					var callbackUrl = Url.Link("DefaultApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
+					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"Greetings,<br /><br />To confirm your email address click on this <a href='{callbackUrl}' target='_blank'>link</a>.<br /><br />The Bellum Gens team");
 				}
 			}
 			catch
@@ -86,6 +86,8 @@ namespace BellumGens.Api.Controllers
 		}
 
 		[AllowAnonymous]
+        [HttpGet]
+        [Route("ConfirmEmail")]
 		public IHttpActionResult ConfirmEmail(string userId, string code)
 		{
 			if (userId == null || code == null)
