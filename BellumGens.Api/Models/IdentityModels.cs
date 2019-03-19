@@ -102,6 +102,8 @@ namespace BellumGens.Api.Models
 
 		public string ESEA { get; set; }
 
+		public bool SearchVisible { get; set; }
+
 		public PlaystyleRole PreferredPrimaryRole { get; set; }
 
 		public PlaystyleRole PreferredSecondaryRole { get; set; }

@@ -26,7 +26,7 @@ namespace BellumGens.Api.Controllers
 			if (!string.IsNullOrEmpty(name))
 			{
 				results.Teams = _dbContext.Teams.Where(t => t.Visible && t.TeamName.Contains(name)).ToList();
-				List<ApplicationUser> activeUsers = _dbContext.Users.Where(u => u.UserName.Contains(name)).ToList();
+				List<ApplicationUser> activeUsers = _dbContext.Users.Where(u => u.SearchVisible && u.UserName.Contains(name)).ToList();
 				foreach (ApplicationUser user in activeUsers)
 				{
 					results.Players.Add(SteamServiceProvider.GetSteamUserDetails(user));
@@ -79,7 +79,7 @@ namespace BellumGens.Api.Controllers
 
 			if (overlap <= 0 && role == null)
 			{
-				var appusers = _dbContext.Users.OrderBy(u => u.Id).Take(50).ToList();
+				var appusers = _dbContext.Users.Where(u => u.SearchVisible).OrderBy(u => u.Id).Take(50).ToList();
 				foreach (ApplicationUser user in appusers)
 				{
 					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
@@ -91,11 +91,11 @@ namespace BellumGens.Api.Controllers
 
 			if (role != null)
 			{
-				users = _dbContext.Users.Where(u => u.PreferredPrimaryRole == role || u.PreferredSecondaryRole == role).ToList();
+				users = _dbContext.Users.Where(u => u.SearchVisible && (u.PreferredPrimaryRole == role || u.PreferredSecondaryRole == role)).ToList();
 			}
 			else
 			{
-				users = _dbContext.Users.Where(u => u.Availability.Any(d => d.Available)).ToList();
+				users = _dbContext.Users.Where(u => u.SearchVisible && u.Availability.Any(d => d.Available)).ToList();
 			}
 			if (overlap > 0)
 			{

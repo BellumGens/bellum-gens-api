@@ -59,6 +59,47 @@ namespace BellumGens.Api.Controllers
             return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
         }
 
+		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		[Route("UserInfo")]
+		[HttpPut]
+		public async Task<IHttpActionResult> UpdateUserInfo(UserPreferencesViewModel preferences)
+		{
+			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			bool newEmail = !string.IsNullOrEmpty(preferences.email) && preferences.email != user.Email && !user.EmailConfirmed;
+			user.Email = preferences.email;
+			user.SearchVisible = preferences.searchVisible;
+			try
+			{
+				_dbContext.SaveChanges();
+				if (newEmail)
+				{
+					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+					var callbackUrl = Url.Link("Default", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
+					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"To confirm your email address click on this <a href='{callbackUrl}' target='_blank'>link</a>.");
+				}
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok(preferences);
+		}
+
+		[AllowAnonymous]
+		public IHttpActionResult ConfirmEmail(string userId, string code)
+		{
+			if (userId == null || code == null)
+			{
+				return Redirect(CORSConfig.allowedOrigins + "/emailconfirm/error");
+			}
+			var result = UserManager.ConfirmEmail(userId, code);
+			if (result.Succeeded)
+			{
+				return Redirect(CORSConfig.allowedOrigins + "/emailconfirm");
+			}
+			return Redirect(CORSConfig.allowedOrigins + "/emailconfirm/error");
+		}
+
 		// POST api/Account/Logout
 		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[Route("Logout")]
@@ -68,125 +109,149 @@ namespace BellumGens.Api.Controllers
             return Ok();
         }
 
-        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-        //[Route("ManageInfo")]
-        //public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
-        //{
-        //    IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+		// DELETE api/Account/Delete
+		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		[HttpDelete]
+		[Route("Delete")]
+		public IHttpActionResult Delete(string userid)
+		{
+			if (SteamServiceProvider.SteamUserId(User.Identity.GetUserId()) != userid)
+			{
+				return BadRequest("User account mismatch...");
+			}
+			Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+			ApplicationUser user = _dbContext.Users.Find(userid);
+			_dbContext.Users.Remove(user);
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok("Ok");
+		}
 
-        //    if (user == null)
-        //    {
-        //        return null;
-        //    }
+		// GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
+		//[Route("ManageInfo")]
+		//public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
+		//{
+		//    IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
-        //    List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
+		//    if (user == null)
+		//    {
+		//        return null;
+		//    }
 
-        //    foreach (IdentityUserLogin linkedAccount in user.Logins)
-        //    {
-        //        logins.Add(new UserLoginInfoViewModel
-        //        {
-        //            LoginProvider = linkedAccount.LoginProvider,
-        //            ProviderKey = linkedAccount.ProviderKey
-        //        });
-        //    }
+		//    List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
 
-        //    if (user.PasswordHash != null)
-        //    {
-        //        logins.Add(new UserLoginInfoViewModel
-        //        {
-        //            LoginProvider = LocalLoginProvider,
-        //            ProviderKey = user.UserName,
-        //        });
-        //    }
+		//    foreach (IdentityUserLogin linkedAccount in user.Logins)
+		//    {
+		//        logins.Add(new UserLoginInfoViewModel
+		//        {
+		//            LoginProvider = linkedAccount.LoginProvider,
+		//            ProviderKey = linkedAccount.ProviderKey
+		//        });
+		//    }
 
-        //    return new ManageInfoViewModel
-        //    {
-        //        LocalLoginProvider = LocalLoginProvider,
-        //        Email = user.UserName,
-        //        Logins = logins,
-        //        ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
-        //    };
-        //}
+		//    if (user.PasswordHash != null)
+		//    {
+		//        logins.Add(new UserLoginInfoViewModel
+		//        {
+		//            LoginProvider = LocalLoginProvider,
+		//            ProviderKey = user.UserName,
+		//        });
+		//    }
 
-        // POST api/Account/ChangePassword
-        //[Route("ChangePassword")]
-        //public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+		//    return new ManageInfoViewModel
+		//    {
+		//        LocalLoginProvider = LocalLoginProvider,
+		//        Email = user.UserName,
+		//        Logins = logins,
+		//        ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
+		//    };
+		//}
 
-        //    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
-        //        model.NewPassword);
-            
-        //    if (!result.Succeeded)
-        //    {
-        //        return GetErrorResult(result);
-        //    }
+		// POST api/Account/ChangePassword
+		//[Route("ChangePassword")]
+		//public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
+		//{
+		//    if (!ModelState.IsValid)
+		//    {
+		//        return BadRequest(ModelState);
+		//    }
 
-        //    return Ok();
-        //}
+		//    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
+		//        model.NewPassword);
 
-        // POST api/Account/SetPassword
-        //[Route("SetPassword")]
-        //public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+		//    if (!result.Succeeded)
+		//    {
+		//        return GetErrorResult(result);
+		//    }
 
-        //    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+		//    return Ok();
+		//}
 
-        //    if (!result.Succeeded)
-        //    {
-        //        return GetErrorResult(result);
-        //    }
+		// POST api/Account/SetPassword
+		//[Route("SetPassword")]
+		//public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
+		//{
+		//    if (!ModelState.IsValid)
+		//    {
+		//        return BadRequest(ModelState);
+		//    }
 
-        //    return Ok();
-        //}
+		//    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
 
-        // POST api/Account/AddExternalLogin
-        //[Route("AddExternalLogin")]
-        //public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+		//    if (!result.Succeeded)
+		//    {
+		//        return GetErrorResult(result);
+		//    }
 
-        //    Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+		//    return Ok();
+		//}
 
-        //    AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
+		// POST api/Account/AddExternalLogin
+		//[Route("AddExternalLogin")]
+		//public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
+		//{
+		//    if (!ModelState.IsValid)
+		//    {
+		//        return BadRequest(ModelState);
+		//    }
 
-        //    if (ticket == null || ticket.Identity == null || (ticket.Properties != null
-        //        && ticket.Properties.ExpiresUtc.HasValue
-        //        && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
-        //    {
-        //        return BadRequest("External login failure.");
-        //    }
+		//    Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
-        //    ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
+		//    AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
 
-        //    if (externalData == null)
-        //    {
-        //        return BadRequest("The external login is already associated with an account.");
-        //    }
+		//    if (ticket == null || ticket.Identity == null || (ticket.Properties != null
+		//        && ticket.Properties.ExpiresUtc.HasValue
+		//        && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
+		//    {
+		//        return BadRequest("External login failure.");
+		//    }
 
-        //    IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
-        //        new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
+		//    ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
 
-        //    if (!result.Succeeded)
-        //    {
-        //        return GetErrorResult(result);
-        //    }
+		//    if (externalData == null)
+		//    {
+		//        return BadRequest("The external login is already associated with an account.");
+		//    }
 
-        //    return Ok();
-        //}
+		//    IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
+		//        new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
 
-        // POST api/Account/RemoveLogin
-        [Route("RemoveLogin")]
+		//    if (!result.Succeeded)
+		//    {
+		//        return GetErrorResult(result);
+		//    }
+
+		//    return Ok();
+		//}
+
+		// POST api/Account/RemoveLogin
+		[Route("RemoveLogin")]
         public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -378,34 +443,6 @@ namespace BellumGens.Api.Controllers
 		
 			return await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(info.LoginProvider, info.ProviderKey));
 		}
-
-		//private void MarkUserOnline(string username)
-		//{
-		//	Cache cache = HttpContext.Current.Cache;
-		//	lock (cache)
-		//	{
-		//		if (!(cache["activeUsers"] is List<string> activeUsers))
-		//			activeUsers = new List<string>();
-		//		if (!activeUsers.Contains(username))
-		//		{
-		//			activeUsers.Add(username);
-		//			cache["activeUsers"] = activeUsers;
-		//		}
-		//	}
-		//}
-
-		//private void MarkUserOffline(string username)
-		//{
-		//	Cache cache = HttpContext.Current.Cache;
-		//	lock(cache)
-		//	{
-		//		if (!(cache["activeUsers"] is List<string> activeUsers))
-		//			activeUsers = new List<string>();
-		//		activeUsers.Remove(username);
-		//		cache["activeUsers"] = activeUsers;
-		//	}
-		//	SteamServiceProvider.InvalidateUserCache(username);
-		//}
 
 		private IAuthenticationManager Authentication
         {

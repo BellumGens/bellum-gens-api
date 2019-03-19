@@ -394,6 +394,10 @@
     <Compile Include="Migrations\201903081443432_PushWithUserID.Designer.cs">
       <DependentUpon>201903081443432_PushWithUserID.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201903190851591_UserSearchVisibility.cs" />
+    <Compile Include="Migrations\201903190851591_UserSearchVisibility.Designer.cs">
+      <DependentUpon>201903190851591_UserSearchVisibility.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\PushSubscription.cs" />
@@ -417,9 +421,11 @@
     <Compile Include="Models\UserAvailability.cs" />
     <Compile Include="Models\UserMessage.cs" />
     <Compile Include="Models\ViewModels\SearchResultViewModel.cs" />
+    <Compile Include="Models\ViewModels\UserPreferencesViewModel.cs" />
     <Compile Include="Models\ViewModels\UserStatsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Providers\EmailServiceProvider.cs" />
     <Compile Include="Providers\NotificationsService.cs" />
     <Compile Include="Providers\SteamServiceProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
@@ -575,6 +581,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903081443432_PushWithUserID.resx">
       <DependentUpon>201903081443432_PushWithUserID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903190851591_UserSearchVisibility.resx">
+      <DependentUpon>201903190851591_UserSearchVisibility.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
