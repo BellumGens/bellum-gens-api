@@ -62,20 +62,42 @@ namespace BellumGens.Api.Controllers
 		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[Route("UserInfo")]
 		[HttpPut]
-		public IHttpActionResult UpdateUserInfo(UserPreferencesViewModel preferences)
+		public async Task<IHttpActionResult> UpdateUserInfo(UserPreferencesViewModel preferences)
 		{
 			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			bool newEmail = !string.IsNullOrEmpty(preferences.email) && preferences.email != user.Email && !user.EmailConfirmed;
 			user.Email = preferences.email;
 			user.SearchVisible = preferences.searchVisible;
 			try
 			{
 				_dbContext.SaveChanges();
+				if (newEmail)
+				{
+					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+					var callbackUrl = Url.Link("Default", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
+					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"To confirm your email address click on this <a href='{callbackUrl}'>link</a>.");
+				}
 			}
 			catch
 			{
 				return BadRequest("Something went wrong...");
 			}
 			return Ok(preferences);
+		}
+
+		[AllowAnonymous]
+		public IHttpActionResult ConfirmEmail(string userId, string code)
+		{
+			if (userId == null || code == null)
+			{
+				return Redirect(CORSConfig.allowedOrigins + "/confirmerror");
+			}
+			var result = UserManager.ConfirmEmail(userId, code);
+			if (result.Succeeded)
+			{
+				return Redirect(CORSConfig.allowedOrigins + "/emailconfirmed");
+			}
+			return Redirect(CORSConfig.allowedOrigins + "/confirmerror");
 		}
 
 		// POST api/Account/Logout

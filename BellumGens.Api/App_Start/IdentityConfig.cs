@@ -4,6 +4,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using BellumGens.Api.Models;
+using BellumGens.Api.Providers;
 
 namespace BellumGens.Api
 {
@@ -11,14 +12,15 @@ namespace BellumGens.Api
 
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser> store)
+        public ApplicationUserManager(IUserStore<ApplicationUser> store, IIdentityMessageService emailService)
             : base(store)
         {
+			EmailService = emailService;
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<BellumGensDbContext>()));
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<BellumGensDbContext>()), new EmailService());
 			// Configure validation logic for usernames
 			//manager.UserValidator = new UserValidator<ApplicationUser>(manager)
 			//{
@@ -42,4 +44,12 @@ namespace BellumGens.Api
             return manager;
         }
     }
+
+	public class EmailService : IIdentityMessageService
+	{
+		public Task SendAsync(IdentityMessage message)
+		{
+			return EmailServiceProvider.SendConfirmationEmail(message);
+		}
+	}
 }

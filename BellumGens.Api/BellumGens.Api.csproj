@@ -425,6 +425,7 @@
     <Compile Include="Models\ViewModels\UserStatsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Providers\EmailServiceProvider.cs" />
     <Compile Include="Providers\NotificationsService.cs" />
     <Compile Include="Providers\SteamServiceProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
