@@ -66,7 +66,7 @@ namespace BellumGens.Api.Controllers
 		{
 			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
 			user.Email = preferences.email;
-			user.SearchVisibile = preferences.searchVisible;
+			user.SearchVisible = preferences.searchVisible;
 			try
 			{
 				_dbContext.SaveChanges();
@@ -75,7 +75,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok("Ok");
+			return Ok(preferences);
 		}
 
 		// POST api/Account/Logout

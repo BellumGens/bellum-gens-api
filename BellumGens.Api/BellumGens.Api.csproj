@@ -394,9 +394,9 @@
     <Compile Include="Migrations\201903081443432_PushWithUserID.Designer.cs">
       <DependentUpon>201903081443432_PushWithUserID.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201903181341416_UserSearchVisibility.cs" />
-    <Compile Include="Migrations\201903181341416_UserSearchVisibility.Designer.cs">
-      <DependentUpon>201903181341416_UserSearchVisibility.cs</DependentUpon>
+    <Compile Include="Migrations\201903190851591_UserSearchVisibility.cs" />
+    <Compile Include="Migrations\201903190851591_UserSearchVisibility.Designer.cs">
+      <DependentUpon>201903190851591_UserSearchVisibility.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -581,8 +581,8 @@
     <EmbeddedResource Include="Migrations\201903081443432_PushWithUserID.resx">
       <DependentUpon>201903081443432_PushWithUserID.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201903181341416_UserSearchVisibility.resx">
-      <DependentUpon>201903181341416_UserSearchVisibility.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201903190851591_UserSearchVisibility.resx">
+      <DependentUpon>201903190851591_UserSearchVisibility.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

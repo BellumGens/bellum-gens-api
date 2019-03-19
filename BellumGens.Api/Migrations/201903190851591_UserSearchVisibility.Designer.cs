@@ -13,7 +13,7 @@ namespace BellumGens.Api.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201903181341416_UserSearchVisibility"; }
+            get { return "201903190851591_UserSearchVisibility"; }
         }
         
         string IMigrationMetadata.Source

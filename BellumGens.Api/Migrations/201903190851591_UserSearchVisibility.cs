@@ -7,12 +7,12 @@ namespace BellumGens.Api.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.AspNetUsers", "SearchVisibile", c => c.Boolean(nullable: false, defaultValue: true));
+            AddColumn("dbo.AspNetUsers", "SearchVisible", c => c.Boolean(nullable: false, defaultValue: true));
         }
         
         public override void Down()
         {
-            DropColumn("dbo.AspNetUsers", "SearchVisibile");
+            DropColumn("dbo.AspNetUsers", "SearchVisible");
         }
     }
 }
