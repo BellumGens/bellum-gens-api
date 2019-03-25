@@ -75,14 +75,14 @@ namespace BellumGens.Api.Controllers
 				{
 					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 					var callbackUrl = Url.Link("DefaultApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
-					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"Greetings,<br /><br />To confirm your email address click on this <a href='{callbackUrl}' target='_blank'>link</a>.<br /><br />The Bellum Gens team");
+					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"Greetings,<br /><br />You have updated your account information on <a href='https://bellumgens.com' target='_blank'>bellumgens.com</a> with your email address.<br /><br />To confirm your email address click on this <a href='{callbackUrl}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>");
 				}
 			}
 			catch
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok(preferences);
+			return Ok(new { newEmail, preferences.email });
 		}
 
 		[AllowAnonymous]
