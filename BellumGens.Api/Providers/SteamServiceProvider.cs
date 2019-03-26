@@ -40,9 +40,9 @@ namespace BellumGens.Api.Providers
 
         public static SteamUser GetSteamUser(string name)
         {
-            if (_cache[name] is UserStatsViewModel)
+            if (_cache.Get(name) is UserStatsViewModel)
             {
-				UserStatsViewModel viewModel = _cache[name] as UserStatsViewModel;
+				UserStatsViewModel viewModel = _cache.Get(name) as UserStatsViewModel;
 				return viewModel.steamUser;
             }
             HttpClient client = new HttpClient();
@@ -63,9 +63,9 @@ namespace BellumGens.Api.Providers
 
 		public static UserStatsViewModel GetSteamUserDetails(string name)
 		{
-			if (_cache[name] is UserStatsViewModel)
+			if (_cache.Get(name) is UserStatsViewModel)
 			{
-				return _cache[name] as UserStatsViewModel;
+				return _cache.Get(name) as UserStatsViewModel;
 			}
 			HttpClient client = new HttpClient();
 			var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
@@ -104,7 +104,7 @@ namespace BellumGens.Api.Providers
 				steamUser = steamUser,
 				userStats = statsForUser
 			};
-			_cache.Add(name, user, null, Cache.NoAbsoluteExpiration, new TimeSpan(48, 0, 0), CacheItemPriority.Normal, null);
+			_cache.Add(name, user, null, DateTime.Now.AddDays(2), Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
 			return user;
 		}
 
@@ -122,9 +122,9 @@ namespace BellumGens.Api.Providers
 
 		public static SteamGroup GetSteamGroup(string groupid)
 		{
-			if (_cache[groupid] is SteamGroup)
+			if (_cache.Get(groupid) is SteamGroup)
 			{
-				return _cache[groupid] as SteamGroup;
+				return _cache.Get(groupid) as SteamGroup;
 			}
 
 			HttpClient client = new HttpClient();
@@ -132,7 +132,7 @@ namespace BellumGens.Api.Providers
 			XmlSerializer serializer = new XmlSerializer(typeof(SteamGroup));
 			SteamGroup group = (SteamGroup)serializer.Deserialize(playerDetailsResponse.Result);
 
-			_cache.Add(groupid, group, null, Cache.NoAbsoluteExpiration, new TimeSpan(168, 0, 0), CacheItemPriority.BelowNormal, null);
+			_cache.Add(groupid, group, null, DateTime.Now.AddDays(7), Cache.NoSlidingExpiration, CacheItemPriority.BelowNormal, null);
 
 			return group;
 		}
@@ -145,7 +145,7 @@ namespace BellumGens.Api.Providers
 
 		public static void InvalidateUserCache(string name)
 		{
-			if (_cache[name] is UserStatsViewModel)
+			if (_cache.Get(name) is UserStatsViewModel)
 			{
 				_cache.Remove(name);
 			}

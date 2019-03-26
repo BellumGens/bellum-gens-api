@@ -26,6 +26,8 @@ namespace BellumGens.Api.Controllers
         private ApplicationUserManager _userManager;
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
 
+		private const string emailConfirmation = "Greetings,<br /><br />You have updated your account information on <a href='https://bellumgens.com' target='_blank'>bellumgens.com</a> with your email address.<br /><br />To confirm your email address click on this <a href='{0}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>";
+
 		public AccountController()
         {
         }
@@ -75,7 +77,7 @@ namespace BellumGens.Api.Controllers
 				{
 					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 					var callbackUrl = Url.Link("DefaultApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
-					await UserManager.SendEmailAsync(user.Id, "Confirm your email", $"Greetings,<br /><br />You have updated your account information on <a href='https://bellumgens.com' target='_blank'>bellumgens.com</a> with your email address.<br /><br />To confirm your email address click on this <a href='{callbackUrl}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>");
+					await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl));
 				}
 			}
 			catch
