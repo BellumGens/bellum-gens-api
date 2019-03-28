@@ -55,10 +55,15 @@ namespace BellumGens.Api.Controllers
 
         // GET api/Account/UserInfo
         [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		[AllowAnonymous]
         [Route("UserInfo")]
         public ApplicationUser GetUserInfo()
         {
-            return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			if (User.Identity.IsAuthenticated)
+			{
+				return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			}
+			return null;
         }
 
 		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
