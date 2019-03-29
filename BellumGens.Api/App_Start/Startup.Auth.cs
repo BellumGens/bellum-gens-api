@@ -39,8 +39,14 @@ namespace BellumGens.Api
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
-				AllowInsecureHttp = true
-			};
+#if DEBUG
+                AllowInsecureHttp = true
+#endif
+
+#if !DEBUG
+                AllowInsecureHttp = false
+#endif
+            };
 
             // Enable the application to use bearer tokens to authenticate users
             app.UseOAuthBearerTokens(OAuthOptions);
