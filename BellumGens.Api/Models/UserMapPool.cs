@@ -28,6 +28,8 @@ namespace BellumGens.Api.Models
 		Mirage,
 		Nuke,
 		Overpass,
-		Train
+		Train,
+		Vertigo,
+		Cobblestone
 	}
 }

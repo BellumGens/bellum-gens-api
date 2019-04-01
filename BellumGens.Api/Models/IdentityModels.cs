@@ -88,6 +88,14 @@ namespace BellumGens.Api.Models
 				new UserMapPool
 				{
 					Map = CSGOMaps.Train
+				},
+				new UserMapPool
+				{
+					Map = CSGOMaps.Vertigo
+				},
+				new UserMapPool
+				{
+					Map = CSGOMaps.Cobblestone
 				}
 			};
 		}

@@ -394,6 +394,14 @@
     <Compile Include="Migrations\201903190851591_UserSearchVisibility.Designer.cs">
       <DependentUpon>201903190851591_UserSearchVisibility.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904010755248_ActiveDuty.cs" />
+    <Compile Include="Migrations\201904010755248_ActiveDuty.Designer.cs">
+      <DependentUpon>201904010755248_ActiveDuty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904010843142_AddingCobble.cs" />
+    <Compile Include="Migrations\201904010843142_AddingCobble.Designer.cs">
+      <DependentUpon>201904010843142_AddingCobble.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\PushSubscription.cs" />
@@ -579,6 +587,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903190851591_UserSearchVisibility.resx">
       <DependentUpon>201903190851591_UserSearchVisibility.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904010755248_ActiveDuty.resx">
+      <DependentUpon>201904010755248_ActiveDuty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904010843142_AddingCobble.resx">
+      <DependentUpon>201904010843142_AddingCobble.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

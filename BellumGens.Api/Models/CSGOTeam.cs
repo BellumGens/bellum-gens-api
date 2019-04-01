@@ -87,6 +87,16 @@ namespace BellumGens.Api.Models
 				{
 					Map = CSGOMaps.Train,
 					IsPlayed = true
+				},
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Vertigo,
+					IsPlayed = true
+				},
+				new TeamMapPool
+				{
+					Map = CSGOMaps.Cobblestone,
+					IsPlayed = true
 				}
 			};
 
