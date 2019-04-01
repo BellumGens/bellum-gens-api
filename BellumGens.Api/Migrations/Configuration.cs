@@ -6,7 +6,7 @@ namespace BellumGens.Api.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
             ContextKey = "BellumGens.Api.Models.BellumGensDbContext";
         }
 
