@@ -36,17 +36,28 @@ namespace BellumGens.Api.Controllers
 		[Route("Strats")]
 		public IHttpActionResult GetTeamStrats(Guid teamId)
 		{
-			if (!this.UserIsTeamMember(teamId))
+			if (!UserIsTeamMember(teamId))
 			{
 				return BadRequest("You're not a member of this team.");
 			}
 			return Ok(_dbContext.Strategies.Where(t => t.TeamId == teamId).ToList());
 		}
 
+		[Route("Strat")]
+		public IHttpActionResult GetTeamStrat(Guid stratId)
+		{
+			TeamStrategy strat = _dbContext.Strategies.Find(stratId);
+			if (strat != null && UserIsTeamMember(strat.TeamId))
+			{
+				return Ok(strat);
+			}
+			return BadRequest("Strat not found or user is not team member.");
+		}
+
 		[Route("MapPool")]
 		public IHttpActionResult GetTeamMapPool(Guid teamId)
 		{
-			if (!this.UserIsTeamMember(teamId))
+			if (!UserIsTeamMember(teamId))
 			{
 				return BadRequest("You're not a member of this team.");
 			}
@@ -57,7 +68,7 @@ namespace BellumGens.Api.Controllers
 		[Route("SteamMembers")]
 		public IHttpActionResult GetSteamGroupMembers(Guid teamId, string members)
 		{
-			if (!this.UserIsTeamAdmin(teamId))
+			if (!UserIsTeamAdmin(teamId))
 			{
 				return BadRequest("User is not an admin for this team...");
 			}
