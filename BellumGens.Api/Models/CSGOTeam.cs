@@ -108,7 +108,6 @@ namespace BellumGens.Api.Models
 		public Guid TeamId { get; set; }
 
         [MaxLength(64)]
-        [Index(IsUnique = true)]
         public string SteamGroupId { get; set; }
 
 		public string TeamName { get; set; }

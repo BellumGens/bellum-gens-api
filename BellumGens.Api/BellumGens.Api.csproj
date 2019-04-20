@@ -402,6 +402,18 @@
     <Compile Include="Migrations\201904010843142_AddingCobble.Designer.cs">
       <DependentUpon>201904010843142_AddingCobble.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904101244550_StrategyImage.cs" />
+    <Compile Include="Migrations\201904101244550_StrategyImage.Designer.cs">
+      <DependentUpon>201904101244550_StrategyImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904110812535_EditorMetadata.cs" />
+    <Compile Include="Migrations\201904110812535_EditorMetadata.Designer.cs">
+      <DependentUpon>201904110812535_EditorMetadata.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904200928554_RemovingUniqueIndex.cs" />
+    <Compile Include="Migrations\201904200928554_RemovingUniqueIndex.Designer.cs">
+      <DependentUpon>201904200928554_RemovingUniqueIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\PushSubscription.cs" />
@@ -465,7 +477,6 @@
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\BellumGensAPI - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <None Include="Scripts\jquery-3.3.1-vsdoc.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -593,6 +604,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904010843142_AddingCobble.resx">
       <DependentUpon>201904010843142_AddingCobble.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904101244550_StrategyImage.resx">
+      <DependentUpon>201904101244550_StrategyImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904110812535_EditorMetadata.resx">
+      <DependentUpon>201904110812535_EditorMetadata.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904200928554_RemovingUniqueIndex.resx">
+      <DependentUpon>201904200928554_RemovingUniqueIndex.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

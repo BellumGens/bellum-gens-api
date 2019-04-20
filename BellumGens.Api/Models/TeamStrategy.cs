@@ -23,6 +23,10 @@ namespace BellumGens.Api.Models
 
 		public string Url { get; set; }
 
+		public string Image { get; set; }
+
+		public string EditorMetadata { get; set; }
+
 		[JsonIgnore]
 		[ForeignKey("TeamId")]
 		public virtual CSGOTeam Team { get; set; }
