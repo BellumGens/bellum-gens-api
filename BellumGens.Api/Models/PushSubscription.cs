@@ -9,13 +9,18 @@ namespace BellumGens.Api.Models
 	public class BellumGensPushSubscription
 	{
 		[Key]
+		[Column(Order = 0)]
 		public string userId { get; set; }
 		public string endpoint { get; set; }
 
 		public TimeSpan expirationTime { get; set; }
-		
+
+		[Key]
+		[Column(Order = 1)]
 		public string p256dh { get; set; }
 
+		[Key]
+		[Column(Order = 2)]
 		public string auth { get; set; }
 
 		[ForeignKey("userId")]

@@ -414,6 +414,10 @@
     <Compile Include="Migrations\201904200928554_RemovingUniqueIndex.Designer.cs">
       <DependentUpon>201904200928554_RemovingUniqueIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904221513586_PushNotifications.cs" />
+    <Compile Include="Migrations\201904221513586_PushNotifications.Designer.cs">
+      <DependentUpon>201904221513586_PushNotifications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\PushSubscription.cs" />
@@ -613,6 +617,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904200928554_RemovingUniqueIndex.resx">
       <DependentUpon>201904200928554_RemovingUniqueIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904221513586_PushNotifications.resx">
+      <DependentUpon>201904221513586_PushNotifications.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
