@@ -275,11 +275,8 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(invitedUserEntity.Id);
-			if (sub != null)
-			{
-				NotificationsService.SendNotification(sub, invite);
-			}
+			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(sub => sub.userId == invitedUserEntity.Id).ToList();
+			NotificationsService.SendNotification(subs, invite);
 			return Ok(userId);
 		}
 
@@ -311,10 +308,7 @@ namespace BellumGens.Api.Controllers
 				}
 				List<TeamMember> admins = _dbContext.Teams.Find(application.TeamId).Members.Where(m => m.IsAdmin).ToList();
 				List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => admins.Any(a => a.UserId == s.userId)).ToList();
-				foreach (BellumGensPushSubscription sub in subs)
-				{
-					NotificationsService.SendNotification(sub, application);
-				}
+				NotificationsService.SendNotification(subs, application);
 				return Ok(application);
 			}
 			return BadRequest("Something went wrong with your application validation");
@@ -360,11 +354,8 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("Something went wrong...");
 			}
 
-			BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(entity.ApplicantId);
-			if (sub != null)
-			{
-				NotificationsService.SendNotification(sub, application, NotificationState.Accepted);
-			}
+			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == entity.ApplicantId).ToList();
+			NotificationsService.SendNotification(subs, application, NotificationState.Accepted);
 			return Ok(entity);
 		}
 

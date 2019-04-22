@@ -152,11 +152,8 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			BellumGensPushSubscription sub = _dbContext.PushSubscriptions.Find(entity.InvitingUser.Id);
-			if (sub != null)
-			{
-				NotificationsService.SendNotification(sub, entity, NotificationState.Accepted);
-			}
+			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == entity.InvitingUser.Id).ToList();
+			NotificationsService.SendNotification(subs, entity, NotificationState.Accepted);
 			return Ok(entity);
 		}
 
