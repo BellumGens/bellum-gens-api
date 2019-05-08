@@ -108,14 +108,14 @@ namespace BellumGens.Api.Providers
 			return user;
 		}
 
-        public static UserStatsViewModel GetSteamUserDetails(ApplicationUser user)
+        public static UserStatsViewModel GetSteamUserDetails(UserInfoViewModel user)
         {
-            UserStatsViewModel model = SteamServiceProvider.GetSteamUserDetails(user.Id);
-            model.availability = user.Availability;
-            model.primaryRole = user.PreferredPrimaryRole;
-            model.secondaryRole = user.PreferredSecondaryRole;
-            model.mapPool = user.MapPool;
-            model.teams = user.Teams;
+            UserStatsViewModel model = GetSteamUserDetails(user.id);
+            model.availability = user.availability;
+            model.primaryRole = user.primaryRole;
+            model.secondaryRole = user.secondaryRole;
+            model.mapPool = user.mapPool;
+            model.teams = user.teams;
 			model.registered = true;
             return model;
         }

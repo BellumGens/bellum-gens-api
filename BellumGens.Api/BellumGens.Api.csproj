@@ -421,10 +421,6 @@
     <Compile Include="Migrations\201904221513586_PushNotifications.Designer.cs">
       <DependentUpon>201904221513586_PushNotifications.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905071505127_TestForPending.cs" />
-    <Compile Include="Migrations\201905071505127_TestForPending.Designer.cs">
-      <DependentUpon>201905071505127_TestForPending.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\PushSubscription.cs" />
@@ -448,7 +444,6 @@
     <Compile Include="Models\UserAvailability.cs" />
     <Compile Include="Models\UserMessage.cs" />
     <Compile Include="Models\ViewModels\SearchResultViewModel.cs" />
-    <Compile Include="Models\ViewModels\BGUserInfoViewModel.cs" />
     <Compile Include="Models\ViewModels\UserPreferencesViewModel.cs" />
     <Compile Include="Models\ViewModels\UserStatsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -630,9 +625,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904221513586_PushNotifications.resx">
       <DependentUpon>201904221513586_PushNotifications.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905071505127_TestForPending.resx">
-      <DependentUpon>201905071505127_TestForPending.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

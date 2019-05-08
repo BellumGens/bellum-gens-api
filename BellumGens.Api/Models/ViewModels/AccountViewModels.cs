@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SteamModels;
+using System;
 using System.Collections.Generic;
 
 namespace BellumGens.Api.Models
@@ -27,11 +28,113 @@ namespace BellumGens.Api.Models
 
     public class UserInfoViewModel
     {
-        public string Email { get; set; }
+        private List<CSGOTeamSummaryViewModel> _teams;
+        private List<CSGOTeam> _teamAdmin;
+        private ApplicationUser _user;
 
-        public bool HasRegistered { get; set; }
+        public UserInfoViewModel(ApplicationUser user)
+        {
+            _user = user;
+        }
 
-        public string LoginProvider { get; set; }
+        public string id
+        {
+            get
+            {
+                return _user.Id;
+            }
+        }
+
+        public SteamUser steamUser
+        {
+            get
+            {
+                return _user.SteamUser;
+            }
+        }
+
+        public List<CSGOTeamSummaryViewModel> teams
+        {
+            get
+            {
+                if (_teams == null)
+                {
+                    _teams = new List<CSGOTeamSummaryViewModel>();
+                    foreach (TeamMember memberof in _user.MemberOf)
+                    {
+                        _teams.Add(new CSGOTeamSummaryViewModel(memberof.Team));
+                    }
+                }
+                return _teams;
+            }
+        }
+
+        public List<CSGOTeam> teamAdmin
+        {
+            get
+            {
+                if (_teamAdmin == null)
+                {
+                    _teamAdmin = new List<CSGOTeam>();
+                    foreach (TeamMember memberof in _user.MemberOf)
+                    {
+                        if (memberof.IsAdmin)
+                            _teamAdmin.Add(memberof.Team);
+                    }
+                }
+                return _teamAdmin;
+            }
+        }
+
+        public ICollection<TeamInvite> notifications
+        {
+            get
+            {
+                return _user.Notifications;
+            }
+        }
+        public string email
+        {
+            get
+            {
+                return _user.Email;
+            }
+        }
+        public bool searchVisible
+        {
+            get
+            {
+                return _user.SearchVisible;
+            }
+        }
+        public ICollection<UserAvailability> availability
+        {
+            get
+            {
+                return _user.Availability;
+            }
+        }
+        public PlaystyleRole primaryRole
+        {
+            get
+            {
+                return _user.PreferredPrimaryRole;
+            }
+        }
+        public PlaystyleRole secondaryRole
+        {
+            get
+            {
+                return _user.PreferredSecondaryRole;
+            }
+        }
+        public ICollection<UserMapPool> mapPool
+        {
+            get
+            {
+                return _user.MapPool;
+            }
+        }
     }
 
     public class UserLoginInfoViewModel

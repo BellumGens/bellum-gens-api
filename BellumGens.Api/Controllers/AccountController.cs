@@ -57,12 +57,13 @@ namespace BellumGens.Api.Controllers
         // GET api/Account/UserInfo
 		[AllowAnonymous]
         [Route("UserInfo")]
-        public BGUserInfoViewModel GetUserInfo()
+        public UserInfoViewModel GetUserInfo()
         {
 			if (User.Identity.IsAuthenticated)
 			{
 				ApplicationUser user = UserManager.FindByName(User.Identity.GetUserName());
-				return user as BGUserInfoViewModel;
+                UserInfoViewModel model = new UserInfoViewModel(user);
+				return model;
 			}
 			return null;
         }

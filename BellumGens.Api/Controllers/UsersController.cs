@@ -41,11 +41,12 @@ namespace BellumGens.Api.Controllers
 				var registered = _dbContext.Users.Find(user.steamUser.steamID64);
 				if (registered != null)
 				{
-					user.availability = registered.Availability;
-					user.primaryRole = registered.PreferredPrimaryRole;
-					user.secondaryRole = registered.PreferredSecondaryRole;
-					user.mapPool = registered.MapPool;
-					user.teams = registered.Teams;
+                    UserInfoViewModel model = new UserInfoViewModel(registered);
+					user.availability = model.availability;
+					user.primaryRole = model.primaryRole;
+					user.secondaryRole = model.secondaryRole;
+					user.mapPool = model.mapPool;
+					user.teams = model.teams;
 					user.registered = true;
 				}
 			}

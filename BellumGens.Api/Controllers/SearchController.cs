@@ -29,7 +29,7 @@ namespace BellumGens.Api.Controllers
 				List<ApplicationUser> activeUsers = _dbContext.Users.Where(u => u.SearchVisible && u.UserName.Contains(name)).ToList();
 				foreach (ApplicationUser user in activeUsers)
 				{
-					results.Players.Add(SteamServiceProvider.GetSteamUserDetails(user));
+					results.Players.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
 				}
 				return Ok(results);
 			}
@@ -82,7 +82,7 @@ namespace BellumGens.Api.Controllers
 				var appusers = _dbContext.Users.Where(u => u.SearchVisible).OrderBy(u => u.Id).Take(50).ToList();
 				foreach (ApplicationUser user in appusers)
 				{
-					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
 				}
 				return Ok(steamUsers);
 			}
@@ -123,14 +123,14 @@ namespace BellumGens.Api.Controllers
 				}
 				foreach (ApplicationUser user in userIds)
 				{
-					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
 				}
 				return Ok(steamUsers);
 			}
 			
 			foreach (ApplicationUser user in users)
 			{
-				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
 			}
 			return Ok(steamUsers);
 		}
