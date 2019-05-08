@@ -8,6 +8,8 @@ using Microsoft.Owin.Security.Cookies;
 using System;
 using Microsoft.AspNet.Identity;
 using BellumGens.Api.Providers;
+using System.Net.Http;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace BellumGens.Api.Controllers
 {
@@ -18,8 +20,9 @@ namespace BellumGens.Api.Controllers
 	public class TeamsController : ApiController
 	{
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+        private ApplicationUserManager _userManager;
 
-		[Route("Teams")]
+        [Route("Teams")]
 		[AllowAnonymous]
 		public List<CSGOTeam> GetTeams()
 		{
@@ -80,13 +83,11 @@ namespace BellumGens.Api.Controllers
 		[HttpPost]
 		public IHttpActionResult TeamFromSteamGroup(SteamUserGroup group)
 		{
-			string userid = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
-			if (!SteamServiceProvider.VerifyUserIsGroupAdmin(userid, group.groupID64))
+            ApplicationUser user = GetAuthUser();
+            if (!SteamServiceProvider.VerifyUserIsGroupAdmin(user.Id, group.groupID64))
 			{
 				return BadRequest("User is not a steam group owner for " + group.groupName);
 			}
-
-			ApplicationUser user = _dbContext.Users.Find(userid);
 
 			CSGOTeam team = _dbContext.Teams.Add(new CSGOTeam()
 			{
@@ -146,9 +147,7 @@ namespace BellumGens.Api.Controllers
 		[HttpPost]
 		public IHttpActionResult NewTeam(CSGOTeam team)
 		{
-			string userid = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
-
-			ApplicationUser user = _dbContext.Users.Find(userid);
+            ApplicationUser user = GetAuthUser();
 
 			_dbContext.Teams.Add(team);
 
@@ -218,9 +217,9 @@ namespace BellumGens.Api.Controllers
 		[HttpDelete]
 		public IHttpActionResult AbandonTeam(Guid teamId)
 		{
-			string userId = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
+            ApplicationUser user = GetAuthUser();
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
-			TeamMember entity = team.Members.SingleOrDefault(e => e.UserId == userId);
+			TeamMember entity = team.Members.SingleOrDefault(e => e.UserId == user.Id);
 			team.Members.Remove(entity);
 			if (team.Members.Count == 0)
 			{
@@ -248,7 +247,7 @@ namespace BellumGens.Api.Controllers
 
 			CSGOTeam teamEntity = _dbContext.Teams.Find(team.TeamId);
 			ApplicationUser invitedUserEntity = _dbContext.Users.Find(userId);
-			ApplicationUser invitingUserEntity = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+			ApplicationUser invitingUserEntity = GetAuthUser();
 			TeamInvite invite = _dbContext.TeamInvites.Find(invitingUserEntity.Id, invitedUserEntity.Id, teamEntity.TeamId);
 			
 			if (invite != null)
@@ -484,22 +483,41 @@ namespace BellumGens.Api.Controllers
 			return Ok("Ok");
 		}
 
-		private bool UserIsTeamAdmin(Guid teamId)
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        private bool UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
-			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+            ApplicationUser user = GetAuthUser();
+            return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == user.Id);
 		}
 
 		private bool UserIsTeamEditor(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
-			return team != null && team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+            ApplicationUser user = GetAuthUser();
+            return team != null && team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == user.Id);
 		}
 
 		private bool UserIsTeamMember(Guid teamId)
         {
             CSGOTeam team = _dbContext.Teams.Find(teamId);
-            return team != null && team.Members.Any(m => m.UserId == SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+            ApplicationUser user = GetAuthUser();
+            return team != null && team.Members.Any(m => m.UserId == user.Id);
         }
-	}
+        private ApplicationUser GetAuthUser()
+        {
+            return UserManager.FindByName(User.Identity.GetUserName());
+        }
+    }
 }

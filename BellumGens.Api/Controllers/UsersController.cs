@@ -1,9 +1,11 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.Cookies;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -16,8 +18,9 @@ namespace BellumGens.Api.Controllers
 	public class UsersController : ApiController
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+        private ApplicationUserManager _userManager;
 
-		[Route("Users")]
+        [Route("Users")]
 		[AllowAnonymous]
 		public List<UserStatsViewModel> GetUsers(int page = 0)
 		{
@@ -57,7 +60,7 @@ namespace BellumGens.Api.Controllers
 		[HttpPut]
 		public IHttpActionResult SetAvailability(UserAvailability newAvailability)
 		{
-			UserAvailability entity = _dbContext.UserAvailabilities.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), newAvailability.Day);
+			UserAvailability entity = GetAuthUser().Availability.First(a => a.Day == newAvailability.Day);
 			_dbContext.Entry(entity).CurrentValues.SetValues(newAvailability);
 			try
 			{
@@ -74,7 +77,7 @@ namespace BellumGens.Api.Controllers
 		[HttpPut]
 		public IHttpActionResult SetMapPool(UserMapPool mapPool)
 		{
-			UserMapPool userMap = _dbContext.UserMapPool.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), mapPool.Map);
+            UserMapPool userMap = GetAuthUser().MapPool.First(m => m.Map == mapPool.Map);
 			_dbContext.Entry(userMap).CurrentValues.SetValues(mapPool);
 			try
 			{
@@ -180,9 +183,21 @@ namespace BellumGens.Api.Controllers
 			return Ok(entity);
 		}
 
-		private ApplicationUser GetAuthUser()
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        private ApplicationUser GetAuthUser()
 		{
-			return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
-		}
+			return UserManager.FindByName(User.Identity.GetUserName());
+        }
 	}
 }
