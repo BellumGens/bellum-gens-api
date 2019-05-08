@@ -177,7 +177,8 @@ namespace BellumGens.Api.Providers
 
 		public static string SteamUserId(string userUri)
 		{
-			return userUri.Split('/')[5];
+			var parts = userUri.Split('/');
+			return parts.Length >= 6 ? parts[5] : null;
 		}
 	}
 }

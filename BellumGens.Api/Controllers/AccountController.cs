@@ -19,7 +19,8 @@ namespace BellumGens.Api.Controllers
 {
 	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
 	[Authorize]
-    [RoutePrefix("api/Account")]
+	[HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
+	[RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -54,19 +55,18 @@ namespace BellumGens.Api.Controllers
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         // GET api/Account/UserInfo
-        [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[AllowAnonymous]
         [Route("UserInfo")]
-        public ApplicationUser GetUserInfo()
+        public BGUserInfoViewModel GetUserInfo()
         {
 			if (User.Identity.IsAuthenticated)
 			{
-				return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+				ApplicationUser user = UserManager.FindByName(User.Identity.GetUserName());
+				return user as BGUserInfoViewModel;
 			}
 			return null;
         }
-
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		
 		[Route("UserInfo")]
 		[HttpPut]
 		public async Task<IHttpActionResult> UpdateUserInfo(UserPreferencesViewModel preferences)
@@ -110,16 +110,14 @@ namespace BellumGens.Api.Controllers
 		}
 
 		// POST api/Account/Logout
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[Route("Logout")]
         public IHttpActionResult Logout()
         {
-            Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             return Ok();
         }
 
 		// DELETE api/Account/Delete
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[HttpDelete]
 		[Route("Delete")]
 		public IHttpActionResult Delete(string userid)
@@ -128,7 +126,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("User account mismatch...");
 			}
-			Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+			Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 			ApplicationUser user = _dbContext.Users.Find(userid);
 			_dbContext.Users.Remove(user);
 			try
@@ -222,42 +220,27 @@ namespace BellumGens.Api.Controllers
 		//}
 
 		// POST api/Account/AddExternalLogin
-		//[Route("AddExternalLogin")]
-		//public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
-		//{
-		//    if (!ModelState.IsValid)
-		//    {
-		//        return BadRequest(ModelState);
-		//    }
+		[Route("AddExternalLogin")]
+		[HttpGet]
+		public async Task<IHttpActionResult> AddExternalLogin(string userId)
+		{
+			ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-		//    Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+			if (externalLogin == null)
+			{
+				return Redirect(CORSConfig.allowedOrigins + "/players/" + userId);
+			}
 
-		//    AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
+			IdentityResult result = await UserManager.AddLoginAsync(userId,
+				new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey));
 
-		//    if (ticket == null || ticket.Identity == null || (ticket.Properties != null
-		//        && ticket.Properties.ExpiresUtc.HasValue
-		//        && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
-		//    {
-		//        return BadRequest("External login failure.");
-		//    }
+			if (!result.Succeeded)
+			{
+				return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+			}
 
-		//    ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
-
-		//    if (externalData == null)
-		//    {
-		//        return BadRequest("The external login is already associated with an account.");
-		//    }
-
-		//    IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
-		//        new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
-
-		//    if (!result.Succeeded)
-		//    {
-		//        return GetErrorResult(result);
-		//    }
-
-		//    return Ok();
-		//}
+			return Redirect(CORSConfig.allowedOrigins + "/players/" + userId);
+		}
 
 		// POST api/Account/RemoveLogin
 		[Route("RemoveLogin")]
@@ -290,15 +273,15 @@ namespace BellumGens.Api.Controllers
 
         // GET api/Account/ExternalLogin
         [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
-        [AllowAnonymous]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
+		[AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
         public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
         {
             if (error != null)
             {
-                return Redirect(Url.Content("~/") + "#error=" + Uri.EscapeDataString(error));
-            }
+                return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+			}
 
             if (!User.Identity.IsAuthenticated)
             {
@@ -309,13 +292,14 @@ namespace BellumGens.Api.Controllers
 
             if (externalLogin == null)
             {
-                return InternalServerError();
-            }
+                return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+			}
 
             if (externalLogin.LoginProvider != provider)
             {
-                Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                return new ChallengeResult(provider, this);
+				string id = SteamServiceProvider.SteamUserId(externalLogin.ProviderKey);
+				Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+				return new ChallengeResult(provider, this, Url.Link("DefaultApi", new { controller = "Account", action = "AddExternalLogin", userId = id }));
             }
 
 			string steamId = SteamServiceProvider.SteamUserId(externalLogin.ProviderKey);
@@ -332,17 +316,17 @@ namespace BellumGens.Api.Controllers
 					IdentityResult x = await this.Register(externalLogin);
 					if (!x.Succeeded)
 					{
-						return InternalServerError();
+						return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
 					}
 					user = await UserManager.FindByIdAsync(steamId);
 					// Upon registration, redirect to the user's profile for information setup.
 					returnUrl = "players/" + steamId + "/true";
 				}
 			}
-            IEnumerable<Claim> claims = externalLogin.GetClaims();
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
-			Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            Authentication.SignIn(identity);
+   //         IEnumerable<Claim> claims = externalLogin.GetClaims();
+   //         ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
+			//Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+   //         Authentication.SignIn(identity);
 
 			return Redirect(CORSConfig.allowedOrigins + '/' + returnUrl); //Ok();
 
@@ -389,37 +373,37 @@ namespace BellumGens.Api.Controllers
         }
 
         // POST api/Account/RegisterExternal
-        [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("RegisterExternal")]
-        public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[OverrideAuthentication]
+        //[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        //[Route("RegisterExternal")]
+        //public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var info = await Authentication.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                return InternalServerError();
-            }
+        //    var info = await Authentication.GetExternalLoginInfoAsync();
+        //    if (info == null)
+        //    {
+        //        return InternalServerError();
+        //    }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+        //    var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
-            IdentityResult result = await UserManager.CreateAsync(user);
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
+        //    IdentityResult result = await UserManager.CreateAsync(user);
+        //    if (!result.Succeeded)
+        //    {
+        //        return GetErrorResult(result);
+        //    }
 
-            result = await UserManager.AddLoginAsync(user.Id, info.Login);
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result); 
-            }
-            return Ok();
-        }
+        //    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+        //    if (!result.Succeeded)
+        //    {
+        //        return GetErrorResult(result); 
+        //    }
+        //    return Ok();
+        //}
 
         protected override void Dispose(bool disposing)
         {

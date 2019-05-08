@@ -136,6 +136,9 @@
     <Reference Include="Owin.Security.Providers.Steam, Version=2.0.0.0, Culture=neutral, PublicKeyToken=1328b8c16b108c43, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.Security.Providers.Steam.2.26.0\lib\net45\Owin.Security.Providers.Steam.dll</HintPath>
     </Reference>
+    <Reference Include="Owin.Security.Providers.Twitch, Version=2.0.0.0, Culture=neutral, PublicKeyToken=1328b8c16b108c43, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.Security.Providers.Twitch.2.26.0\lib\net45\Owin.Security.Providers.Twitch.dll</HintPath>
+    </Reference>
     <Reference Include="SteamModels, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SteamModels.1.2.2\lib\portable45-net45+win8+wp8+wpa81\SteamModels.dll</HintPath>
     </Reference>
@@ -418,6 +421,10 @@
     <Compile Include="Migrations\201904221513586_PushNotifications.Designer.cs">
       <DependentUpon>201904221513586_PushNotifications.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905071505127_TestForPending.cs" />
+    <Compile Include="Migrations\201905071505127_TestForPending.Designer.cs">
+      <DependentUpon>201905071505127_TestForPending.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\PushSubscription.cs" />
@@ -441,6 +448,7 @@
     <Compile Include="Models\UserAvailability.cs" />
     <Compile Include="Models\UserMessage.cs" />
     <Compile Include="Models\ViewModels\SearchResultViewModel.cs" />
+    <Compile Include="Models\ViewModels\BGUserInfoViewModel.cs" />
     <Compile Include="Models\ViewModels\UserPreferencesViewModel.cs" />
     <Compile Include="Models\ViewModels\UserStatsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -478,7 +486,9 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\PublishProfiles\BellumGensAPI - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -620,6 +630,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904221513586_PushNotifications.resx">
       <DependentUpon>201904221513586_PushNotifications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905071505127_TestForPending.resx">
+      <DependentUpon>201905071505127_TestForPending.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
