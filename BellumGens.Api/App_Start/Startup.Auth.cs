@@ -8,7 +8,6 @@ using Owin.Security.Providers.Twitch;
 using Owin;
 using BellumGens.Api.Providers;
 using BellumGens.Api.Models;
-using System.Configuration;
 
 namespace BellumGens.Api
 {
@@ -47,9 +46,9 @@ namespace BellumGens.Api
             // Enable the application to use bearer tokens to authenticate users
             app.UseOAuthBearerTokens(OAuthOptions);
 		
-			app.UseSteamAuthentication(SteamInfo.Config.steamApiKey);
+			app.UseSteamAuthentication(AppInfo.Config.steamApiKey);
 
-			app.UseTwitchAuthentication(ConfigurationManager.AppSettings["twitchClientId"], ConfigurationManager.AppSettings["twitchSecret"]);
+			app.UseTwitchAuthentication(AppInfo.Config.twitchClientId, AppInfo.Config.twitchSecret);
 
 			// Uncomment the following lines to enable logging in with third party login providers
 			//app.UseMicrosoftAccountAuthentication(

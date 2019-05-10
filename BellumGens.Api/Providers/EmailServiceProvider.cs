@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNet.Identity;
-using System;
-using System.Configuration;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -13,7 +11,7 @@ namespace BellumGens.Api.Providers
 		{
 			MailMessage msg = new MailMessage();
 			msg.To.Add(new MailAddress(message.Destination));
-			msg.From = new MailAddress(ConfigurationManager.AppSettings["email"], "Bellum Gens");
+			msg.From = new MailAddress(AppInfo.Config.email, "Bellum Gens");
 			msg.Subject = message.Subject;
 			msg.Body = message.Body;
 			msg.IsBodyHtml = true;
@@ -21,7 +19,7 @@ namespace BellumGens.Api.Providers
             SmtpClient client = new SmtpClient
             {
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(ConfigurationManager.AppSettings["emailUsername"], ConfigurationManager.AppSettings["emailPassword"]),
+                Credentials = new NetworkCredential(AppInfo.Config.emailUsername, AppInfo.Config.emailPassword),
                 Port = 587,
                 Host = "smtp.office365.com",
                 DeliveryMethod = SmtpDeliveryMethod.Network,

@@ -33,7 +33,7 @@ namespace BellumGens.Api.Providers
 		public static CSGOPlayerStats GetStatsForGame(string username)
 		{
 			HttpClient client = new HttpClient();
-			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, SteamInfo.Config.gameId, SteamInfo.Config.steamApiKey, username));
+			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, username));
 			CSGOPlayerStats statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse.Result);
 			return statsForUser;
 		}
@@ -56,7 +56,7 @@ namespace BellumGens.Api.Providers
 		public static List<SteamUserSummary> GetSteamUsersSummary(string users)
 		{
 			HttpClient client = new HttpClient();
-			var playerDetailsResponse = client.GetStringAsync(string.Format(_steamUserUrl, SteamInfo.Config.steamApiKey, users));
+			var playerDetailsResponse = client.GetStringAsync(string.Format(_steamUserUrl, AppInfo.Config.steamApiKey, users));
 			SteamUsersSummary result = JsonConvert.DeserializeObject<SteamUsersSummary>(playerDetailsResponse.Result);
 			return result.response.players;
 		}
@@ -84,7 +84,7 @@ namespace BellumGens.Api.Providers
 				};
 			}
 
-			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, SteamInfo.Config.gameId, SteamInfo.Config.steamApiKey, steamUser.steamID64));
+			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, steamUser.steamID64));
 			CSGOPlayerStats statsForUser = null;
 			try
 			{
