@@ -337,7 +337,7 @@ namespace BellumGens.Api.Controllers
 				}
 				else
 				{
-					return Redirect(CORSConfig.allowedOrigins + "/addSteam");
+					return Redirect(CORSConfig.allowedOrigins + "/addsteam");
 				}
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
