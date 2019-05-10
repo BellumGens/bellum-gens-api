@@ -306,14 +306,18 @@ namespace BellumGens.Api.Controllers
 
             if (externalLogin.LoginProvider != provider)
             {
-				string id = SteamServiceProvider.SteamUserId(externalLogin.ProviderKey);
 				Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-				return new ChallengeResult(provider, this, Url.Link("DefaultApi", new { controller = "Account", action = "AddExternalLogin", userId = id }));
+				if (provider == "Steam")
+				{
+					return new ChallengeResult(provider, this);
+				}
+				else
+				{
+					return new ChallengeResult(provider, this, Url.Link("DefaultApi", new { controller = "Account", action = "AddExternalLogin", userId = GetAuthUser().Id }));
+				}
             }
 
-			string steamId = SteamServiceProvider.SteamUserId(externalLogin.ProviderKey);
-
-			ApplicationUser user = await UserManager.FindByIdAsync(steamId);
+			ApplicationUser user = GetAuthUser();
 
 			bool hasRegistered = user != null;
 			string returnUrl = "";
@@ -327,16 +331,20 @@ namespace BellumGens.Api.Controllers
 					{
 						return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
 					}
-					user = await UserManager.FindByIdAsync(steamId);
+					user = GetAuthUser();
 					// Upon registration, redirect to the user's profile for information setup.
-					returnUrl = "players/" + steamId + "/true";
+					returnUrl = "players/" + user.Id + "/true";
+				}
+				else
+				{
+					return Redirect(CORSConfig.allowedOrigins + "/addSteam");
 				}
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignIn(identity);
 
-            return Redirect(CORSConfig.allowedOrigins + '/' + returnUrl); //Ok();
+            return Redirect(CORSConfig.allowedOrigins + '/' + returnUrl);
 
 		}
 		// GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
@@ -433,10 +441,10 @@ namespace BellumGens.Api.Controllers
 
         private async Task<IdentityResult> Register(ExternalLoginData info)
 		{
-			string username = SteamServiceProvider.SteamUserId(info.ProviderKey);
+			string id = SteamServiceProvider.SteamUserId(info.ProviderKey);
 
 			var user = new ApplicationUser() {
-				Id = username,
+				Id = id,
 				UserName = User.Identity.Name
 			};
 			user.InitializeDefaults();
