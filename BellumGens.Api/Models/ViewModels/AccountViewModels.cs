@@ -93,6 +93,7 @@ namespace BellumGens.Api.Models
                 return _user.Notifications;
             }
         }
+        public List<string> externalLogins { get; set; }
         public string email
         {
             get

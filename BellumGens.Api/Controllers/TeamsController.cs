@@ -99,7 +99,7 @@ namespace BellumGens.Api.Controllers
 
 			team.Members.Add(new TeamMember()
 			{
-				Member = user,
+				UserId = user.Id,
 				IsActive = true,
 				IsAdmin = true,
 				IsEditor = true
@@ -153,7 +153,7 @@ namespace BellumGens.Api.Controllers
 
 			team.Members.Add(new TeamMember()
 			{
-				Member = user,
+				UserId = user.Id,
 				IsActive = true,
 				IsAdmin = true,
 				IsEditor = true
@@ -262,7 +262,7 @@ namespace BellumGens.Api.Controllers
 				invite = new TeamInvite()
 				{
 					InvitedUser = invitedUserEntity,
-					InvitingUser = invitingUserEntity
+					InvitingUserId = invitingUserEntity.Id
 				};
 				teamEntity.Invites.Add(invite);
 			}

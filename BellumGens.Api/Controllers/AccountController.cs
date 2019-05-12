@@ -14,6 +14,7 @@ using BellumGens.Api.Providers;
 using BellumGens.Api.Results;
 using Microsoft.Owin.Security.Cookies;
 using System.Web.Http.Cors;
+using System.Linq;
 
 namespace BellumGens.Api.Controllers
 {
@@ -63,6 +64,7 @@ namespace BellumGens.Api.Controllers
 			{
                 ApplicationUser user = GetAuthUser();
                 UserInfoViewModel model = new UserInfoViewModel(user);
+                model.externalLogins = UserManager.GetLogins(user.Id).Select(t => t.LoginProvider).ToList();
 				return model;
 			}
 			return null;
