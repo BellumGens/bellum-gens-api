@@ -15,21 +15,19 @@ namespace BellumGens.Api.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        private List<CSGOTeamSummaryViewModel> _teams;
-		private List<CSGOTeam> _teamAdmin;
 		private SteamUser _user;
 
 		public ApplicationUser() : base()
 		{
-			this.Availability = new HashSet<UserAvailability>();
-			this.MapPool = new HashSet<UserMapPool>();
-			this.MemberOf = new HashSet<TeamMember>();
+			Availability = new HashSet<UserAvailability>();
+			MapPool = new HashSet<UserMapPool>();
+			MemberOf = new HashSet<TeamMember>();
 		}
 
 		public void InitializeDefaults()
 		{
 
-			this.Availability = new HashSet<UserAvailability>() {
+			Availability = new HashSet<UserAvailability>() {
 				new UserAvailability
 				{
 					Day = DayOfWeek.Monday
@@ -59,7 +57,7 @@ namespace BellumGens.Api.Models
 					Day = DayOfWeek.Sunday
 				}
 			};
-			this.MapPool = new HashSet<UserMapPool>()
+			MapPool = new HashSet<UserMapPool>()
 			{
 				new UserMapPool
 				{
@@ -110,7 +108,7 @@ namespace BellumGens.Api.Models
 
 		public string ESEA { get; set; }
 
-		public bool SearchVisible { get; set; }
+        public bool SearchVisible { get; set; } = true;
 
 		public PlaystyleRole PreferredPrimaryRole { get; set; }
 
@@ -139,41 +137,6 @@ namespace BellumGens.Api.Models
 					_user = SteamServiceProvider.GetSteamUser(this.Id);
 				}
 				return _user;
-			}
-		}
-
-		[NotMapped]
-        public List<CSGOTeamSummaryViewModel> Teams
-        {
-            get
-            {
-                if (_teams == null)
-                {
-                    _teams = new List<CSGOTeamSummaryViewModel>();
-                    foreach (TeamMember memberof in MemberOf)
-                    {
-                        _teams.Add(new CSGOTeamSummaryViewModel(memberof.Team));
-                    }
-                }
-                return _teams;
-            }
-        }
-
-		[NotMapped]
-		public List<CSGOTeam> TeamAdmin
-		{
-			get
-			{
-				if (_teamAdmin == null)
-				{
-					_teamAdmin = new List<CSGOTeam>();
-					foreach (TeamMember memberof in MemberOf)
-					{
-						if (memberof.IsAdmin)
-							_teamAdmin.Add(memberof.Team);
-					}
-				}
-				return _teamAdmin;
 			}
 		}
     }

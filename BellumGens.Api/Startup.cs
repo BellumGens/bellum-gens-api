@@ -11,7 +11,6 @@ namespace BellumGens.Api
     {
         public void Configuration(IAppBuilder app)
 		{
-			SteamInfo.Initialize();
 			var configuration = new Configuration();
 			var migrator = new DbMigrator(configuration);
 			migrator.Update();

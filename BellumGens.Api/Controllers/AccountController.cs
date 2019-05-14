@@ -14,12 +14,14 @@ using BellumGens.Api.Providers;
 using BellumGens.Api.Results;
 using Microsoft.Owin.Security.Cookies;
 using System.Web.Http.Cors;
+using System.Linq;
 
 namespace BellumGens.Api.Controllers
 {
 	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
 	[Authorize]
-    [RoutePrefix("api/Account")]
+	[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+	[RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
@@ -54,24 +56,25 @@ namespace BellumGens.Api.Controllers
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
         // GET api/Account/UserInfo
-        [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[AllowAnonymous]
         [Route("UserInfo")]
-        public ApplicationUser GetUserInfo()
+        public UserInfoViewModel GetUserInfo()
         {
 			if (User.Identity.IsAuthenticated)
 			{
-				return _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+                ApplicationUser user = GetAuthUser();
+                UserInfoViewModel model = new UserInfoViewModel(user);
+                model.externalLogins = UserManager.GetLogins(user.Id).Select(t => t.LoginProvider).ToList();
+				return model;
 			}
 			return null;
         }
-
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
+		
 		[Route("UserInfo")]
 		[HttpPut]
 		public async Task<IHttpActionResult> UpdateUserInfo(UserPreferencesViewModel preferences)
 		{
-			ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+            ApplicationUser user = GetAuthUser();
 			bool newEmail = !string.IsNullOrEmpty(preferences.email) && preferences.email != user.Email && !user.EmailConfirmed;
 			user.Email = preferences.email;
 			user.SearchVisible = preferences.searchVisible;
@@ -110,26 +113,26 @@ namespace BellumGens.Api.Controllers
 		}
 
 		// POST api/Account/Logout
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[Route("Logout")]
         public IHttpActionResult Logout()
         {
+            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
 
 		// DELETE api/Account/Delete
-		[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 		[HttpDelete]
 		[Route("Delete")]
 		public IHttpActionResult Delete(string userid)
 		{
-			if (SteamServiceProvider.SteamUserId(User.Identity.GetUserId()) != userid)
+			if (GetAuthUser().Id != userid)
 			{
 				return BadRequest("User account mismatch...");
 			}
-			Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
-			ApplicationUser user = _dbContext.Users.Find(userid);
+			Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+            ApplicationUser user = _dbContext.Users.Find(userid);
 			_dbContext.Users.Remove(user);
 			try
 			{
@@ -222,42 +225,33 @@ namespace BellumGens.Api.Controllers
 		//}
 
 		// POST api/Account/AddExternalLogin
-		//[Route("AddExternalLogin")]
-		//public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
-		//{
-		//    if (!ModelState.IsValid)
-		//    {
-		//        return BadRequest(ModelState);
-		//    }
+		[Route("AddExternalLogin")]
+        [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
+        [HttpGet]
+		public async Task<IHttpActionResult> AddExternalLogin(string userId)
+		{
+			ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-		//    Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+			if (externalLogin == null)
+			{
+				return Redirect(CORSConfig.allowedOrigins + "/players/" + userId);
+			}
 
-		//    AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
+			IdentityResult result = await UserManager.AddLoginAsync(userId,
+				new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey));
 
-		//    if (ticket == null || ticket.Identity == null || (ticket.Properties != null
-		//        && ticket.Properties.ExpiresUtc.HasValue
-		//        && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
-		//    {
-		//        return BadRequest("External login failure.");
-		//    }
+			if (!result.Succeeded)
+			{
+				return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+			}
 
-		//    ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
 
-		//    if (externalData == null)
-		//    {
-		//        return BadRequest("The external login is already associated with an account.");
-		//    }
+            IEnumerable<Claim> claims = externalLogin.GetClaims();
+            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
+            Authentication.SignIn(identity);
 
-		//    IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
-		//        new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
-
-		//    if (!result.Succeeded)
-		//    {
-		//        return GetErrorResult(result);
-		//    }
-
-		//    return Ok();
-		//}
+            return Redirect(CORSConfig.allowedOrigins + "/players/" + userId);
+		}
 
 		// POST api/Account/RemoveLogin
 		[Route("RemoveLogin")]
@@ -272,11 +266,11 @@ namespace BellumGens.Api.Controllers
 
             if (model.LoginProvider == LocalLoginProvider)
             {
-                result = await UserManager.RemovePasswordAsync(User.Identity.GetUserId());
+                result = await UserManager.RemovePasswordAsync(GetAuthUser().Id);
             }
             else
             {
-                result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(),
+                result = await UserManager.RemoveLoginAsync(GetAuthUser().Id,
                     new UserLoginInfo(model.LoginProvider, model.ProviderKey));
             }
 
@@ -290,15 +284,15 @@ namespace BellumGens.Api.Controllers
 
         // GET api/Account/ExternalLogin
         [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
-        [AllowAnonymous]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
+		[AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
         public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
         {
             if (error != null)
             {
-                return Redirect(Url.Content("~/") + "#error=" + Uri.EscapeDataString(error));
-            }
+                return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+			}
 
             if (!User.Identity.IsAuthenticated)
             {
@@ -309,18 +303,23 @@ namespace BellumGens.Api.Controllers
 
             if (externalLogin == null)
             {
-                return InternalServerError();
-            }
+                return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+			}
 
             if (externalLogin.LoginProvider != provider)
             {
-                Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                return new ChallengeResult(provider, this);
+				Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+				if (provider == "Steam")
+				{
+					return new ChallengeResult(provider, this);
+				}
+				else
+				{
+					return new ChallengeResult(provider, this, Url.Link("DefaultApi", new { controller = "Account", action = "AddExternalLogin", userId = GetAuthUser().Id }));
+				}
             }
 
-			string steamId = SteamServiceProvider.SteamUserId(externalLogin.ProviderKey);
-
-			ApplicationUser user = await UserManager.FindByIdAsync(steamId);
+			ApplicationUser user = GetAuthUser();
 
 			bool hasRegistered = user != null;
 			string returnUrl = "";
@@ -332,19 +331,22 @@ namespace BellumGens.Api.Controllers
 					IdentityResult x = await this.Register(externalLogin);
 					if (!x.Succeeded)
 					{
-						return InternalServerError();
+						return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
 					}
-					user = await UserManager.FindByIdAsync(steamId);
+					user = GetAuthUser();
 					// Upon registration, redirect to the user's profile for information setup.
-					returnUrl = "players/" + steamId + "/true";
+					returnUrl = "players/" + user.Id + "/true";
+				}
+				else
+				{
+					return Redirect(CORSConfig.allowedOrigins + "/addsteam");
 				}
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
-			Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignIn(identity);
 
-			return Redirect(CORSConfig.allowedOrigins + '/' + returnUrl); //Ok();
+            return Redirect(CORSConfig.allowedOrigins + '/' + returnUrl);
 
 		}
 		// GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
@@ -389,37 +391,37 @@ namespace BellumGens.Api.Controllers
         }
 
         // POST api/Account/RegisterExternal
-        [OverrideAuthentication]
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [Route("RegisterExternal")]
-        public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[OverrideAuthentication]
+        //[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+        //[Route("RegisterExternal")]
+        //public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var info = await Authentication.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                return InternalServerError();
-            }
+        //    var info = await Authentication.GetExternalLoginInfoAsync();
+        //    if (info == null)
+        //    {
+        //        return InternalServerError();
+        //    }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+        //    var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
 
-            IdentityResult result = await UserManager.CreateAsync(user);
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
-            }
+        //    IdentityResult result = await UserManager.CreateAsync(user);
+        //    if (!result.Succeeded)
+        //    {
+        //        return GetErrorResult(result);
+        //    }
 
-            result = await UserManager.AddLoginAsync(user.Id, info.Login);
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result); 
-            }
-            return Ok();
-        }
+        //    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+        //    if (!result.Succeeded)
+        //    {
+        //        return GetErrorResult(result); 
+        //    }
+        //    return Ok();
+        //}
 
         protected override void Dispose(bool disposing)
         {
@@ -432,14 +434,19 @@ namespace BellumGens.Api.Controllers
             base.Dispose(disposing);
         }
 
+        private ApplicationUser GetAuthUser()
+        {
+            return UserManager.FindByName(User.Identity.GetUserName());
+        }
+
         #region Helpers
 
-		private async Task<IdentityResult> Register(ExternalLoginData info)
+        private async Task<IdentityResult> Register(ExternalLoginData info)
 		{
-			string username = SteamServiceProvider.SteamUserId(info.ProviderKey);
+			string id = SteamServiceProvider.SteamUserId(info.ProviderKey);
 
 			var user = new ApplicationUser() {
-				Id = username,
+				Id = id,
 				UserName = User.Identity.Name
 			};
 			user.InitializeDefaults();

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Owin.Security;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -17,12 +15,28 @@ namespace BellumGens.Api.Results
             Request = controller.Request;
         }
 
-        public string LoginProvider { get; set; }
+		public ChallengeResult(string loginProvider, ApiController controller, string redirectUri)
+		{
+			LoginProvider = loginProvider;
+			Request = controller.Request;
+			RedirectUri = redirectUri;
+		}
+
+		public string LoginProvider { get; set; }
         public HttpRequestMessage Request { get; set; }
+		public string RedirectUri { get; set; }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            Request.GetOwinContext().Authentication.Challenge(LoginProvider);
+			if (RedirectUri != null)
+			{
+				var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+				Request.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+			}
+			else
+			{
+				Request.GetOwinContext().Authentication.Challenge(LoginProvider);
+			}
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
             response.RequestMessage = Request;

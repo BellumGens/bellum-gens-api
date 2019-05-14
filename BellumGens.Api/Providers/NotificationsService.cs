@@ -1,15 +1,14 @@
 ﻿using BellumGens.Api.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using WebPush;
 
 namespace BellumGens.Api.Providers
 {
 	public static class NotificationsService
 	{
-		private static string _publicVapidKey = ConfigurationManager.AppSettings["publicVapidKey"];
-		private static string _privateVapidKey = ConfigurationManager.AppSettings["privateVapidKey"];
+		private static string _publicVapidKey = AppInfo.Config.publicVapidKey;
+		private static string _privateVapidKey = AppInfo.Config.privateVapidKey;
 
 		public static void SendNotification(List<BellumGensPushSubscription> subs, TeamInvite notification)
 		{

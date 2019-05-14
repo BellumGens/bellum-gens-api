@@ -33,7 +33,7 @@ namespace BellumGens.Api.Providers
 		public static CSGOPlayerStats GetStatsForGame(string username)
 		{
 			HttpClient client = new HttpClient();
-			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, SteamInfo.Config.gameId, SteamInfo.Config.steamApiKey, username));
+			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, username));
 			CSGOPlayerStats statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse.Result);
 			return statsForUser;
 		}
@@ -56,7 +56,7 @@ namespace BellumGens.Api.Providers
 		public static List<SteamUserSummary> GetSteamUsersSummary(string users)
 		{
 			HttpClient client = new HttpClient();
-			var playerDetailsResponse = client.GetStringAsync(string.Format(_steamUserUrl, SteamInfo.Config.steamApiKey, users));
+			var playerDetailsResponse = client.GetStringAsync(string.Format(_steamUserUrl, AppInfo.Config.steamApiKey, users));
 			SteamUsersSummary result = JsonConvert.DeserializeObject<SteamUsersSummary>(playerDetailsResponse.Result);
 			return result.response.players;
 		}
@@ -84,7 +84,7 @@ namespace BellumGens.Api.Providers
 				};
 			}
 
-			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, SteamInfo.Config.gameId, SteamInfo.Config.steamApiKey, steamUser.steamID64));
+			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, steamUser.steamID64));
 			CSGOPlayerStats statsForUser = null;
 			try
 			{
@@ -108,14 +108,14 @@ namespace BellumGens.Api.Providers
 			return user;
 		}
 
-        public static UserStatsViewModel GetSteamUserDetails(ApplicationUser user)
+        public static UserStatsViewModel GetSteamUserDetails(UserInfoViewModel user)
         {
-            UserStatsViewModel model = SteamServiceProvider.GetSteamUserDetails(user.Id);
-            model.availability = user.Availability;
-            model.primaryRole = user.PreferredPrimaryRole;
-            model.secondaryRole = user.PreferredSecondaryRole;
-            model.mapPool = user.MapPool;
-            model.teams = user.Teams;
+            UserStatsViewModel model = GetSteamUserDetails(user.id);
+            model.availability = user.availability;
+            model.primaryRole = user.primaryRole;
+            model.secondaryRole = user.secondaryRole;
+            model.mapPool = user.mapPool;
+            model.teams = user.teams;
 			model.registered = true;
             return model;
         }
@@ -177,7 +177,8 @@ namespace BellumGens.Api.Providers
 
 		public static string SteamUserId(string userUri)
 		{
-			return userUri.Split('/')[5];
+			var parts = userUri.Split('/');
+			return parts.Length >= 6 ? parts[5] : null;
 		}
 	}
 }

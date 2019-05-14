@@ -8,6 +8,8 @@ using BellumGens.Api.Models.Extensions;
 using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security.Cookies;
+using System.Net.Http;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace BellumGens.Api.Controllers
 {
@@ -17,8 +19,9 @@ namespace BellumGens.Api.Controllers
 	public class SearchController : ApiController
 	{
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+        private ApplicationUserManager _userManager;
 
-		[Route("Search")]
+        [Route("Search")]
 		[HttpGet]
 		public IHttpActionResult Search(string name)
 		{
@@ -29,7 +32,7 @@ namespace BellumGens.Api.Controllers
 				List<ApplicationUser> activeUsers = _dbContext.Users.Where(u => u.SearchVisible && u.UserName.Contains(name)).ToList();
 				foreach (ApplicationUser user in activeUsers)
 				{
-					results.Players.Add(SteamServiceProvider.GetSteamUserDetails(user));
+					results.Players.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
 				}
 				return Ok(results);
 			}
@@ -60,7 +63,7 @@ namespace BellumGens.Api.Controllers
 				{
 					return BadRequest("You must sign in to perform search by availability...");
 				}
-				ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+                ApplicationUser user = GetAuthUser();
 				if (!user.Availability.Any(a => a.Available))
 				{
 					return BadRequest("You must provide your availability in your user profile...");
@@ -82,7 +85,7 @@ namespace BellumGens.Api.Controllers
 				var appusers = _dbContext.Users.Where(u => u.SearchVisible).OrderBy(u => u.Id).Take(50).ToList();
 				foreach (ApplicationUser user in appusers)
 				{
-					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
 				}
 				return Ok(steamUsers);
 			}
@@ -113,7 +116,7 @@ namespace BellumGens.Api.Controllers
 				}
 				else
 				{
-					ApplicationUser user = _dbContext.Users.Find(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()));
+					ApplicationUser user = GetAuthUser();
 					overlap = Math.Min(overlap, user.GetTotalAvailability());
 					if (!user.Availability.Any(a => a.Available))
 					{
@@ -123,16 +126,33 @@ namespace BellumGens.Api.Controllers
 				}
 				foreach (ApplicationUser user in userIds)
 				{
-					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
 				}
 				return Ok(steamUsers);
 			}
 			
 			foreach (ApplicationUser user in users)
 			{
-				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
 			}
 			return Ok(steamUsers);
 		}
-	}
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        private ApplicationUser GetAuthUser()
+        {
+            return UserManager.FindByName(User.Identity.GetUserName());
+        }
+    }
 }
