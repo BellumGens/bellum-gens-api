@@ -1,10 +1,12 @@
 ﻿using BellumGens.Api.Providers;
+using BellumGens.Api.Utils;
 using Newtonsoft.Json;
 using SteamModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace BellumGens.Api.Models
 {
@@ -103,6 +105,19 @@ namespace BellumGens.Api.Models
 			Visible = true;
 		}
 
+		public void UniqueCustomUrl(BellumGensDbContext context)
+		{
+			var parts = TeamName.Split(' ');
+			string url = string.Join("-", parts);
+			while (context.Teams.Where(t => t.CustomUrl == url).SingleOrDefault() != null)
+			{
+				if (url.Length > 58)
+					url = url.Substring(0, 58);
+				url += '-' + Util.GenerateHashString(6);
+			}
+			CustomUrl = url;
+		}
+
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid TeamId { get; set; }
@@ -119,6 +134,10 @@ namespace BellumGens.Api.Models
 		public string Discord { get; set; }
 
 		public bool Visible { get; set; }
+
+		[MaxLength(64)]
+		[Index(IsUnique = true)]
+		public string CustomUrl { get; set; }
 
 		[JsonIgnore]
 		public virtual ICollection<TeamStrategy> Strategies { get; set; }

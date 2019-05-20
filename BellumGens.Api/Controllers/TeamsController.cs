@@ -31,9 +31,9 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Team")]
 		[AllowAnonymous]
-		public CSGOTeam GetTeam(Guid teamId)
+		public CSGOTeam GetTeam(string teamId)
 		{
-			return _dbContext.Teams.Find(teamId);
+			return ResolveTeam(teamId);
 		}
 
 		[Route("Strats")]
@@ -96,6 +96,7 @@ namespace BellumGens.Api.Controllers
 				TeamAvatar = group.avatarFull
 			});
 			team.InitializeDefaults();
+			team.UniqueCustomUrl(_dbContext);
 
 			team.Members.Add(new TeamMember()
 			{
@@ -159,6 +160,7 @@ namespace BellumGens.Api.Controllers
 				IsEditor = true
 			});
 			team.InitializeDefaults();
+			team.UniqueCustomUrl(_dbContext);
 
 			try
 			{
@@ -518,6 +520,20 @@ namespace BellumGens.Api.Controllers
         private ApplicationUser GetAuthUser()
         {
             return UserManager.FindByName(User.Identity.GetUserName());
-        }
-    }
+		}
+
+		private CSGOTeam ResolveTeam(string teamId)
+		{
+			CSGOTeam team = _dbContext.Teams.FirstOrDefault(t => t.CustomUrl == teamId);
+			if (team == null)
+			{
+				var valid = Guid.TryParse(teamId, out Guid id);
+				if (valid)
+				{
+					team = _dbContext.Teams.Find(id);
+				}
+			}
+			return team;
+		}
+	}
 }

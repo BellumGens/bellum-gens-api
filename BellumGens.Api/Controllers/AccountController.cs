@@ -328,7 +328,7 @@ namespace BellumGens.Api.Controllers
             {
 				if (externalLogin.LoginProvider == "Steam")
 				{
-					IdentityResult x = await this.Register(externalLogin);
+					IdentityResult x = await Register(externalLogin);
 					if (!x.Succeeded)
 					{
 						return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
