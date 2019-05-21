@@ -33,7 +33,8 @@ namespace BellumGens.Api.Models
 					{
 						TeamId = Team.TeamId,
 						TeamName = Team.TeamName,
-						TeamAvatar = Team.TeamAvatar
+						TeamAvatar = Team.TeamAvatar,
+						CustomUrl = Team.CustomUrl
 					};
 				}
 				return _teamInfo;

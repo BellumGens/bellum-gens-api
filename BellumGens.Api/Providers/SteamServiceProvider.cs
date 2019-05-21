@@ -139,7 +139,7 @@ namespace BellumGens.Api.Providers
 
 		public static bool VerifyUserIsGroupAdmin(string userid, string groupid)
 		{
-			SteamGroup group = SteamServiceProvider.GetSteamGroup(groupid);
+			SteamGroup group = GetSteamGroup(groupid);
 			return group.members[0] == userid;
 		}
 

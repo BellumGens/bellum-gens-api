@@ -26,7 +26,6 @@ namespace BellumGens.Api.Models
 
 		public void InitializeDefaults()
 		{
-
 			Availability = new HashSet<UserAvailability>() {
 				new UserAvailability
 				{

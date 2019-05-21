@@ -60,7 +60,8 @@ namespace BellumGens.Api.Controllers
 		[HttpPut]
 		public IHttpActionResult SetAvailability(UserAvailability newAvailability)
 		{
-			UserAvailability entity = GetAuthUser().Availability.First(a => a.Day == newAvailability.Day);
+			ApplicationUser user = GetAuthUser();
+			UserAvailability entity = _dbContext.Users.Find(user.Id).Availability.First(a => a.Day == newAvailability.Day);
 			_dbContext.Entry(entity).CurrentValues.SetValues(newAvailability);
 			try
 			{
@@ -77,7 +78,8 @@ namespace BellumGens.Api.Controllers
 		[HttpPut]
 		public IHttpActionResult SetMapPool(UserMapPool mapPool)
 		{
-            UserMapPool userMap = GetAuthUser().MapPool.First(m => m.Map == mapPool.Map);
+			ApplicationUser user = GetAuthUser();
+			UserMapPool userMap = _dbContext.Users.Find(user.Id).MapPool.First(m => m.Map == mapPool.Map);
 			_dbContext.Entry(userMap).CurrentValues.SetValues(mapPool);
 			try
 			{
@@ -142,7 +144,7 @@ namespace BellumGens.Api.Controllers
 			CSGOTeam team = _dbContext.Teams.Find(invite.TeamId);
 			team.Members.Add(new TeamMember()
 			{
-				Member = user,
+				UserId = user.Id,
 				IsActive = true,
                 IsAdmin = false,
 				IsEditor = false

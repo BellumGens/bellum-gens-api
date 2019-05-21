@@ -417,8 +417,21 @@
     <Compile Include="Migrations\201904221513586_PushNotifications.Designer.cs">
       <DependentUpon>201904221513586_PushNotifications.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905171344382_TeamCustomUrl.cs" />
+    <Compile Include="Migrations\201905171344382_TeamCustomUrl.Designer.cs">
+      <DependentUpon>201905171344382_TeamCustomUrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905171346467_UpdateCurrentTeams.cs" />
+    <Compile Include="Migrations\201905171346467_UpdateCurrentTeams.Designer.cs">
+      <DependentUpon>201905171346467_UpdateCurrentTeams.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905201354049_ReturningEverythingBack.cs" />
+    <Compile Include="Migrations\201905201354049_ReturningEverythingBack.Designer.cs">
+      <DependentUpon>201905201354049_ReturningEverythingBack.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
+    <Compile Include="Models\Extensions\Util.cs" />
     <Compile Include="Models\PushSubscription.cs" />
     <Compile Include="Models\ViewModels\CSGOTeamSummaryView.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
@@ -619,6 +632,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904221513586_PushNotifications.resx">
       <DependentUpon>201904221513586_PushNotifications.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905171344382_TeamCustomUrl.resx">
+      <DependentUpon>201905171344382_TeamCustomUrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905171346467_UpdateCurrentTeams.resx">
+      <DependentUpon>201905171346467_UpdateCurrentTeams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905201354049_ReturningEverythingBack.resx">
+      <DependentUpon>201905201354049_ReturningEverythingBack.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
