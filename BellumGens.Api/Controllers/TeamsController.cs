@@ -239,15 +239,15 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Invite")]
 		[HttpPost]
-		public IHttpActionResult InviteToTeam(string userId, Guid teamId)
+		public IHttpActionResult InviteToTeam(InviteModel model)
 		{
-			CSGOTeam team = UserIsTeamAdmin(teamId);
+			CSGOTeam team = UserIsTeamAdmin(model.teamId);
 			if (team == null)
 			{
 				return BadRequest("User is not team admin for " + team.TeamName);
 			}
 
-			ApplicationUser invitedUserEntity = _dbContext.Users.Find(userId);
+			ApplicationUser invitedUserEntity = _dbContext.Users.Find(model.userId);
 			ApplicationUser invitingUserEntity = GetAuthUser();
 			TeamInvite invite = team.Invites.SingleOrDefault(i => i.InvitingUserId == invitingUserEntity.Id && i.InvitedUserId == invitedUserEntity.Id);
 			
@@ -277,7 +277,7 @@ namespace BellumGens.Api.Controllers
 			}
 			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(sub => sub.userId == invitedUserEntity.Id).ToList();
 			NotificationsService.SendNotification(subs, invite);
-			return Ok(userId);
+			return Ok(model.userId);
 		}
 
 		[Route("Apply")]
@@ -563,5 +563,11 @@ namespace BellumGens.Api.Controllers
 			}
 			return team;
 		}
+	}
+
+	public class InviteModel
+	{
+		public string userId { get; set; }
+		public Guid teamId { get; set; }
 	}
 }
