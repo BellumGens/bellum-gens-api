@@ -228,6 +228,11 @@ namespace BellumGens.Api.Controllers
 				_dbContext.Teams.Remove(team);
 				response = new { removed = true };
 			}
+			else if (!team.Members.Any(m => m.IsAdmin))
+			{
+				team.Members.First().IsAdmin = true;
+			}
+
 			try
 			{
 				_dbContext.SaveChanges();
