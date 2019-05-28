@@ -222,10 +222,17 @@ namespace BellumGens.Api.Controllers
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
 			TeamMember entity = team.Members.SingleOrDefault(e => e.UserId == user.Id);
 			team.Members.Remove(entity);
+			object response = new { removed = false };
 			if (team.Members.Count == 0)
 			{
 				_dbContext.Teams.Remove(team);
+				response = new { removed = true };
 			}
+			else if (!team.Members.Any(m => m.IsAdmin))
+			{
+				team.Members.First().IsAdmin = true;
+			}
+
 			try
 			{
 				_dbContext.SaveChanges();
@@ -234,7 +241,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("Something went wrong...");
 			}
-			return Ok("ok");
+			return Ok(response);
 		}
 
 		[Route("Invite")]

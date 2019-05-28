@@ -37,6 +37,11 @@ namespace BellumGens.Api.Models
             _user = user;
         }
 
+		public bool registered
+		{
+			get { return true; }
+		}
+
         public string id
         {
             get
