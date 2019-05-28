@@ -25,11 +25,12 @@ namespace BellumGens.Api.Controllers
 		public List<UserStatsViewModel> GetUsers(int page = 0)
 		{
 			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
-			List<string> activeUsers = _dbContext.Users.OrderBy(e => e.Id).Skip(page * 10).Take(10).Select(e => e.Id).ToList();
+			List<ApplicationUser> activeUsers = _dbContext.Users.OrderBy(e => e.Id).Skip(page * 10).Take(10).ToList();
 
-			foreach (string user in activeUsers)
+			foreach (ApplicationUser user in activeUsers)
 			{
-				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(user));
+				var model = new UserInfoViewModel(user);
+				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(model));
 			}
 			return steamUsers;
 		}
