@@ -429,10 +429,16 @@
     <Compile Include="Migrations\201905201354049_ReturningEverythingBack.Designer.cs">
       <DependentUpon>201905201354049_ReturningEverythingBack.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906121424038_ExtendingStrategies.cs" />
+    <Compile Include="Migrations\201906121424038_ExtendingStrategies.Designer.cs">
+      <DependentUpon>201906121424038_ExtendingStrategies.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
     <Compile Include="Models\PushSubscription.cs" />
+    <Compile Include="Models\StrategyComment.cs" />
+    <Compile Include="Models\StrategyVotes.cs" />
     <Compile Include="Models\ViewModels\CSGOTeamSummaryView.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Application.cs" />
@@ -641,6 +647,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905201354049_ReturningEverythingBack.resx">
       <DependentUpon>201905201354049_ReturningEverythingBack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906121424038_ExtendingStrategies.resx">
+      <DependentUpon>201906121424038_ExtendingStrategies.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

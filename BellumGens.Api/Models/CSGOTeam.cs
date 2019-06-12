@@ -101,8 +101,6 @@ namespace BellumGens.Api.Models
 					IsPlayed = true
 				}
 			};
-
-			Visible = true;
 		}
 
 		public void UniqueCustomUrl(BellumGensDbContext context)
@@ -133,7 +131,7 @@ namespace BellumGens.Api.Models
 
 		public string Discord { get; set; }
 
-		public bool Visible { get; set; }
+		public bool Visible { get; set; } = true;
 
 		[MaxLength(64)]
 		[Index(IsUnique = true)]

@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace BellumGens.Api.Models
 {
@@ -12,6 +14,8 @@ namespace BellumGens.Api.Models
 		public Guid Id { get; set; }
 
 		public Guid TeamId { get; set; }
+
+		public string UserId { get; set; }
 
 		public Side Side { get; set; }
 
@@ -27,9 +31,33 @@ namespace BellumGens.Api.Models
 
 		public string EditorMetadata { get; set; }
 
+		public bool Visible { get; set; } = true;
+
+		public string PrivateShareLink { get; set; }
+
+		[NotMapped]
+		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+		public int Rating
+		{
+			get
+			{
+				return Votes.Where(v => v.Vote == VoteDirection.Up).Count() - Votes.Where(v => v.Vote == VoteDirection.Down).Count();
+			}
+			private set { }
+		}
+
+		[JsonIgnore]
+		public virtual ICollection<StrategyVotes> Votes { get; set; }
+
+		public virtual ICollection<StrategyComment> Comments { get; set; }
+
 		[JsonIgnore]
 		[ForeignKey("TeamId")]
 		public virtual CSGOTeam Team { get; set; }
+
+		[JsonIgnore]
+		[ForeignKey("UserId")]
+		public virtual ApplicationUser User { get; set; }
 	}
 
 	public enum Side
