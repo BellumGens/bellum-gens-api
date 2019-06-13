@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace BellumGens.Api.Models
 {
-	public class TeamStrategy
+	public class CSGOStrategy
 	{
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -34,6 +34,8 @@ namespace BellumGens.Api.Models
 		public bool Visible { get; set; } = true;
 
 		public string PrivateShareLink { get; set; }
+
+		public DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
 
 		[NotMapped]
 		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]

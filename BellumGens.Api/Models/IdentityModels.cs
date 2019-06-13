@@ -109,6 +109,10 @@ namespace BellumGens.Api.Models
 
         public bool SearchVisible { get; set; } = true;
 
+		public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
+
+		public DateTimeOffset LastSeen { get; set; } = DateTimeOffset.Now;
+
 		public PlaystyleRole PreferredPrimaryRole { get; set; }
 
 		public PlaystyleRole PreferredSecondaryRole { get; set; }
@@ -156,7 +160,7 @@ namespace BellumGens.Api.Models
 
 		public DbSet<TeamApplication> TeamApplications { get; set; }
 
-		public DbSet<TeamStrategy> Strategies { get; set; }
+		public DbSet<CSGOStrategy> Strategies { get; set; }
 
 		public DbSet<TeamMapPool> TeamMapPool { get; set; }
 

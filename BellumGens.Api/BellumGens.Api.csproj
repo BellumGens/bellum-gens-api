@@ -268,6 +268,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PushController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\StrategyController.cs" />
     <Compile Include="Controllers\TeamsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
@@ -433,6 +434,14 @@
     <Compile Include="Migrations\201906121424038_ExtendingStrategies.Designer.cs">
       <DependentUpon>201906121424038_ExtendingStrategies.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906130753183_RenameStrategiesTable.cs" />
+    <Compile Include="Migrations\201906130753183_RenameStrategiesTable.Designer.cs">
+      <DependentUpon>201906130753183_RenameStrategiesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906130814235_RegistrationDates.cs" />
+    <Compile Include="Migrations\201906130814235_RegistrationDates.Designer.cs">
+      <DependentUpon>201906130814235_RegistrationDates.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
@@ -453,7 +462,7 @@
     <Compile Include="Models\TeamMapPool.cs" />
     <Compile Include="Models\TeamMember.cs" />
     <Compile Include="Models\SearchModels.cs" />
-    <Compile Include="Models\TeamStrategy.cs" />
+    <Compile Include="Models\CSGOStrategy.cs" />
     <Compile Include="Models\UserMapPool.cs" />
     <Compile Include="Models\PlayerRoles.cs" />
     <Compile Include="Models\UserAvailability.cs" />
@@ -650,6 +659,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906121424038_ExtendingStrategies.resx">
       <DependentUpon>201906121424038_ExtendingStrategies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906130753183_RenameStrategiesTable.resx">
+      <DependentUpon>201906130753183_RenameStrategiesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906130814235_RegistrationDates.resx">
+      <DependentUpon>201906130814235_RegistrationDates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

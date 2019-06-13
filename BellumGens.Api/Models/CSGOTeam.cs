@@ -131,6 +131,8 @@ namespace BellumGens.Api.Models
 
 		public string Discord { get; set; }
 
+		public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
+
 		public bool Visible { get; set; } = true;
 
 		[MaxLength(64)]
@@ -138,7 +140,7 @@ namespace BellumGens.Api.Models
 		public string CustomUrl { get; set; }
 
 		[JsonIgnore]
-		public virtual ICollection<TeamStrategy> Strategies { get; set; }
+		public virtual ICollection<CSGOStrategy> Strategies { get; set; }
 
 		public virtual ICollection<TeamAvailability> PracticeSchedule { get; set; }
 

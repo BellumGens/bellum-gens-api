@@ -19,7 +19,7 @@ namespace BellumGens.Api.Models
 
 		[JsonIgnore]
 		[ForeignKey("StratId")]
-		public virtual TeamStrategy Strategy { get; set; }
+		public virtual CSGOStrategy Strategy { get; set; }
 
 		[JsonIgnore]
 		[ForeignKey("UserId")]

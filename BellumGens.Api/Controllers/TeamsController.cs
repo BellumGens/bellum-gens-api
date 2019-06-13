@@ -50,7 +50,7 @@ namespace BellumGens.Api.Controllers
 		[Route("Strat")]
 		public IHttpActionResult GetTeamStrat(Guid stratId)
 		{
-			TeamStrategy strat = _dbContext.Strategies.Find(stratId);
+			CSGOStrategy strat = _dbContext.Strategies.Find(stratId);
 			if (strat != null && strat.Team.Members.Any(m => m.UserId == GetAuthUser().Id))
 			{
 				return Ok(strat);
@@ -442,7 +442,7 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Strategy")]
 		[HttpPost]
-		public IHttpActionResult SubmitStrategy(TeamStrategy strategy)
+		public IHttpActionResult SubmitStrategy(CSGOStrategy strategy)
 		{
 			CSGOTeam team = UserIsTeamEditor(strategy.TeamId);
 			if (team == null)
@@ -450,7 +450,7 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("You need to be team editor.");
 			}
 
-			TeamStrategy entity = team.Strategies.FirstOrDefault(s => s.Id == strategy.Id);
+			CSGOStrategy entity = team.Strategies.FirstOrDefault(s => s.Id == strategy.Id);
 			if (entity == null)
 			{
 				entity = _dbContext.Strategies.Add(strategy);
@@ -481,7 +481,7 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("You need to be team editor.");
 			}
 
-			TeamStrategy entity = team.Strategies.FirstOrDefault(s => s.Id == id);
+			CSGOStrategy entity = team.Strategies.FirstOrDefault(s => s.Id == id);
 			if (entity != null)
 			{
 				_dbContext.Strategies.Remove(entity);
