@@ -41,9 +41,9 @@ namespace BellumGens.Api.Controllers
 			}
 			catch
 			{
-				return BadRequest("Something went wrong...");
+				return Ok("Sub already exists...");
 			}
-			return Ok(sub);
+			return Ok(push);
 		}
         public ApplicationUserManager UserManager
         {
