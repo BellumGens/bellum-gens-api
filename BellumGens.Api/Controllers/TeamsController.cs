@@ -48,9 +48,9 @@ namespace BellumGens.Api.Controllers
 		}
 
 		[Route("Strat")]
-		public IHttpActionResult GetTeamStrat(Guid stratId)
+		public IHttpActionResult GetTeamStrat(string stratId)
 		{
-			CSGOStrategy strat = _dbContext.Strategies.Find(stratId);
+			CSGOStrategy strat = ResolveStrategy(stratId);
 			if (strat != null && strat.Team.Members.Any(m => m.UserId == GetAuthUser().Id))
 			{
 				return Ok(strat);
@@ -569,6 +569,20 @@ namespace BellumGens.Api.Controllers
 				}
 			}
 			return team;
+		}
+
+		private CSGOStrategy ResolveStrategy(string stratId)
+		{
+			CSGOStrategy strat = _dbContext.Strategies.FirstOrDefault(s => s.CustomUrl == stratId);
+			if (strat == null)
+			{
+				var valid = Guid.TryParse(stratId, out Guid id);
+				if (valid)
+				{
+					strat = _dbContext.Strategies.Find(id);
+				}
+			}
+			return strat;
 		}
 	}
 

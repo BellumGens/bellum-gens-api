@@ -34,6 +34,7 @@ namespace BellumGens.Api.Models
 
 		public bool Visible { get; set; } = false;
 
+		[JsonIgnore]
 		public string PrivateShareLink { get; set; }
 
 		public DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
