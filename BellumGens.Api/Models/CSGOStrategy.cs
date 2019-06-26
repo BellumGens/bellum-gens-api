@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BellumGens.Api.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,11 +32,15 @@ namespace BellumGens.Api.Models
 
 		public string EditorMetadata { get; set; }
 
-		public bool Visible { get; set; } = true;
+		public bool Visible { get; set; } = false;
 
 		public string PrivateShareLink { get; set; }
 
 		public DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
+
+		[MaxLength(64)]
+		[Index(IsUnique = true)]
+		public string CustomUrl { get; set; }
 
 		[NotMapped]
 		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
@@ -60,6 +65,19 @@ namespace BellumGens.Api.Models
 		[JsonIgnore]
 		[ForeignKey("UserId")]
 		public virtual ApplicationUser User { get; set; }
+
+		public void UniqueCustomUrl(BellumGensDbContext context)
+		{
+			var parts = Title.Split(' ');
+			string url = string.Join("-", parts);
+			while (context.Strategies.Where(s => s.CustomUrl == url).SingleOrDefault() != null)
+			{
+				if (url.Length > 58)
+					url = url.Substring(0, 58);
+				url += '-' + Util.GenerateHashString(6);
+			}
+			CustomUrl = url;
+		}
 	}
 
 	public enum Side

@@ -442,6 +442,18 @@
     <Compile Include="Migrations\201906130814235_RegistrationDates.Designer.cs">
       <DependentUpon>201906130814235_RegistrationDates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906261102362_StrategyCustomUrl.cs" />
+    <Compile Include="Migrations\201906261102362_StrategyCustomUrl.Designer.cs">
+      <DependentUpon>201906261102362_StrategyCustomUrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906261109468_UniqueIndexForStratURL.cs" />
+    <Compile Include="Migrations\201906261109468_UniqueIndexForStratURL.Designer.cs">
+      <DependentUpon>201906261109468_UniqueIndexForStratURL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.cs" />
+    <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.Designer.cs">
+      <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
@@ -665,6 +677,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906130814235_RegistrationDates.resx">
       <DependentUpon>201906130814235_RegistrationDates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906261102362_StrategyCustomUrl.resx">
+      <DependentUpon>201906261102362_StrategyCustomUrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906261109468_UniqueIndexForStratURL.resx">
+      <DependentUpon>201906261109468_UniqueIndexForStratURL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906261111111_UniqueIndexForStratURL2.resx">
+      <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
