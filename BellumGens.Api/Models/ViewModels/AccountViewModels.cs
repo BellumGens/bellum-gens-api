@@ -1,6 +1,7 @@
 ﻿using SteamModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BellumGens.Api.Models
 {
@@ -84,7 +85,7 @@ namespace BellumGens.Api.Models
                     foreach (TeamMember memberof in _user.MemberOf)
                     {
                         if (memberof.IsAdmin)
-                            _teamAdmin.Add(memberof.Team);
+							_teamAdmin.Add(memberof.Team);
                     }
                 }
                 return _teamAdmin;
@@ -95,7 +96,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _user.Notifications;
+                return _user.Notifications.Where(n => n.State == NotificationState.NotSeen).ToList();
             }
         }
         public List<string> externalLogins { get; set; }

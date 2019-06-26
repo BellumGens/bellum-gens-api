@@ -330,7 +330,7 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("You need to be team admin.");
 			}
 
-			return Ok(team.Applications);
+			return Ok(team.Applications.Where(a => a.State == NotificationState.NotSeen).ToList());
 		}
 
 		[Route("ApproveApplication")]
