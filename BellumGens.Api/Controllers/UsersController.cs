@@ -98,7 +98,7 @@ namespace BellumGens.Api.Controllers
 		public IHttpActionResult SetPrimaryRole(Role role)
 		{
 			ApplicationUser user = GetAuthUser();
-			user.PreferredPrimaryRole = role.Id;
+			_dbContext.Users.Find(user.Id).PreferredPrimaryRole = role.Id;
 			try
 			{
 				_dbContext.SaveChanges();
@@ -115,7 +115,7 @@ namespace BellumGens.Api.Controllers
 		public IHttpActionResult SetSecondaryRole(Role role)
 		{
 			ApplicationUser user = GetAuthUser();
-			user.PreferredSecondaryRole = role.Id;
+			_dbContext.Users.Find(user.Id).PreferredSecondaryRole = role.Id;
 			try
 			{
 				_dbContext.SaveChanges();
