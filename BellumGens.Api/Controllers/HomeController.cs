@@ -6,7 +6,7 @@ namespace BellumGens.Api.Controllers
 	{
 		public ActionResult Index()
 		{
-			return Redirect(CORSConfig.allowedOrigins);
+			return Redirect(CORSConfig.returnOrigin);
 		}
 	}
 }
