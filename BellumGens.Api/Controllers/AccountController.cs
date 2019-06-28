@@ -102,14 +102,14 @@ namespace BellumGens.Api.Controllers
 		{
 			if (userId == null || code == null)
 			{
-				return Redirect(CORSConfig.allowedOrigins + "/emailconfirm/error");
+				return Redirect(CORSConfig.returnOrigin + "/emailconfirm/error");
 			}
 			var result = UserManager.ConfirmEmail(userId, code);
 			if (result.Succeeded)
 			{
-				return Redirect(CORSConfig.allowedOrigins + "/emailconfirm");
+				return Redirect(CORSConfig.returnOrigin + "/emailconfirm");
 			}
-			return Redirect(CORSConfig.allowedOrigins + "/emailconfirm/error");
+			return Redirect(CORSConfig.returnOrigin + "/emailconfirm/error");
 		}
 
 		// POST api/Account/Logout
@@ -234,7 +234,7 @@ namespace BellumGens.Api.Controllers
 
 			if (externalLogin == null)
 			{
-				return Redirect(CORSConfig.allowedOrigins + "/players/" + userId);
+				return Redirect(CORSConfig.returnOrigin + "/players/" + userId);
 			}
 
 			IdentityResult result = await UserManager.AddLoginAsync(userId,
@@ -242,7 +242,7 @@ namespace BellumGens.Api.Controllers
 
 			if (!result.Succeeded)
 			{
-				return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+				return Redirect(CORSConfig.returnOrigin + "/unauthorized");
 			}
 
 
@@ -250,7 +250,7 @@ namespace BellumGens.Api.Controllers
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignIn(identity);
 
-            return Redirect(CORSConfig.allowedOrigins + "/players/" + userId);
+            return Redirect(CORSConfig.returnOrigin + "/players/" + userId);
 		}
 
 		// POST api/Account/RemoveLogin
@@ -291,7 +291,7 @@ namespace BellumGens.Api.Controllers
         {
             if (error != null)
             {
-                return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+                return Redirect(CORSConfig.returnOrigin + "/unauthorized");
 			}
 
             if (!User.Identity.IsAuthenticated)
@@ -303,7 +303,7 @@ namespace BellumGens.Api.Controllers
 
             if (externalLogin == null)
             {
-                return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+                return Redirect(CORSConfig.returnOrigin + "/unauthorized");
 			}
 
             if (externalLogin.LoginProvider != provider)
@@ -331,7 +331,7 @@ namespace BellumGens.Api.Controllers
 					IdentityResult x = await Register(externalLogin);
 					if (!x.Succeeded)
 					{
-						return Redirect(CORSConfig.allowedOrigins + "/unauthorized");
+						return Redirect(CORSConfig.returnOrigin + "/unauthorized");
 					}
 					user = GetAuthUser();
 					// Upon registration, redirect to the user's profile for information setup.
@@ -339,14 +339,14 @@ namespace BellumGens.Api.Controllers
 				}
 				else
 				{
-					return Redirect(CORSConfig.allowedOrigins + "/addsteam");
+					return Redirect(CORSConfig.returnOrigin + "/addsteam");
 				}
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignIn(identity);
 
-            return Redirect(CORSConfig.allowedOrigins + '/' + returnUrl);
+            return Redirect(CORSConfig.returnOrigin + '/' + returnUrl);
 
 		}
 		// GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
