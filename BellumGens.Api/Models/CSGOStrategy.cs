@@ -49,7 +49,7 @@ namespace BellumGens.Api.Models
 		{
 			get
 			{
-				return Votes.Where(v => v.Vote == VoteDirection.Up).Count() - Votes.Where(v => v.Vote == VoteDirection.Down).Count();
+				return Votes == null ? 0 : Votes.Where(v => v.Vote == VoteDirection.Up).Count() - Votes.Where(v => v.Vote == VoteDirection.Down).Count();
 			}
 			private set { }
 		}
