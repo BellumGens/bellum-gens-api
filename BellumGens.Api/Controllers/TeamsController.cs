@@ -28,28 +28,6 @@ namespace BellumGens.Api.Controllers
 			return ResolveTeam(teamId);
 		}
 
-		[Route("Strats")]
-		public IHttpActionResult GetTeamStrats(string teamId)
-		{
-			CSGOTeam team = UserIsTeamMember(teamId);
-			if (team == null)
-			{
-				return BadRequest("You're not a member of this team.");
-			}
-			return Ok(team.Strategies);
-		}
-
-		[Route("Strat")]
-		public IHttpActionResult GetTeamStrat(string stratId)
-		{
-			CSGOStrategy strat = ResolveStrategy(stratId);
-			if (strat != null && strat.Team.Members.Any(m => m.UserId == GetAuthUser().Id))
-			{
-				return Ok(strat);
-			}
-			return BadRequest("Strat not found or user is not team member.");
-		}
-
 		[Route("MapPool")]
 		public IHttpActionResult GetTeamMapPool(string teamId)
 		{
@@ -432,13 +410,6 @@ namespace BellumGens.Api.Controllers
 			return Ok(entity);
 		}
 
-  //      private CSGOTeam UserIsTeamAdmin(string teamId)
-		//{
-		//	CSGOTeam team = ResolveTeam(teamId);
-  //          ApplicationUser user = GetAuthUser();
-  //          return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == user.Id) ? team : null;
-		//}
-
 		private CSGOTeam UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
@@ -453,13 +424,6 @@ namespace BellumGens.Api.Controllers
             return team != null && team.Members.Any(m => m.UserId == user.Id) ? team : null;
         }
 
-		private CSGOTeam UserIsTeamMember(Guid teamId)
-		{
-			CSGOTeam team = _dbContext.Teams.Find(teamId);
-			ApplicationUser user = GetAuthUser();
-			return team != null && team.Members.Any(m => m.UserId == user.Id) ? team : null;
-		}
-
 		private CSGOTeam ResolveTeam(string teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.FirstOrDefault(t => t.CustomUrl == teamId);
@@ -472,20 +436,6 @@ namespace BellumGens.Api.Controllers
 				}
 			}
 			return team;
-		}
-
-		private CSGOStrategy ResolveStrategy(string stratId)
-		{
-			CSGOStrategy strat = _dbContext.Strategies.FirstOrDefault(s => s.CustomUrl == stratId);
-			if (strat == null)
-			{
-				var valid = Guid.TryParse(stratId, out Guid id);
-				if (valid)
-				{
-					strat = _dbContext.Strategies.Find(id);
-				}
-			}
-			return strat;
 		}
 	}
 

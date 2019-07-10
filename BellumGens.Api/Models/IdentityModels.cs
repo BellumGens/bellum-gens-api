@@ -202,9 +202,13 @@ namespace BellumGens.Api.Models
 						.HasMany(e => e.TeamApplications)
 						.WithRequired(e => e.User);
 
+			modelBuilder.Entity<CSGOStrategy>()
+						.HasOptional(s => s.Team)
+						.WithMany(e => e.Strategies);
+
 			modelBuilder.Entity<CSGOTeam>()
 						.HasMany(e => e.Strategies)
-						.WithRequired(e => e.Team);
+						.WithOptional(e => e.Team);
 		}
 	}
 }

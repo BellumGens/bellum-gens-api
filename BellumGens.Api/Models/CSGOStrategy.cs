@@ -14,7 +14,7 @@ namespace BellumGens.Api.Models
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
 
-		public Guid TeamId { get; set; }
+		public Guid? TeamId { get; set; }
 
 		public string UserId { get; set; }
 

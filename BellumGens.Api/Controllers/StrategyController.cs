@@ -18,19 +18,52 @@ namespace BellumGens.Api.Controllers
 			return Ok(strategies);
 		}
 
+		[Route("teamstrats")]
+		public IHttpActionResult GetTeamStrats(string teamId)
+		{
+			CSGOTeam team = UserIsTeamMember(teamId);
+			if (team == null)
+			{
+				return BadRequest("You're not a member of this team.");
+			}
+			return Ok(team.Strategies);
+		}
+
+		[Route("Strat")]
+		public IHttpActionResult GetStrat(string stratId)
+		{
+			CSGOStrategy strat = ResolveStrategy(stratId);
+			if (strat != null && strat.TeamId != null && strat.TeamId != Guid.Empty)
+			{
+				if (!UserIsTeamMember(strat.TeamId.Value))
+				{
+					return BadRequest("You need to be team editor.");
+				}
+			}
+
+			if (strat != null)
+			{
+				return Ok(strat);
+			}
+			return BadRequest("Strat not found or user is not team member.");
+		}
+
 		[Route("Strategy")]
 		[HttpPost]
 		public IHttpActionResult SubmitStrategy(CSGOStrategy strategy)
 		{
-			CSGOTeam team = UserIsTeamEditor(strategy.TeamId);
-			if (team == null)
+			if (strategy.TeamId != null && strategy.TeamId != Guid.Empty)
 			{
-				return BadRequest("You need to be team editor.");
+				if (!UserIsTeamEditor(strategy.TeamId.Value))
+				{
+					return BadRequest("You need to be team editor.");
+				}
 			}
 
-			CSGOStrategy entity = team.Strategies.FirstOrDefault(s => s.Id == strategy.Id);
+			CSGOStrategy entity = UserCanEdit(strategy.Id);
 			if (entity == null)
 			{
+				strategy.UniqueCustomUrl(_dbContext);
 				entity = _dbContext.Strategies.Add(strategy);
 			}
 			else
@@ -51,19 +84,23 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Strategy")]
 		[HttpDelete]
-		public IHttpActionResult DeleteStrategy(Guid id, string teamid)
+		public IHttpActionResult DeleteStrategy(Guid id)
 		{
-			CSGOTeam team = UserIsTeamEditor(teamid);
-			if (team == null)
+			CSGOStrategy entity = UserCanEdit(id);
+			if (entity == null)
 			{
 				return BadRequest("You need to be team editor.");
 			}
 
-			CSGOStrategy entity = team.Strategies.FirstOrDefault(s => s.Id == id);
-			if (entity != null)
+			if (entity.TeamId != null && entity.TeamId != Guid.Empty)
 			{
-				_dbContext.Strategies.Remove(entity);
+				if (!UserIsTeamEditor(entity.TeamId.Value))
+				{
+					return BadRequest("You need to be team editor to delete this strategy.");
+				}
 			}
+
+			_dbContext.Strategies.Remove(entity);
 
 			try
 			{
@@ -76,18 +113,31 @@ namespace BellumGens.Api.Controllers
 			return Ok("Ok");
 		}
 
-		private CSGOTeam UserIsTeamEditor(string teamId)
+		private CSGOStrategy UserCanEdit(Guid id)
 		{
-			CSGOTeam team = ResolveTeam(teamId);
 			ApplicationUser user = GetAuthUser();
-			return team != null && team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == user.Id) ? team : null;
+			return _dbContext.Strategies.FirstOrDefault(s => s.Id == id && s.UserId == user.Id);
 		}
 
-		private CSGOTeam UserIsTeamEditor(Guid teamId)
+		private bool UserIsTeamEditor(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
 			ApplicationUser user = GetAuthUser();
-			return team != null && team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == user.Id) ? team : null;
+			return team != null && team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == user.Id);
+		}
+
+		private CSGOTeam UserIsTeamMember(string teamId)
+		{
+			CSGOTeam team = ResolveTeam(teamId);
+			ApplicationUser user = GetAuthUser();
+			return team != null && team.Members.Any(m => m.UserId == user.Id) ? team : null;
+		}
+
+		private bool UserIsTeamMember(Guid teamId)
+		{
+			CSGOTeam team = _dbContext.Teams.Find(teamId);
+			ApplicationUser user = GetAuthUser();
+			return team != null && team.Members.Any(m => m.UserId == user.Id);
 		}
 
 		private CSGOTeam ResolveTeam(string teamId)
@@ -102,6 +152,20 @@ namespace BellumGens.Api.Controllers
 				}
 			}
 			return team;
+		}
+
+		private CSGOStrategy ResolveStrategy(string stratId)
+		{
+			CSGOStrategy strat = _dbContext.Strategies.FirstOrDefault(s => s.CustomUrl == stratId);
+			if (strat == null)
+			{
+				var valid = Guid.TryParse(stratId, out Guid id);
+				if (valid)
+				{
+					strat = _dbContext.Strategies.Find(id);
+				}
+			}
+			return strat;
 		}
 	}
 }

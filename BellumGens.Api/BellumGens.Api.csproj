@@ -455,6 +455,10 @@
     <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.Designer.cs">
       <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907101455417_OptionalTeam.cs" />
+    <Compile Include="Migrations\201907101455417_OptionalTeam.Designer.cs">
+      <DependentUpon>201907101455417_OptionalTeam.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
@@ -687,6 +691,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906261111111_UniqueIndexForStratURL2.resx">
       <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907101455417_OptionalTeam.resx">
+      <DependentUpon>201907101455417_OptionalTeam.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
