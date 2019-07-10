@@ -1,24 +1,16 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security.Cookies;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
 	[Authorize]
-    [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
     [RoutePrefix("api/Users")]
-	public class UsersController : ApiController
+	public class UsersController : BaseController
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
-        private ApplicationUserManager _userManager;
 
         [Route("Users")]
 		[AllowAnonymous]
@@ -185,22 +177,5 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok(entity);
 		}
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        private ApplicationUser GetAuthUser()
-		{
-			return UserManager.FindByName(User.Identity.GetUserName());
-        }
 	}
 }

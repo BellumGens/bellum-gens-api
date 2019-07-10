@@ -3,23 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using BellumGens.Api.Models.Extensions;
 using BellumGens.Api.Providers;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security.Cookies;
-using System.Net.Http;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-	[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 	[RoutePrefix("api/Search")]
-	public class SearchController : ApiController
+	public class SearchController : BaseController
 	{
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
-        private ApplicationUserManager _userManager;
 
         [Route("Search")]
 		[HttpGet]
@@ -137,22 +129,5 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok(steamUsers);
 		}
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        private ApplicationUser GetAuthUser()
-        {
-            return UserManager.FindByName(User.Identity.GetUserName());
-        }
     }
 }
