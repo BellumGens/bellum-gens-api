@@ -1,4 +1,5 @@
-﻿using SteamModels;
+﻿using BellumGens.Api.Providers;
+using SteamModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,32 +33,54 @@ namespace BellumGens.Api.Models
         private List<CSGOTeamSummaryViewModel> _teams;
         private List<CSGOTeam> _teamAdmin;
         private ApplicationUser _user;
+		private SteamUser _steamUser;
+
+		public UserInfoViewModel() { }
 
         public UserInfoViewModel(ApplicationUser user)
         {
             _user = user;
         }
 
+		public void SetUser(ApplicationUser user)
+		{
+			_user = user;
+		}
+
 		public bool registered
 		{
-			get { return true; }
+			get { return _user != null; }
 		}
 
         public string id
         {
             get
             {
-                return _user.Id;
+                return _user?.Id;
             }
         }
 
-        public SteamUser steamUser
-        {
-            get
-            {
-                return _user.SteamUser;
-            }
-        }
+		public SteamUser steamUser
+		{
+			get
+			{
+				if (_user != null)
+				{
+					_steamUser = _user.SteamUser;
+				}
+				if (_steamUser == null)
+				{
+					_steamUser = SteamServiceProvider.GetSteamUser(id);
+				}
+				return _steamUser;
+			}
+			set
+			{
+				_steamUser = value;
+				if (_user != null)
+					_user.SteamUser = value;
+			}
+		}
 
         public List<CSGOTeamSummaryViewModel> teams
         {
@@ -66,7 +89,7 @@ namespace BellumGens.Api.Models
                 if (_teams == null)
                 {
                     _teams = new List<CSGOTeamSummaryViewModel>();
-                    foreach (TeamMember memberof in _user.MemberOf)
+                    foreach (TeamMember memberof in _user?.MemberOf)
                     {
                         _teams.Add(new CSGOTeamSummaryViewModel(memberof.Team));
                     }
@@ -82,7 +105,7 @@ namespace BellumGens.Api.Models
                 if (_teamAdmin == null)
                 {
                     _teamAdmin = new List<CSGOTeam>();
-                    foreach (TeamMember memberof in _user.MemberOf)
+                    foreach (TeamMember memberof in _user?.MemberOf)
                     {
                         if (memberof.IsAdmin)
 							_teamAdmin.Add(memberof.Team);
@@ -96,7 +119,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _user.Notifications.Where(n => n.State == NotificationState.NotSeen).ToList();
+                return _user?.Notifications.Where(n => n.State == NotificationState.NotSeen).ToList();
             }
         }
         public List<string> externalLogins { get; set; }
@@ -104,42 +127,42 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _user.Email;
+                return _user?.Email;
             }
         }
-        public bool searchVisible
+        public bool? searchVisible
         {
             get
             {
-                return _user.SearchVisible;
+                return _user?.SearchVisible;
             }
         }
         public ICollection<UserAvailability> availability
         {
             get
             {
-                return _user.Availability;
+                return _user?.Availability;
             }
         }
-        public PlaystyleRole primaryRole
+        public PlaystyleRole? primaryRole
         {
             get
             {
-                return _user.PreferredPrimaryRole;
+                return _user?.PreferredPrimaryRole;
             }
         }
-        public PlaystyleRole secondaryRole
+        public PlaystyleRole? secondaryRole
         {
             get
             {
-                return _user.PreferredSecondaryRole;
+                return _user?.PreferredSecondaryRole;
             }
         }
         public ICollection<UserMapPool> mapPool
         {
             get
             {
-                return _user.MapPool;
+                return _user?.MapPool;
             }
         }
     }

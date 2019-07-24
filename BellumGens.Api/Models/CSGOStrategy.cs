@@ -54,6 +54,15 @@ namespace BellumGens.Api.Models
 			private set { }
 		}
 
+		[NotMapped]
+		public string Owner
+		{
+			get
+			{
+				return User.UserName;
+			}
+		}
+
 		[JsonIgnore]
 		public virtual ICollection<StrategyVotes> Votes { get; set; }
 

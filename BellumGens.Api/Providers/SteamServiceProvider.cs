@@ -9,6 +9,7 @@ using System;
 using System.Web.Caching;
 using System.Web;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace BellumGens.Api.Providers
 {
@@ -61,19 +62,22 @@ namespace BellumGens.Api.Providers
 			return result.response.players;
 		}
 
-		public static UserStatsViewModel GetSteamUserDetails(string name)
+		public static async Task<UserStatsViewModel> GetSteamUserDetails(string name)
 		{
-			if (_cache.Get(name) is UserStatsViewModel)
+			lock (_cache)
 			{
-				return _cache.Get(name) as UserStatsViewModel;
+				if (_cache.Get(name) is UserStatsViewModel)
+				{
+					return _cache.Get(name) as UserStatsViewModel;
+				}
 			}
 			HttpClient client = new HttpClient();
-			var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
+			var playerDetailsResponse = await client.GetStreamAsync(NormalizeUsername(name));
 			SteamUser steamUser = null;
 			XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
 			try
 			{
-				steamUser = (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
+				steamUser = (SteamUser)serializer.Deserialize(playerDetailsResponse);
 			}
 			catch (Exception e)
 			{
@@ -84,11 +88,21 @@ namespace BellumGens.Api.Providers
 				};
 			}
 
-			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, steamUser.steamID64));
-			CSGOPlayerStats statsForUser = null;
+			var statsForGameResponse = await client.GetStringAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, steamUser.steamID64));
+
 			try
 			{
-				statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse.Result);
+				CSGOPlayerStats statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse);
+				UserStatsViewModel user = new UserStatsViewModel()
+				{
+					steamUser = steamUser,
+					userStats = statsForUser
+				};
+				lock (_cache)
+				{
+					_cache.Add(name, user, null, DateTime.Now.AddDays(2), Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
+				}
+				return user;
 			}
 			catch (Exception e)
 			{
@@ -98,27 +112,7 @@ namespace BellumGens.Api.Providers
 					userStatsException = e.Message
 				};
 			}
-
-			UserStatsViewModel user = new UserStatsViewModel()
-			{
-				steamUser = steamUser,
-				userStats = statsForUser
-			};
-			_cache.Add(name, user, null, DateTime.Now.AddDays(2), Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
-			return user;
 		}
-
-        public static UserStatsViewModel GetSteamUserDetails(UserInfoViewModel user)
-        {
-            UserStatsViewModel model = GetSteamUserDetails(user.id);
-            model.availability = user.availability;
-            model.primaryRole = user.primaryRole;
-            model.secondaryRole = user.secondaryRole;
-            model.mapPool = user.mapPool;
-            model.teams = user.teams;
-			model.registered = true;
-            return model;
-        }
 
 		public static SteamGroup GetSteamGroup(string groupid)
 		{

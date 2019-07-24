@@ -8,10 +8,9 @@ namespace BellumGens.Api.Models
 		public SearchResultViewModel()
 		{
 			this.Teams = new List<CSGOTeam>();
-			this.Players = new List<UserStatsViewModel>();
 		}
 
 		public List<CSGOTeam> Teams { get; set; }
-		public List<UserStatsViewModel> Players { get; set; }
+		public UserStatsViewModel [] Players { get; set; }
 	}
 }

@@ -141,6 +141,10 @@ namespace BellumGens.Api.Models
 				}
 				return _user;
 			}
+			set
+			{
+				_user = value;
+			}
 		}
     }
 

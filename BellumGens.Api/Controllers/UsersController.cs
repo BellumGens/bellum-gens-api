@@ -2,6 +2,7 @@
 using BellumGens.Api.Providers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace BellumGens.Api.Controllers
@@ -14,36 +15,32 @@ namespace BellumGens.Api.Controllers
 
         [Route("Users")]
 		[AllowAnonymous]
-		public List<UserStatsViewModel> GetUsers(int page = 0)
+		public async Task<UserStatsViewModel []> GetUsers(int page = 0)
 		{
-			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
+			UserStatsViewModel[] steamUsers;
 			List<ApplicationUser> activeUsers = _dbContext.Users.OrderBy(e => e.Id).Skip(page * 10).Take(10).ToList();
 
+			List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
 			foreach (ApplicationUser user in activeUsers)
 			{
-				var model = new UserInfoViewModel(user);
-				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(model));
+				var model = new UserStatsViewModel(user);
+				tasks.Add(model.GetSteamUserDetails());
 			}
-			return steamUsers;
+
+			return await Task.WhenAll(tasks);
 		}
 
 		[Route("User")]
 		[AllowAnonymous]
-		public UserStatsViewModel GetUser(string userid)
+		public async Task<UserStatsViewModel> GetUser(string userid)
 		{
-			UserStatsViewModel user = SteamServiceProvider.GetSteamUserDetails(userid);
+			UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid);
 			if (user.steamUser != null)
 			{
 				var registered = _dbContext.Users.Find(user.steamUser.steamID64);
 				if (registered != null)
 				{
-                    UserInfoViewModel model = new UserInfoViewModel(registered);
-					user.availability = model.availability;
-					user.primaryRole = model.primaryRole;
-					user.secondaryRole = model.secondaryRole;
-					user.mapPool = model.mapPool;
-					user.teams = model.teams;
-					user.registered = true;
+					user.SetUser(registered);
 				}
 			}
 			return user;
