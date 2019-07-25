@@ -68,6 +68,7 @@ namespace BellumGens.Api.Controllers
 			}
 			else
 			{
+				strategy.LastUpdated = DateTimeOffset.Now;
 				_dbContext.Entry(entity).CurrentValues.SetValues(strategy);
 			}
 
@@ -112,6 +113,54 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok("Ok");
 		}
+
+		[Route("Vote")]
+		[HttpPost]
+		[Authorize]
+		public IHttpActionResult SubmitStrategyVote(VoteModel model)
+		{
+			string userId = GetAuthUser().Id;
+
+			var strategy = _dbContext.Strategies.Find(model.id);
+			StrategyVote vote = strategy.Votes.FirstOrDefault(v => v.UserId == userId);
+			if (vote == null)
+			{
+				vote = new StrategyVote()
+				{
+					UserId = userId,
+					Vote = model.direction
+				};
+				strategy.Votes.Add(vote);
+			}
+			else
+			{
+				if (vote.Vote == model.direction)
+				{
+					strategy.Votes.Remove(vote);
+				}
+				else
+				{
+					vote.Vote = model.direction;
+				}
+			}
+
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok(vote);
+		}
+
+		public class VoteModel
+		{
+			public Guid id { get; set; }
+			public VoteDirection direction { get; set; }
+		}
+
 
 		private CSGOStrategy UserCanEdit(Guid id)
 		{

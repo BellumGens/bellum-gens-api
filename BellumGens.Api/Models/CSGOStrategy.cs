@@ -59,12 +59,11 @@ namespace BellumGens.Api.Models
 		{
 			get
 			{
-				return User.UserName;
+				return User?.UserName;
 			}
 		}
 
-		[JsonIgnore]
-		public virtual ICollection<StrategyVotes> Votes { get; set; }
+		public virtual ICollection<StrategyVote> Votes { get; set; }
 
 		public virtual ICollection<StrategyComment> Comments { get; set; }
 

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Models
 {
-	public class StrategyVotes
+	public class StrategyVote
 	{
 		[Key]
 		[Column(Order = 0)]
