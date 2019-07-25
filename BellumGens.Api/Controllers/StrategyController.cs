@@ -14,8 +14,9 @@ namespace BellumGens.Api.Controllers
 		[Route("Strategies")]
 		public IHttpActionResult GetStrategies(int page = 0)
 		{
-			List<CSGOStrategy> strategies = _dbContext.Strategies.Where(s => s.TeamId == Guid.Empty || s.Visible == true).OrderByDescending(s => s.Id).Skip(page * 25).Take(25).ToList();
-			return Ok(strategies);
+			List<CSGOStrategy> strategies = _dbContext.Strategies.Where(s => s.Visible == true)
+																 .OrderByDescending(s => s.LastUpdated).Skip(page * 25).Take(25).ToList();
+			return Ok(strategies.OrderByDescending(s => s.Rating));
 		}
 
 		[Route("teamstrats")]
@@ -137,6 +138,7 @@ namespace BellumGens.Api.Controllers
 				if (vote.Vote == model.direction)
 				{
 					strategy.Votes.Remove(vote);
+					vote = null;
 				}
 				else
 				{
