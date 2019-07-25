@@ -13,9 +13,9 @@ namespace BellumGens.Api.Models
 		public UserStatsViewModel(ApplicationUser user)
 			: base(user) { }
 
-		public string steamUserException { get; set; }
+		public bool steamUserException { get; set; } = false;
 		public CSGOPlayerStats userStats { get; set; }
-		public string userStatsException { get; set; }
+		public bool userStatsException { get; set; } = false;
 
 		public async Task<UserStatsViewModel> GetSteamUserDetails()
 		{

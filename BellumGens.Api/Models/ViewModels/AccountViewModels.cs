@@ -64,13 +64,9 @@ namespace BellumGens.Api.Models
 		{
 			get
 			{
-				if (_user != null)
-				{
-					_steamUser = _user.SteamUser;
-				}
 				if (_steamUser == null)
 				{
-					_steamUser = SteamServiceProvider.GetSteamUser(id);
+					_steamUser = _user?.SteamUser;
 				}
 				return _steamUser;
 			}
@@ -86,10 +82,10 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                if (_teams == null)
+                if (_teams == null && _user != null)
                 {
                     _teams = new List<CSGOTeamSummaryViewModel>();
-                    foreach (TeamMember memberof in _user?.MemberOf)
+                    foreach (TeamMember memberof in _user.MemberOf)
                     {
                         _teams.Add(new CSGOTeamSummaryViewModel(memberof.Team));
                     }
@@ -102,10 +98,10 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                if (_teamAdmin == null)
+                if (_teamAdmin == null && _user != null)
                 {
                     _teamAdmin = new List<CSGOTeam>();
-                    foreach (TeamMember memberof in _user?.MemberOf)
+                    foreach (TeamMember memberof in _user.MemberOf)
                     {
                         if (memberof.IsAdmin)
 							_teamAdmin.Add(memberof.Team);

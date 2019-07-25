@@ -17,7 +17,6 @@ namespace BellumGens.Api.Controllers
 		[AllowAnonymous]
 		public async Task<UserStatsViewModel []> GetUsers(int page = 0)
 		{
-			UserStatsViewModel[] steamUsers;
 			List<ApplicationUser> activeUsers = _dbContext.Users.OrderBy(e => e.Id).Skip(page * 10).Take(10).ToList();
 
 			List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
@@ -32,18 +31,15 @@ namespace BellumGens.Api.Controllers
 
 		[Route("User")]
 		[AllowAnonymous]
-		public async Task<UserStatsViewModel> GetUser(string userid)
+		public async Task<IHttpActionResult> GetUser(string userid)
 		{
 			UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid);
-			if (user.steamUser != null)
+			var registered = _dbContext.Users.Find(user.steamUser?.steamID64);
+			if (registered != null)
 			{
-				var registered = _dbContext.Users.Find(user.steamUser.steamID64);
-				if (registered != null)
-				{
-					user.SetUser(registered);
-				}
+				user.SetUser(registered);
 			}
-			return user;
+			return Ok(user);
 		}
 
 		[Route("Availability")]
