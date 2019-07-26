@@ -44,7 +44,6 @@ namespace BellumGens.Api.Models
 		public string CustomUrl { get; set; }
 
 		[NotMapped]
-		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
 		public int Rating
 		{
 			get

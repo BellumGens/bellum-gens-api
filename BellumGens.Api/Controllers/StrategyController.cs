@@ -14,7 +14,7 @@ namespace BellumGens.Api.Controllers
 		[Route("Strategies")]
 		public IHttpActionResult GetStrategies(int page = 0)
 		{
-			List<CSGOStrategy> strategies = _dbContext.Strategies.Where(s => s.Visible == true)
+			List<CSGOStrategy> strategies = _dbContext.Strategies.Where(s => s.Visible == true && (!string.IsNullOrEmpty(s.Url) || !string.IsNullOrEmpty(s.Image)))
 																 .OrderByDescending(s => s.LastUpdated).Skip(page * 25).Take(25).ToList();
 			return Ok(strategies.OrderByDescending(s => s.Rating));
 		}
