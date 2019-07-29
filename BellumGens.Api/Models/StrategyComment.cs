@@ -16,6 +16,24 @@ namespace BellumGens.Api.Models
 
 		public string Comment { get; set; }
 
+		[NotMapped]
+		public string UserName
+		{
+			get
+			{
+				return User.UserName;
+			}
+		}
+
+		[NotMapped]
+		public string UserAvatar
+		{
+			get
+			{
+				return User.SteamUser.avatarIcon;
+			}
+		}
+
 		[JsonIgnore]
 		[ForeignKey("StratId")]
 		public virtual CSGOStrategy Strategy { get; set; }
