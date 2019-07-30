@@ -34,7 +34,7 @@ namespace BellumGens.Api.Controllers
 		public IHttpActionResult GetStrat(string stratId)
 		{
 			CSGOStrategy strat = ResolveStrategy(stratId);
-			if (strat != null && strat.TeamId != null && strat.TeamId != Guid.Empty)
+			if (strat != null && !strat.Visible && strat.TeamId != null && strat.TeamId != Guid.Empty)
 			{
 				if (!UserIsTeamMember(strat.TeamId.Value))
 				{
