@@ -459,6 +459,10 @@
     <Compile Include="Migrations\201907101455417_OptionalTeam.Designer.cs">
       <DependentUpon>201907101455417_OptionalTeam.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907311444344_CommentUniqueId.cs" />
+    <Compile Include="Migrations\201907311444344_CommentUniqueId.Designer.cs">
+      <DependentUpon>201907311444344_CommentUniqueId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
@@ -694,6 +698,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907101455417_OptionalTeam.resx">
       <DependentUpon>201907101455417_OptionalTeam.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907311444344_CommentUniqueId.resx">
+      <DependentUpon>201907311444344_CommentUniqueId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

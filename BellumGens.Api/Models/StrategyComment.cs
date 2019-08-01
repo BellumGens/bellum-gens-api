@@ -6,6 +6,7 @@ namespace BellumGens.Api.Models
 {
 	public class StrategyComment
 	{
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
 
 		public Guid StratId { get; set; }

@@ -157,6 +157,27 @@ namespace BellumGens.Api.Controllers
 			return Ok(vote);
 		}
 
+		[Route("Comment")]
+		[HttpPost]
+		[Authorize]
+		public IHttpActionResult SubmitStrategyComment(StrategyComment comment)
+		{
+			string userId = GetAuthUser().Id;
+
+			comment.UserId = userId;
+			comment = _dbContext.StrategyComments.Add(comment);
+
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+			return Ok(comment);
+		}
+
 		public class VoteModel
 		{
 			public Guid id { get; set; }
