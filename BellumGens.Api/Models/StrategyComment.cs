@@ -22,7 +22,7 @@ namespace BellumGens.Api.Models
 		{
 			get
 			{
-				return User.UserName;
+				return User?.UserName;
 			}
 		}
 
@@ -31,7 +31,7 @@ namespace BellumGens.Api.Models
 		{
 			get
 			{
-				return User.SteamUser.avatarIcon;
+				return User?.SteamUser.avatarIcon;
 			}
 		}
 

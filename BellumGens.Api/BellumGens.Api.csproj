@@ -423,14 +423,6 @@
     <Compile Include="Migrations\201905171344382_TeamCustomUrl.Designer.cs">
       <DependentUpon>201905171344382_TeamCustomUrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905171346467_UpdateCurrentTeams.cs" />
-    <Compile Include="Migrations\201905171346467_UpdateCurrentTeams.Designer.cs">
-      <DependentUpon>201905171346467_UpdateCurrentTeams.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201905201354049_ReturningEverythingBack.cs" />
-    <Compile Include="Migrations\201905201354049_ReturningEverythingBack.Designer.cs">
-      <DependentUpon>201905201354049_ReturningEverythingBack.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201906121424038_ExtendingStrategies.cs" />
     <Compile Include="Migrations\201906121424038_ExtendingStrategies.Designer.cs">
       <DependentUpon>201906121424038_ExtendingStrategies.cs</DependentUpon>
@@ -447,10 +439,6 @@
     <Compile Include="Migrations\201906261102362_StrategyCustomUrl.Designer.cs">
       <DependentUpon>201906261102362_StrategyCustomUrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201906261109468_UniqueIndexForStratURL.cs" />
-    <Compile Include="Migrations\201906261109468_UniqueIndexForStratURL.Designer.cs">
-      <DependentUpon>201906261109468_UniqueIndexForStratURL.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.cs" />
     <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.Designer.cs">
       <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
@@ -462,6 +450,10 @@
     <Compile Include="Migrations\201907311444344_CommentUniqueId.cs" />
     <Compile Include="Migrations\201907311444344_CommentUniqueId.Designer.cs">
       <DependentUpon>201907311444344_CommentUniqueId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908010826262_UpdateStratAndTeamURLs.cs" />
+    <Compile Include="Migrations\201908010826262_UpdateStratAndTeamURLs.Designer.cs">
+      <DependentUpon>201908010826262_UpdateStratAndTeamURLs.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -672,12 +664,6 @@
     <EmbeddedResource Include="Migrations\201905171344382_TeamCustomUrl.resx">
       <DependentUpon>201905171344382_TeamCustomUrl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905171346467_UpdateCurrentTeams.resx">
-      <DependentUpon>201905171346467_UpdateCurrentTeams.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905201354049_ReturningEverythingBack.resx">
-      <DependentUpon>201905201354049_ReturningEverythingBack.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906121424038_ExtendingStrategies.resx">
       <DependentUpon>201906121424038_ExtendingStrategies.cs</DependentUpon>
     </EmbeddedResource>
@@ -690,9 +676,6 @@
     <EmbeddedResource Include="Migrations\201906261102362_StrategyCustomUrl.resx">
       <DependentUpon>201906261102362_StrategyCustomUrl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906261109468_UniqueIndexForStratURL.resx">
-      <DependentUpon>201906261109468_UniqueIndexForStratURL.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906261111111_UniqueIndexForStratURL2.resx">
       <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
     </EmbeddedResource>
@@ -701,6 +684,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907311444344_CommentUniqueId.resx">
       <DependentUpon>201907311444344_CommentUniqueId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908010826262_UpdateStratAndTeamURLs.resx">
+      <DependentUpon>201908010826262_UpdateStratAndTeamURLs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

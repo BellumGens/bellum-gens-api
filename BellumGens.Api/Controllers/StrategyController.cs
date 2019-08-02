@@ -164,8 +164,10 @@ namespace BellumGens.Api.Controllers
 		{
 			string userId = GetAuthUser().Id;
 
-			comment.UserId = userId;
+            comment.User = _dbContext.Users.Find(userId);
 			comment = _dbContext.StrategyComments.Add(comment);
+
+            /* TODO: Send push notification to owner */
 
 			try
 			{
