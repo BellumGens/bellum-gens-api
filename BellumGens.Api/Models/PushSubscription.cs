@@ -127,6 +127,25 @@ namespace BellumGens.Api.Models
 			}
 		}
 
+		public BellumGensNotificationWrapper(StrategyComment comment)
+		{
+			notification = new BellumGensNotification()
+			{
+				title = $"New comments on your strategy",
+				icon = comment.UserAvatar,
+				data = comment.StratId,
+				renotify = true,
+				actions = new List<BellumGensNotificationAction>()
+				{
+					new BellumGensNotificationAction()
+					{
+						action = "viewstrategy",
+						title = "View comments"
+					}
+				}
+			};
+		}
+
 		public BellumGensNotification notification { get; set; }
 
 		public override string ToString()

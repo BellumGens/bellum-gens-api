@@ -1,4 +1,5 @@
 ﻿using BellumGens.Api.Models;
+using BellumGens.Api.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -163,12 +164,52 @@ namespace BellumGens.Api.Controllers
 		public IHttpActionResult SubmitStrategyComment(StrategyComment comment)
 		{
 			string userId = GetAuthUser().Id;
+			CSGOStrategy strat = null;
 
             comment.User = _dbContext.Users.Find(userId);
-			comment = _dbContext.StrategyComments.Add(comment);
 
-            /* TODO: Send push notification to owner */
+			var entity = _dbContext.StrategyComments.Find(comment.Id);
+			if (entity != null)
+			{
+				_dbContext.Entry(entity).CurrentValues.SetValues(comment);
+			}
+			else
+			{
+				comment = _dbContext.StrategyComments.Add(comment);
+				strat = _dbContext.Strategies.Find(comment.StratId);
+			}
 
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return BadRequest("Something went wrong...");
+			}
+
+			if (strat != null && strat.UserId != userId)
+			{
+				List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == comment.Strategy.UserId).ToList();
+				NotificationsService.SendNotification(subs, comment);
+			}
+			return Ok(comment);
+		}
+
+		[Route("Comment")]
+		[HttpDelete]
+		[Authorize]
+		public IHttpActionResult DeleteStrategyComment(Guid id)
+		{
+			string userId = GetAuthUser().Id;
+
+			var comment = _dbContext.StrategyComments.Find(id);
+			if (comment == null || comment.UserId != userId)
+			{
+				return BadRequest("Could not delete this user comment...");
+			}
+
+			_dbContext.StrategyComments.Remove(comment);
 			try
 			{
 				_dbContext.SaveChanges();

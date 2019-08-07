@@ -76,15 +76,18 @@ namespace BellumGens.Api.Models
 
 		public void UniqueCustomUrl(BellumGensDbContext context)
 		{
-			var parts = Title.Split(' ');
-			string url = string.Join("-", parts);
-			while (context.Strategies.Where(s => s.CustomUrl == url).SingleOrDefault() != null)
+			if (string.IsNullOrEmpty(CustomUrl))
 			{
-				if (url.Length > 58)
-					url = url.Substring(0, 58);
-				url += '-' + Util.GenerateHashString(6);
+				var parts = Title.Split(' ');
+				string url = string.Join("-", parts);
+				while (context.Strategies.Where(s => s.CustomUrl == url).SingleOrDefault() != null)
+				{
+					if (url.Length > 58)
+						url = url.Substring(0, 58);
+					url += '-' + Util.GenerateHashString(6);
+				}
+				CustomUrl = url;
 			}
-			CustomUrl = url;
 		}
 	}
 
