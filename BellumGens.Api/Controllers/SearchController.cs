@@ -3,37 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using BellumGens.Api.Models.Extensions;
-using BellumGens.Api.Providers;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security.Cookies;
-using System.Net.Http;
-using Microsoft.AspNet.Identity.Owin;
+using System.Threading.Tasks;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
-	[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 	[RoutePrefix("api/Search")]
-	public class SearchController : ApiController
+	public class SearchController : BaseController
 	{
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
-        private ApplicationUserManager _userManager;
 
         [Route("Search")]
 		[HttpGet]
-		public IHttpActionResult Search(string name)
+		public async Task<IHttpActionResult> Search(string name)
 		{
 			SearchResultViewModel results = new SearchResultViewModel();
 			if (!string.IsNullOrEmpty(name))
 			{
 				results.Teams = _dbContext.Teams.Where(t => t.Visible && t.TeamName.Contains(name)).ToList();
 				List<ApplicationUser> activeUsers = _dbContext.Users.Where(u => u.SearchVisible && u.UserName.Contains(name)).ToList();
+
+				List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
 				foreach (ApplicationUser user in activeUsers)
 				{
-					results.Players.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
+					var player = new UserStatsViewModel(user);
+					tasks.Add(player.GetSteamUserDetails());
 				}
+				results.Players = await Task.WhenAll(tasks);
+
 				return Ok(results);
 			}
 			return Ok(results);
@@ -76,18 +73,22 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Players")]
 		[HttpGet]
-		public IHttpActionResult SearchPlayers(PlaystyleRole? role, double overlap, Guid? teamid)
+		public async Task<IHttpActionResult> SearchPlayers(PlaystyleRole? role, double overlap, Guid? teamid)
 		{
-			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
+			List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
 
 			if (overlap <= 0 && role == null)
 			{
 				var appusers = _dbContext.Users.Where(u => u.SearchVisible).OrderBy(u => u.Id).Take(50).ToList();
+
 				foreach (ApplicationUser user in appusers)
 				{
-					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
+					var player = new UserStatsViewModel(user);
+					tasks.Add(player.GetSteamUserDetails());
 				}
-				return Ok(steamUsers);
+
+				
+				return Ok(await Task.WhenAll(tasks));
 			}
 
 			List<ApplicationUser> users;
@@ -124,35 +125,21 @@ namespace BellumGens.Api.Controllers
 					}
 					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && u.GetTotalOverlap(user) >= overlap).ToList();
 				}
+
 				foreach (ApplicationUser user in userIds)
 				{
-					steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
+					var player = new UserStatsViewModel(user);
+					tasks.Add(player.GetSteamUserDetails());
 				}
-				return Ok(steamUsers);
+				return Ok(await Task.WhenAll(tasks));
 			}
-			
+
 			foreach (ApplicationUser user in users)
 			{
-				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(new UserInfoViewModel(user)));
+				var player = new UserStatsViewModel(user);
+				tasks.Add(player.GetSteamUserDetails());
 			}
-			return Ok(steamUsers);
+			return Ok(await Task.WhenAll(tasks));
 		}
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        private ApplicationUser GetAuthUser()
-        {
-            return UserManager.FindByName(User.Identity.GetUserName());
-        }
     }
 }

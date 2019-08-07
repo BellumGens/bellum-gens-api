@@ -7,13 +7,13 @@ namespace BellumGens.Api.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class ReturningEverythingBack : IMigrationMetadata
+    public sealed partial class UniqueIndexForStratURL2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ReturningEverythingBack));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UniqueIndexForStratURL2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201905201354049_ReturningEverythingBack"; }
+            get { return "201906261111111_UniqueIndexForStratURL2"; }
         }
         
         string IMigrationMetadata.Source

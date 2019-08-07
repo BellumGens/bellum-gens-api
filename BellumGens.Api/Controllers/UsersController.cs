@@ -1,60 +1,45 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security.Cookies;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
 	[Authorize]
-    [HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
     [RoutePrefix("api/Users")]
-	public class UsersController : ApiController
+	public class UsersController : BaseController
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
-        private ApplicationUserManager _userManager;
 
         [Route("Users")]
 		[AllowAnonymous]
-		public List<UserStatsViewModel> GetUsers(int page = 0)
+		public async Task<UserStatsViewModel []> GetUsers(int page = 0)
 		{
-			List<UserStatsViewModel> steamUsers = new List<UserStatsViewModel>();
 			List<ApplicationUser> activeUsers = _dbContext.Users.OrderBy(e => e.Id).Skip(page * 10).Take(10).ToList();
 
+			List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
 			foreach (ApplicationUser user in activeUsers)
 			{
-				var model = new UserInfoViewModel(user);
-				steamUsers.Add(SteamServiceProvider.GetSteamUserDetails(model));
+				var model = new UserStatsViewModel(user);
+				tasks.Add(model.GetSteamUserDetails());
 			}
-			return steamUsers;
+
+			return await Task.WhenAll(tasks);
 		}
 
 		[Route("User")]
 		[AllowAnonymous]
-		public UserStatsViewModel GetUser(string userid)
+		public async Task<IHttpActionResult> GetUser(string userid)
 		{
-			UserStatsViewModel user = SteamServiceProvider.GetSteamUserDetails(userid);
-			if (user.steamUser != null)
+			UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid);
+			var registered = _dbContext.Users.Find(user.steamUser?.steamID64);
+			if (registered != null)
 			{
-				var registered = _dbContext.Users.Find(user.steamUser.steamID64);
-				if (registered != null)
-				{
-                    UserInfoViewModel model = new UserInfoViewModel(registered);
-					user.availability = model.availability;
-					user.primaryRole = model.primaryRole;
-					user.secondaryRole = model.secondaryRole;
-					user.mapPool = model.mapPool;
-					user.teams = model.teams;
-					user.registered = true;
-				}
+				user.SetUser(registered);
 			}
-			return user;
+			return Ok(user);
 		}
 
 		[Route("Availability")]
@@ -185,22 +170,5 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok(entity);
 		}
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        private ApplicationUser GetAuthUser()
-		{
-			return UserManager.FindByName(User.Identity.GetUserName());
-        }
 	}
 }

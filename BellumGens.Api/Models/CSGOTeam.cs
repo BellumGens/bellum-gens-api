@@ -101,21 +101,22 @@ namespace BellumGens.Api.Models
 					IsPlayed = true
 				}
 			};
-
-			Visible = true;
 		}
 
 		public void UniqueCustomUrl(BellumGensDbContext context)
 		{
-			var parts = TeamName.Split(' ');
-			string url = string.Join("-", parts);
-			while (context.Teams.Where(t => t.CustomUrl == url).SingleOrDefault() != null)
+			if (string.IsNullOrEmpty(CustomUrl))
 			{
-				if (url.Length > 58)
-					url = url.Substring(0, 58);
-				url += '-' + Util.GenerateHashString(6);
+				var parts = TeamName.Split(' ');
+				string url = string.Join("-", parts);
+				while (context.Teams.Where(t => t.CustomUrl == url).SingleOrDefault() != null)
+				{
+					if (url.Length > 58)
+						url = url.Substring(0, 58);
+					url += '-' + Util.GenerateHashString(6);
+				}
+				CustomUrl = url;
 			}
-			CustomUrl = url;
 		}
 
 		[Key]
@@ -133,14 +134,16 @@ namespace BellumGens.Api.Models
 
 		public string Discord { get; set; }
 
-		public bool Visible { get; set; }
+		public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
+
+		public bool Visible { get; set; } = true;
 
 		[MaxLength(64)]
 		[Index(IsUnique = true)]
 		public string CustomUrl { get; set; }
 
 		[JsonIgnore]
-		public virtual ICollection<TeamStrategy> Strategies { get; set; }
+		public virtual ICollection<CSGOStrategy> Strategies { get; set; }
 
 		public virtual ICollection<TeamAvailability> PracticeSchedule { get; set; }
 

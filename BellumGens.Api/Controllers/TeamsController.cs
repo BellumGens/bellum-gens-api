@@ -2,25 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Cors;
 using SteamModels;
-using Microsoft.Owin.Security.Cookies;
 using System;
-using Microsoft.AspNet.Identity;
 using BellumGens.Api.Providers;
-using System.Net.Http;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace BellumGens.Api.Controllers
 {
-	[EnableCors(origins: CORSConfig.allowedOrigins, headers: CORSConfig.allowedHeaders, methods: CORSConfig.allowedMethods, SupportsCredentials = true)]
 	[Authorize]
-	[HostAuthentication(CookieAuthenticationDefaults.AuthenticationType)]
 	[RoutePrefix("api/Teams")]
-	public class TeamsController : ApiController
+	public class TeamsController : BaseController
 	{
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
-        private ApplicationUserManager _userManager;
 
         [Route("Teams")]
 		[AllowAnonymous]
@@ -34,28 +26,6 @@ namespace BellumGens.Api.Controllers
 		public CSGOTeam GetTeam(string teamId)
 		{
 			return ResolveTeam(teamId);
-		}
-
-		[Route("Strats")]
-		public IHttpActionResult GetTeamStrats(string teamId)
-		{
-			CSGOTeam team = UserIsTeamMember(teamId);
-			if (team == null)
-			{
-				return BadRequest("You're not a member of this team.");
-			}
-			return Ok(team.Strategies);
-		}
-
-		[Route("Strat")]
-		public IHttpActionResult GetTeamStrat(Guid stratId)
-		{
-			TeamStrategy strat = _dbContext.Strategies.Find(stratId);
-			if (strat != null && strat.Team.Members.Any(m => m.UserId == GetAuthUser().Id))
-			{
-				return Ok(strat);
-			}
-			return BadRequest("Strat not found or user is not team member.");
 		}
 
 		[Route("MapPool")]
@@ -330,7 +300,7 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("You need to be team admin.");
 			}
 
-			return Ok(team.Applications);
+			return Ok(team.Applications.Where(a => a.State == NotificationState.NotSeen).ToList());
 		}
 
 		[Route("ApproveApplication")]
@@ -440,102 +410,11 @@ namespace BellumGens.Api.Controllers
 			return Ok(entity);
 		}
 
-		[Route("Strategy")]
-		[HttpPost]
-		public IHttpActionResult SubmitStrategy(TeamStrategy strategy)
-		{
-			CSGOTeam team = UserIsTeamEditor(strategy.TeamId);
-			if (team == null)
-			{
-				return BadRequest("You need to be team editor.");
-			}
-
-			TeamStrategy entity = team.Strategies.FirstOrDefault(s => s.Id == strategy.Id);
-			if (entity == null)
-			{
-				entity = _dbContext.Strategies.Add(strategy);
-			}
-			else
-			{
-				_dbContext.Entry(entity).CurrentValues.SetValues(strategy);
-			}
-
-			try
-			{
-				_dbContext.SaveChanges();
-			}
-			catch
-			{
-				return BadRequest("Something went wrong...");
-			}
-			return Ok(entity);
-		}
-
-		[Route("Strategy")]
-		[HttpDelete]
-		public IHttpActionResult DeleteStrategy(Guid id, string teamid)
-		{
-			CSGOTeam team = UserIsTeamEditor(teamid);
-			if (team == null)
-			{
-				return BadRequest("You need to be team editor.");
-			}
-
-			TeamStrategy entity = team.Strategies.FirstOrDefault(s => s.Id == id);
-			if (entity != null)
-			{
-				_dbContext.Strategies.Remove(entity);
-			}
-
-			try
-			{
-				_dbContext.SaveChanges();
-			}
-			catch
-			{
-				return BadRequest("Something went wrong...");
-			}
-			return Ok("Ok");
-		}
-
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        private CSGOTeam UserIsTeamAdmin(string teamId)
-		{
-			CSGOTeam team = ResolveTeam(teamId);
-            ApplicationUser user = GetAuthUser();
-            return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == user.Id) ? team : null;
-		}
-
 		private CSGOTeam UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
 			ApplicationUser user = GetAuthUser();
 			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == user.Id) ? team : null;
-		}
-
-		private CSGOTeam UserIsTeamEditor(string teamId)
-		{
-			CSGOTeam team = ResolveTeam(teamId);
-            ApplicationUser user = GetAuthUser();
-            return team != null && team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == user.Id) ? team : null;
-		}
-
-		private CSGOTeam UserIsTeamEditor(Guid teamId)
-		{
-			CSGOTeam team = _dbContext.Teams.Find(teamId);
-			ApplicationUser user = GetAuthUser();
-			return team != null && team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == user.Id) ? team : null;
 		}
 
 		private CSGOTeam UserIsTeamMember(string teamId)
@@ -544,18 +423,6 @@ namespace BellumGens.Api.Controllers
             ApplicationUser user = GetAuthUser();
             return team != null && team.Members.Any(m => m.UserId == user.Id) ? team : null;
         }
-
-		private CSGOTeam UserIsTeamMember(Guid teamId)
-		{
-			CSGOTeam team = _dbContext.Teams.Find(teamId);
-			ApplicationUser user = GetAuthUser();
-			return team != null && team.Members.Any(m => m.UserId == user.Id) ? team : null;
-		}
-
-		private ApplicationUser GetAuthUser()
-        {
-            return UserManager.FindByName(User.Identity.GetUserName());
-		}
 
 		private CSGOTeam ResolveTeam(string teamId)
 		{

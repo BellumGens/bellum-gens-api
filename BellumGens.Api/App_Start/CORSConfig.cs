@@ -8,7 +8,7 @@
 #endif
 
 #if !DEBUG
-		public const string allowedOrigins = "https://bellumgens.com,http://staging.bellumgens.com";
+		public const string allowedOrigins = "https://bellumgens.com,http://staging.bellumgens.com,https://staging.bellumgens.com";
 		public const string returnOrigin = "https://bellumgens.com";
 #endif
 

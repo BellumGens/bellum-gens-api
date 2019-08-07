@@ -7,13 +7,13 @@ namespace BellumGens.Api.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class UpdateCurrentTeams : IMigrationMetadata
+    public sealed partial class CommentUniqueId : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateCurrentTeams));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CommentUniqueId));
         
         string IMigrationMetadata.Id
         {
-            get { return "201905171346467_UpdateCurrentTeams"; }
+            get { return "201907311444344_CommentUniqueId"; }
         }
         
         string IMigrationMetadata.Source

@@ -109,6 +109,10 @@ namespace BellumGens.Api.Models
 
         public bool SearchVisible { get; set; } = true;
 
+		public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
+
+		public DateTimeOffset LastSeen { get; set; } = DateTimeOffset.Now;
+
 		public PlaystyleRole PreferredPrimaryRole { get; set; }
 
 		public PlaystyleRole PreferredSecondaryRole { get; set; }
@@ -137,6 +141,10 @@ namespace BellumGens.Api.Models
 				}
 				return _user;
 			}
+			set
+			{
+				_user = value;
+			}
 		}
     }
 
@@ -156,7 +164,7 @@ namespace BellumGens.Api.Models
 
 		public DbSet<TeamApplication> TeamApplications { get; set; }
 
-		public DbSet<TeamStrategy> Strategies { get; set; }
+		public DbSet<CSGOStrategy> Strategies { get; set; }
 
 		public DbSet<TeamMapPool> TeamMapPool { get; set; }
 
@@ -165,6 +173,8 @@ namespace BellumGens.Api.Models
 		public DbSet<UserMessage> Messages { get; set; }
 
 		public DbSet<BellumGensPushSubscription> PushSubscriptions { get; set; }
+
+		public DbSet<StrategyComment> StrategyComments { get; set; }
 
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
@@ -198,9 +208,13 @@ namespace BellumGens.Api.Models
 						.HasMany(e => e.TeamApplications)
 						.WithRequired(e => e.User);
 
+			modelBuilder.Entity<CSGOStrategy>()
+						.HasOptional(s => s.Team)
+						.WithMany(e => e.Strategies);
+
 			modelBuilder.Entity<CSGOTeam>()
 						.HasMany(e => e.Strategies)
-						.WithRequired(e => e.Team);
+						.WithOptional(e => e.Team);
 		}
 	}
 }

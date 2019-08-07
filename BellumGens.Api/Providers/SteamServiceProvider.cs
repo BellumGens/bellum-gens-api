@@ -9,6 +9,7 @@ using System;
 using System.Web.Caching;
 using System.Web;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace BellumGens.Api.Providers
 {
@@ -40,18 +41,17 @@ namespace BellumGens.Api.Providers
 
         public static SteamUser GetSteamUser(string name)
         {
-            if (_cache.Get(name) is UserStatsViewModel)
-            {
+			if (_cache.Get(name) is UserStatsViewModel)
+			{
 				UserStatsViewModel viewModel = _cache.Get(name) as UserStatsViewModel;
 				return viewModel.steamUser;
-            }
+			}
+
             HttpClient client = new HttpClient();
             var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
-            SteamUser steamUser = null;
             XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
-            steamUser = (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
-            return steamUser;
-        }
+            return (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
+		}
 
 		public static List<SteamUserSummary> GetSteamUsersSummary(string users)
 		{
@@ -61,64 +61,60 @@ namespace BellumGens.Api.Providers
 			return result.response.players;
 		}
 
-		public static UserStatsViewModel GetSteamUserDetails(string name)
+		public static async Task<UserStatsViewModel> GetSteamUserDetails(string name)
 		{
-			if (_cache.Get(name) is UserStatsViewModel)
+			lock (_cache)
 			{
-				return _cache.Get(name) as UserStatsViewModel;
+				if (_cache.Get(name) is UserStatsViewModel)
+				{
+					return _cache.Get(name) as UserStatsViewModel;
+				}
 			}
 			HttpClient client = new HttpClient();
-			var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
-			SteamUser steamUser = null;
-			XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
-			try
+			UserStatsViewModel model = new UserStatsViewModel();
+			var playerDetailsResponse = await client.GetAsync(NormalizeUsername(name));
+
+			if (playerDetailsResponse.IsSuccessStatusCode)
 			{
-				steamUser = (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
-			}
-			catch (Exception e)
-			{
-				return new UserStatsViewModel()
+				XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
+
+				try
 				{
-					steamUser = steamUser,
-					steamUserException = e.Message
-				};
+					model.steamUser = (SteamUser)serializer.Deserialize(await playerDetailsResponse.Content.ReadAsStreamAsync());
+				}
+				catch
+				{
+					model.steamUserException = true;
+					return model;
+				}
+			}
+			else
+			{
+				model.steamUserException = true;
+				return model;
 			}
 
-			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, steamUser.steamID64));
-			CSGOPlayerStats statsForUser = null;
-			try
+			var statsForGameResponse = await client.GetAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, model.steamUser.steamID64));
+			if (statsForGameResponse.IsSuccessStatusCode)
 			{
-				statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse.Result);
-			}
-			catch (Exception e)
-			{
-				return new UserStatsViewModel()
+				try
 				{
-					steamUser = steamUser,
-					userStatsException = e.Message
-				};
+					model.userStats = JsonConvert.DeserializeObject<CSGOPlayerStats>(await statsForGameResponse.Content.ReadAsStringAsync());
+					lock (_cache)
+					{
+						_cache.Add(name, model, null, DateTime.Now.AddDays(2), Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
+					}
+					return model;
+				}
+				catch
+				{
+					model.userStatsException = true;
+					return model;
+				}
 			}
-
-			UserStatsViewModel user = new UserStatsViewModel()
-			{
-				steamUser = steamUser,
-				userStats = statsForUser
-			};
-			_cache.Add(name, user, null, DateTime.Now.AddDays(2), Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
-			return user;
+			model.userStatsException = true;
+			return model;
 		}
-
-        public static UserStatsViewModel GetSteamUserDetails(UserInfoViewModel user)
-        {
-            UserStatsViewModel model = GetSteamUserDetails(user.id);
-            model.availability = user.availability;
-            model.primaryRole = user.primaryRole;
-            model.secondaryRole = user.secondaryRole;
-            model.mapPool = user.mapPool;
-            model.teams = user.teams;
-			model.registered = true;
-            return model;
-        }
 
 		public static SteamGroup GetSteamGroup(string groupid)
 		{

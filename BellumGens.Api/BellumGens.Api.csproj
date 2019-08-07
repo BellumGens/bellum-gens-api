@@ -265,9 +265,11 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PushController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\StrategyController.cs" />
     <Compile Include="Controllers\TeamsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
@@ -421,18 +423,44 @@
     <Compile Include="Migrations\201905171344382_TeamCustomUrl.Designer.cs">
       <DependentUpon>201905171344382_TeamCustomUrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905171346467_UpdateCurrentTeams.cs" />
-    <Compile Include="Migrations\201905171346467_UpdateCurrentTeams.Designer.cs">
-      <DependentUpon>201905171346467_UpdateCurrentTeams.cs</DependentUpon>
+    <Compile Include="Migrations\201906121424038_ExtendingStrategies.cs" />
+    <Compile Include="Migrations\201906121424038_ExtendingStrategies.Designer.cs">
+      <DependentUpon>201906121424038_ExtendingStrategies.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905201354049_ReturningEverythingBack.cs" />
-    <Compile Include="Migrations\201905201354049_ReturningEverythingBack.Designer.cs">
-      <DependentUpon>201905201354049_ReturningEverythingBack.cs</DependentUpon>
+    <Compile Include="Migrations\201906130753183_RenameStrategiesTable.cs" />
+    <Compile Include="Migrations\201906130753183_RenameStrategiesTable.Designer.cs">
+      <DependentUpon>201906130753183_RenameStrategiesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906130814235_RegistrationDates.cs" />
+    <Compile Include="Migrations\201906130814235_RegistrationDates.Designer.cs">
+      <DependentUpon>201906130814235_RegistrationDates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906261102362_StrategyCustomUrl.cs" />
+    <Compile Include="Migrations\201906261102362_StrategyCustomUrl.Designer.cs">
+      <DependentUpon>201906261102362_StrategyCustomUrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.cs" />
+    <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.Designer.cs">
+      <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907101455417_OptionalTeam.cs" />
+    <Compile Include="Migrations\201907101455417_OptionalTeam.Designer.cs">
+      <DependentUpon>201907101455417_OptionalTeam.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907311444344_CommentUniqueId.cs" />
+    <Compile Include="Migrations\201907311444344_CommentUniqueId.Designer.cs">
+      <DependentUpon>201907311444344_CommentUniqueId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908010826262_UpdateStratAndTeamURLs.cs" />
+    <Compile Include="Migrations\201908010826262_UpdateStratAndTeamURLs.Designer.cs">
+      <DependentUpon>201908010826262_UpdateStratAndTeamURLs.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
     <Compile Include="Models\PushSubscription.cs" />
+    <Compile Include="Models\StrategyComment.cs" />
+    <Compile Include="Models\StrategyVotes.cs" />
     <Compile Include="Models\ViewModels\CSGOTeamSummaryView.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Application.cs" />
@@ -447,7 +475,7 @@
     <Compile Include="Models\TeamMapPool.cs" />
     <Compile Include="Models\TeamMember.cs" />
     <Compile Include="Models\SearchModels.cs" />
-    <Compile Include="Models\TeamStrategy.cs" />
+    <Compile Include="Models\CSGOStrategy.cs" />
     <Compile Include="Models\UserMapPool.cs" />
     <Compile Include="Models\PlayerRoles.cs" />
     <Compile Include="Models\UserAvailability.cs" />
@@ -636,11 +664,29 @@
     <EmbeddedResource Include="Migrations\201905171344382_TeamCustomUrl.resx">
       <DependentUpon>201905171344382_TeamCustomUrl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905171346467_UpdateCurrentTeams.resx">
-      <DependentUpon>201905171346467_UpdateCurrentTeams.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201906121424038_ExtendingStrategies.resx">
+      <DependentUpon>201906121424038_ExtendingStrategies.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905201354049_ReturningEverythingBack.resx">
-      <DependentUpon>201905201354049_ReturningEverythingBack.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201906130753183_RenameStrategiesTable.resx">
+      <DependentUpon>201906130753183_RenameStrategiesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906130814235_RegistrationDates.resx">
+      <DependentUpon>201906130814235_RegistrationDates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906261102362_StrategyCustomUrl.resx">
+      <DependentUpon>201906261102362_StrategyCustomUrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906261111111_UniqueIndexForStratURL2.resx">
+      <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907101455417_OptionalTeam.resx">
+      <DependentUpon>201907101455417_OptionalTeam.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907311444344_CommentUniqueId.resx">
+      <DependentUpon>201907311444344_CommentUniqueId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908010826262_UpdateStratAndTeamURLs.resx">
+      <DependentUpon>201908010826262_UpdateStratAndTeamURLs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
