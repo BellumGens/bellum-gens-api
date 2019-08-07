@@ -8,11 +8,13 @@ using System.Web.Http;
 namespace BellumGens.Api.Controllers
 {
 	[RoutePrefix("api/Strategy")]
+	[Authorize]
 	public class StrategyController : BaseController
     {
 		private BellumGensDbContext _dbContext = new BellumGensDbContext();
 
 		[Route("Strategies")]
+		[AllowAnonymous]
 		public IHttpActionResult GetStrategies(int page = 0)
 		{
 			List<CSGOStrategy> strategies = _dbContext.Strategies.Where(s => s.Visible == true && (!string.IsNullOrEmpty(s.Url) || !string.IsNullOrEmpty(s.Image)))
@@ -31,7 +33,19 @@ namespace BellumGens.Api.Controllers
 			return Ok(team.Strategies);
 		}
 
+		[Route("userstrats")]
+		public IHttpActionResult GetUserStrats(string userId)
+		{
+			if (GetAuthUser().Id == userId)
+			{
+				var strategies = _dbContext.Strategies.Where(s => s.UserId == userId).OrderByDescending(s => s.LastUpdated).ToList();
+				return Ok(strategies);
+			}
+			return BadRequest("You need to authenticate first.");
+		}
+
 		[Route("Strat")]
+		[AllowAnonymous]
 		public IHttpActionResult GetStrat(string stratId)
 		{
 			CSGOStrategy strat = ResolveStrategy(stratId);
@@ -118,7 +132,6 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Vote")]
 		[HttpPost]
-		[Authorize]
 		public IHttpActionResult SubmitStrategyVote(VoteModel model)
 		{
 			string userId = GetAuthUser().Id;
@@ -160,7 +173,6 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Comment")]
 		[HttpPost]
-		[Authorize]
 		public IHttpActionResult SubmitStrategyComment(StrategyComment comment)
 		{
 			string userId = GetAuthUser().Id;
@@ -198,7 +210,6 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Comment")]
 		[HttpDelete]
-		[Authorize]
 		public IHttpActionResult DeleteStrategyComment(Guid id)
 		{
 			string userId = GetAuthUser().Id;
