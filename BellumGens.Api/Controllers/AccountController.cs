@@ -12,7 +12,6 @@ using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
 using BellumGens.Api.Results;
 using Microsoft.Owin.Security.Cookies;
-using System.Web.Http.Cors;
 using System.Linq;
 
 namespace BellumGens.Api.Controllers

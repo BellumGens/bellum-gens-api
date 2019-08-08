@@ -439,10 +439,6 @@
     <Compile Include="Migrations\201906261102362_StrategyCustomUrl.Designer.cs">
       <DependentUpon>201906261102362_StrategyCustomUrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.cs" />
-    <Compile Include="Migrations\201906261111111_UniqueIndexForStratURL2.Designer.cs">
-      <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201907101455417_OptionalTeam.cs" />
     <Compile Include="Migrations\201907101455417_OptionalTeam.Designer.cs">
       <DependentUpon>201907101455417_OptionalTeam.cs</DependentUpon>
@@ -675,9 +671,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906261102362_StrategyCustomUrl.resx">
       <DependentUpon>201906261102362_StrategyCustomUrl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906261111111_UniqueIndexForStratURL2.resx">
-      <DependentUpon>201906261111111_UniqueIndexForStratURL2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907101455417_OptionalTeam.resx">
       <DependentUpon>201907101455417_OptionalTeam.cs</DependentUpon>
