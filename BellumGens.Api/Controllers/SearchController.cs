@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Http;
 using BellumGens.Api.Models.Extensions;
 using System.Threading.Tasks;
+using BellumGens.Api.Providers;
 
 namespace BellumGens.Api.Controllers
 {
@@ -21,6 +22,7 @@ namespace BellumGens.Api.Controllers
 			if (!string.IsNullOrEmpty(name))
 			{
 				results.Teams = _dbContext.Teams.Where(t => t.Visible && t.TeamName.Contains(name)).ToList();
+				results.Strategies = _dbContext.Strategies.Where(s => s.Visible && s.Title.Contains(name)).ToList();
 				List<ApplicationUser> activeUsers = _dbContext.Users.Where(u => u.SearchVisible && u.UserName.Contains(name)).ToList();
 
 				List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
@@ -28,6 +30,10 @@ namespace BellumGens.Api.Controllers
 				{
 					var player = new UserStatsViewModel(user);
 					tasks.Add(player.GetSteamUserDetails());
+				}
+				if (!activeUsers.Any(u => u.UserName == name))
+				{
+					tasks.Add(SteamServiceProvider.GetSteamUserDetails(name));
 				}
 				results.Players = await Task.WhenAll(tasks);
 
