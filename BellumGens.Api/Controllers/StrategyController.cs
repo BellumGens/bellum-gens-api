@@ -99,7 +99,7 @@ namespace BellumGens.Api.Controllers
 			return Ok(entity);
 		}
 
-		[Route("Strategy")]
+		[Route("Strat")]
 		[HttpDelete]
 		public IHttpActionResult DeleteStrategy(Guid id)
 		{
