@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Web.Hosting;
 
 namespace BellumGens.Api.Models
 {
@@ -28,7 +31,9 @@ namespace BellumGens.Api.Models
 
 		public string Url { get; set; }
 
-		public string Image { get; set; }
+		[JsonProperty("Image")]
+		[Column("Image")]
+		public string StratImage { get; set; }
 
 		public string EditorMetadata { get; set; }
 
@@ -87,6 +92,24 @@ namespace BellumGens.Api.Models
 					url += '-' + Util.GenerateHashString(6);
 				}
 				CustomUrl = url;
+			}
+		}
+
+		public void SaveStrategyImage()
+		{
+			if (!string.IsNullOrEmpty(StratImage) && !Uri.IsWellFormedUriString(StratImage, UriKind.Absolute))
+			{
+				string base64 = StratImage.Substring(StratImage.IndexOf(',') + 1);
+				byte[] bytes = Convert.FromBase64String(base64);
+
+				Image image;
+				using (MemoryStream ms = new MemoryStream(bytes))
+				{
+					image = Image.FromStream(ms);
+					string path = Path.Combine(HostingEnvironment.MapPath("~/Content/Strats/"), $"{CustomUrl}.png");
+					image.Save(path);
+					StratImage = CORSConfig.apiDomain + $"/Content/Strats/{CustomUrl}.png";
+				}
 			}
 		}
 	}
