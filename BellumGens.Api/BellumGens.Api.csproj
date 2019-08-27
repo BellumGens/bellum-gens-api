@@ -451,6 +451,10 @@
     <Compile Include="Migrations\201908010826262_UpdateStratAndTeamURLs.Designer.cs">
       <DependentUpon>201908010826262_UpdateStratAndTeamURLs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908270820086_SaveStratImages.cs" />
+    <Compile Include="Migrations\201908270820086_SaveStratImages.Designer.cs">
+      <DependentUpon>201908270820086_SaveStratImages.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
@@ -547,6 +551,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Strats\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201808101242593_InitialCreate.resx">
@@ -680,6 +685,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908010826262_UpdateStratAndTeamURLs.resx">
       <DependentUpon>201908010826262_UpdateStratAndTeamURLs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908270820086_SaveStratImages.resx">
+      <DependentUpon>201908270820086_SaveStratImages.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -17,7 +17,7 @@ namespace BellumGens.Api.Controllers
 		[AllowAnonymous]
 		public IHttpActionResult GetStrategies(int page = 0)
 		{
-			List<CSGOStrategy> strategies = _dbContext.Strategies.Where(s => s.Visible == true && (!string.IsNullOrEmpty(s.Url) || !string.IsNullOrEmpty(s.Image)))
+			List<CSGOStrategy> strategies = _dbContext.Strategies.Where(s => s.Visible == true && (!string.IsNullOrEmpty(s.Url) || !string.IsNullOrEmpty(s.StratImage)))
 																 .OrderByDescending(s => s.LastUpdated).Skip(page * 25).Take(25).ToList();
 			return Ok(strategies.OrderByDescending(s => s.Rating));
 		}
@@ -80,11 +80,13 @@ namespace BellumGens.Api.Controllers
 			if (entity == null)
 			{
 				strategy.UniqueCustomUrl(_dbContext);
+				strategy.SaveStrategyImage();
 				entity = _dbContext.Strategies.Add(strategy);
 			}
 			else
 			{
 				strategy.LastUpdated = DateTimeOffset.Now;
+				strategy.SaveStrategyImage();
 				_dbContext.Entry(entity).CurrentValues.SetValues(strategy);
 			}
 
