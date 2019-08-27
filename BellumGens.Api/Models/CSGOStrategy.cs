@@ -106,6 +106,10 @@ namespace BellumGens.Api.Models
 				using (MemoryStream ms = new MemoryStream(bytes))
 				{
 					image = Image.FromStream(ms);
+					if (!Directory.Exists(HostingEnvironment.MapPath("~/Content/Strats")))
+					{
+						Directory.CreateDirectory(HostingEnvironment.MapPath("~/Content/Strats"));
+					}
 					string path = Path.Combine(HostingEnvironment.MapPath("~/Content/Strats/"), $"{CustomUrl}.png");
 					image.Save(path);
 					StratImage = CORSConfig.apiDomain + $"/Content/Strats/{CustomUrl}.png";
