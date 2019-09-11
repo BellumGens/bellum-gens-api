@@ -52,6 +52,49 @@ namespace BellumGens.Api.Controllers
 			}
 			return null;
         }
+
+		[HttpGet]
+		[AllowAnonymous]
+		[Route("Subscribe")]
+		public IHttpActionResult Subscribe(string email)
+		{
+			_dbContext.Subscribers.Add(new Subscriber()
+			{
+				Email = email
+			});
+
+			try
+			{
+				_dbContext.SaveChanges();
+			}
+			catch
+			{
+				return Ok("Already subscribed...");
+			}
+			return Ok("Subscribed successfully!");
+		}
+
+		[HttpGet]
+		[AllowAnonymous]
+		[Route("Unsubscribe")]
+		public IHttpActionResult Unsubscribe(string email, Guid sub)
+		{
+			Subscriber subscriber = _dbContext.Subscribers.Find(email);
+			if (subscriber?.SubKey == sub)
+			{
+				subscriber.Subscribed = false;
+				try
+				{
+					_dbContext.SaveChanges();
+				}
+				catch
+				{
+					return BadRequest("Something went wrong");
+				}
+				return Ok("Unsubscribed successfully!");
+			}
+			return BadRequest("Couldn't find the subscription...");
+		}
 		
 		[Route("UserInfo")]
 		[HttpPut]

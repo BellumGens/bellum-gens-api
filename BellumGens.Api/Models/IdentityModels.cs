@@ -176,6 +176,8 @@ namespace BellumGens.Api.Models
 
 		public DbSet<StrategyComment> StrategyComments { get; set; }
 
+		public DbSet<Subscriber> Subscribers { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
