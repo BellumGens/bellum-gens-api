@@ -455,12 +455,24 @@
     <Compile Include="Migrations\201908270820086_SaveStratImages.Designer.cs">
       <DependentUpon>201908270820086_SaveStratImages.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909112128222_Subscribers.cs" />
+    <Compile Include="Migrations\201909112128222_Subscribers.Designer.cs">
+      <DependentUpon>201909112128222_Subscribers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909112150171_SubscriberKey.cs" />
+    <Compile Include="Migrations\201909112150171_SubscriberKey.Designer.cs">
+      <DependentUpon>201909112150171_SubscriberKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
+    <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
     <Compile Include="Models\PushSubscription.cs" />
     <Compile Include="Models\StrategyComment.cs" />
     <Compile Include="Models\StrategyVotes.cs" />
+    <Compile Include="Models\Subscriber.cs" />
+    <Compile Include="Models\Tournament.cs" />
+    <Compile Include="Models\TournamentApplication.cs" />
     <Compile Include="Models\ViewModels\CSGOTeamSummaryView.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\Application.cs" />
@@ -688,6 +700,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908270820086_SaveStratImages.resx">
       <DependentUpon>201908270820086_SaveStratImages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909112128222_Subscribers.resx">
+      <DependentUpon>201909112128222_Subscribers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909112150171_SubscriberKey.resx">
+      <DependentUpon>201909112150171_SubscriberKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

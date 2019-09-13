@@ -3,7 +3,7 @@
 	public static class CORSConfig
 	{
 #if DEBUG
-		public const string allowedOrigins = "http://localhost:4200";
+		public const string allowedOrigins = "http://localhost:4200,http://localhost:4000";
 		public const string returnOrigin = "http://localhost:4200";
 		public const string apiDomain = "https://localhost:44394";
 #endif
