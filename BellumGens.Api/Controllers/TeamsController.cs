@@ -284,8 +284,16 @@ namespace BellumGens.Api.Controllers
 					return BadRequest("Something went wrong...");
 				}
 				List<TeamMember> admins = _dbContext.Teams.Find(application.TeamId).Members.Where(m => m.IsAdmin).ToList();
-				List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => admins.Any(a => a.UserId == s.userId)).ToList();
-				NotificationsService.SendNotification(subs, application);
+				try
+				{
+					List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.ToList();
+					subs = subs.FindAll(s => admins.Any(a => a.UserId == s.userId));
+					NotificationsService.SendNotification(subs, application);
+				}
+				catch (Exception e)
+				{
+
+				}
 				return Ok(application);
 			}
 			return BadRequest("Something went wrong with your application validation");
