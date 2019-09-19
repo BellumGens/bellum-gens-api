@@ -9,12 +9,12 @@
 #endif
 
 #if !DEBUG
-		public const string allowedOrigins = "https://bellumgens.com,https://eb-league.com,http://eb-league.com,http://staging.bellumgens.com,https://staging.bellumgens.com";
+		public const string allowedOrigins = "https://bellumgens.com,https://www.bellumgens.com,https://eb-league.com,https://www.eb-league.com,http://staging.bellumgens.com";
 		public const string returnOrigin = "https://bellumgens.com";
 		public const string apiDomain = "https://api.bellumgens.com";
 #endif
 
-		public const string allowedHeaders = "*";
+        public const string allowedHeaders = "*";
 		public const string allowedMethods = "*";
 	}
 }

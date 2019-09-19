@@ -463,6 +463,10 @@
     <Compile Include="Migrations\201909112150171_SubscriberKey.Designer.cs">
       <DependentUpon>201909112150171_SubscriberKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909191535465_PushSubUpdate.cs" />
+    <Compile Include="Migrations\201909191535465_PushSubUpdate.Designer.cs">
+      <DependentUpon>201909191535465_PushSubUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -706,6 +710,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909112150171_SubscriberKey.resx">
       <DependentUpon>201909112150171_SubscriberKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909191535465_PushSubUpdate.resx">
+      <DependentUpon>201909191535465_PushSubUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
