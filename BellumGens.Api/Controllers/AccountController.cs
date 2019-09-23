@@ -53,25 +53,26 @@ namespace BellumGens.Api.Controllers
 			return null;
         }
 
-		[HttpGet]
+		[HttpPost]
 		[AllowAnonymous]
 		[Route("Subscribe")]
-		public IHttpActionResult Subscribe(string email)
+		public IHttpActionResult Subscribe(Subscriber sub)
 		{
-			_dbContext.Subscribers.Add(new Subscriber()
-			{
-				Email = email
-			});
+            if (ModelState.IsValid)
+            {
+                _dbContext.Subscribers.Add(sub);
 
-			try
-			{
-				_dbContext.SaveChanges();
-			}
-			catch
-			{
-				return Ok("Already subscribed...");
-			}
-			return Ok("Subscribed successfully!");
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch
+                {
+                    return Ok("Already subscribed...");
+                }
+                return Ok("Subscribed successfully!");
+            }
+            return BadRequest("Email is not valid");
 		}
 
 		[HttpGet]
