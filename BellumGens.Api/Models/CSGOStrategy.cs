@@ -117,10 +117,4 @@ namespace BellumGens.Api.Models
 			}
 		}
 	}
-
-	public enum Side
-	{
-		TSide,
-		CTSide
-	}
 }

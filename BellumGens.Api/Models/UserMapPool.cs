@@ -19,17 +19,4 @@ namespace BellumGens.Api.Models
 		[ForeignKey("UserId")]
 		public virtual ApplicationUser User { get; set; }
 	}
-
-	public enum CSGOMaps
-	{
-		Cache,
-		Dust2,
-		Inferno,
-		Mirage,
-		Nuke,
-		Overpass,
-		Train,
-		Vertigo,
-		Cobblestone
-	}
 }

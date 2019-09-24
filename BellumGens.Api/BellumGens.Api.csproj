@@ -467,9 +467,14 @@
     <Compile Include="Migrations\201909191535465_PushSubUpdate.Designer.cs">
       <DependentUpon>201909191535465_PushSubUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909241610156_TournamentEntities.cs" />
+    <Compile Include="Migrations\201909241610156_TournamentEntities.Designer.cs">
+      <DependentUpon>201909241610156_TournamentEntities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
     <Compile Include="Models\PushSubscription.cs" />
     <Compile Include="Models\StrategyComment.cs" />
@@ -493,7 +498,7 @@
     <Compile Include="Models\SearchModels.cs" />
     <Compile Include="Models\CSGOStrategy.cs" />
     <Compile Include="Models\UserMapPool.cs" />
-    <Compile Include="Models\PlayerRoles.cs" />
+    <Compile Include="Models\ViewModels\PlayerRolesViewModel.cs" />
     <Compile Include="Models\UserAvailability.cs" />
     <Compile Include="Models\UserMessage.cs" />
     <Compile Include="Models\ViewModels\SearchResultViewModel.cs" />
@@ -713,6 +718,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909191535465_PushSubUpdate.resx">
       <DependentUpon>201909191535465_PushSubUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909241610156_TournamentEntities.resx">
+      <DependentUpon>201909241610156_TournamentEntities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

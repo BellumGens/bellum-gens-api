@@ -25,10 +25,4 @@ namespace BellumGens.Api.Models
 		[ForeignKey("UserId")]
 		public virtual ApplicationUser User { get; set; }
 	}
-
-	public enum VoteDirection
-	{
-		Up,
-		Down
-	}
 }
