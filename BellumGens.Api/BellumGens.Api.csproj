@@ -395,14 +395,6 @@
     <Compile Include="Migrations\201903190851591_UserSearchVisibility.Designer.cs">
       <DependentUpon>201903190851591_UserSearchVisibility.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201904010755248_ActiveDuty.cs" />
-    <Compile Include="Migrations\201904010755248_ActiveDuty.Designer.cs">
-      <DependentUpon>201904010755248_ActiveDuty.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201904010843142_AddingCobble.cs" />
-    <Compile Include="Migrations\201904010843142_AddingCobble.Designer.cs">
-      <DependentUpon>201904010843142_AddingCobble.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\201904101244550_StrategyImage.cs" />
     <Compile Include="Migrations\201904101244550_StrategyImage.Designer.cs">
       <DependentUpon>201904101244550_StrategyImage.cs</DependentUpon>
@@ -446,14 +438,6 @@
     <Compile Include="Migrations\201907311444344_CommentUniqueId.cs" />
     <Compile Include="Migrations\201907311444344_CommentUniqueId.Designer.cs">
       <DependentUpon>201907311444344_CommentUniqueId.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201908010826262_UpdateStratAndTeamURLs.cs" />
-    <Compile Include="Migrations\201908010826262_UpdateStratAndTeamURLs.Designer.cs">
-      <DependentUpon>201908010826262_UpdateStratAndTeamURLs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201908270820086_SaveStratImages.cs" />
-    <Compile Include="Migrations\201908270820086_SaveStratImages.Designer.cs">
-      <DependentUpon>201908270820086_SaveStratImages.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201909112128222_Subscribers.cs" />
     <Compile Include="Migrations\201909112128222_Subscribers.Designer.cs">
@@ -656,12 +640,6 @@
     <EmbeddedResource Include="Migrations\201903190851591_UserSearchVisibility.resx">
       <DependentUpon>201903190851591_UserSearchVisibility.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201904010755248_ActiveDuty.resx">
-      <DependentUpon>201904010755248_ActiveDuty.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201904010843142_AddingCobble.resx">
-      <DependentUpon>201904010843142_AddingCobble.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904101244550_StrategyImage.resx">
       <DependentUpon>201904101244550_StrategyImage.cs</DependentUpon>
     </EmbeddedResource>
@@ -694,12 +672,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907311444344_CommentUniqueId.resx">
       <DependentUpon>201907311444344_CommentUniqueId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201908010826262_UpdateStratAndTeamURLs.resx">
-      <DependentUpon>201908010826262_UpdateStratAndTeamURLs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201908270820086_SaveStratImages.resx">
-      <DependentUpon>201908270820086_SaveStratImages.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909112128222_Subscribers.resx">
       <DependentUpon>201909112128222_Subscribers.cs</DependentUpon>
