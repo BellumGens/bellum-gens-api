@@ -1,6 +1,7 @@
 ﻿using BellumGens.Api.Utils;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -13,15 +14,26 @@ namespace BellumGens.Api.Models
 
 		public Guid TournamentId { get; set; }
 
+        public string UserId { get; set; }
+
 		public Guid TeamId { get; set; }
 
-		public Guid CompanyId { get; set; }
+		public string CompanyId { get; set; }
 
 		public DateTimeOffset DateSubmitted { get; set; } = DateTimeOffset.Now;
 
 		public Game Game { get; set; }
 
+        [EmailAddress]
+        public string Email { get; set; }
+
         public string Hash { get; set; }
+
+        public string BattleNetId { get; set; }
+
+        [ForeignKey("UserId")]
+        [JsonIgnore]
+        public virtual ApplicationUser User { get; set; }
 
         [ForeignKey("CompanyId")]
         [JsonIgnore]

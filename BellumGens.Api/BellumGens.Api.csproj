@@ -471,6 +471,18 @@
     <Compile Include="Migrations\201909241610156_TournamentEntities.Designer.cs">
       <DependentUpon>201909241610156_TournamentEntities.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910010832022_TournamentApplicationUpdate.cs" />
+    <Compile Include="Migrations\201910010832022_TournamentApplicationUpdate.Designer.cs">
+      <DependentUpon>201910010832022_TournamentApplicationUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910011305373_BattleTag.cs" />
+    <Compile Include="Migrations\201910011305373_BattleTag.Designer.cs">
+      <DependentUpon>201910011305373_BattleTag.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910030806393_Companies.cs" />
+    <Compile Include="Migrations\201910030806393_Companies.Designer.cs">
+      <DependentUpon>201910030806393_Companies.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -721,6 +733,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909241610156_TournamentEntities.resx">
       <DependentUpon>201909241610156_TournamentEntities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910010832022_TournamentApplicationUpdate.resx">
+      <DependentUpon>201910010832022_TournamentApplicationUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910011305373_BattleTag.resx">
+      <DependentUpon>201910011305373_BattleTag.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910030806393_Companies.resx">
+      <DependentUpon>201910030806393_Companies.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
