@@ -111,7 +111,7 @@ namespace BellumGens.Api.Controllers
 				if (newEmail)
 				{
 					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-					var callbackUrl = Url.Link("DefaultApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
+					var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
 					await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl));
 				}
 			}
@@ -342,7 +342,7 @@ namespace BellumGens.Api.Controllers
 				}
 				else
 				{
-					return new ChallengeResult(provider, this, Url.Link("DefaultApi", new { controller = "Account", action = "AddExternalLogin", userId = GetAuthUser().Id }));
+					return new ChallengeResult(provider, this, Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLogin", userId = GetAuthUser().Id }));
 				}
             }
 

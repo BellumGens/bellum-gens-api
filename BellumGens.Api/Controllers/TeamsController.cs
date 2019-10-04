@@ -290,7 +290,7 @@ namespace BellumGens.Api.Controllers
 					subs = subs.FindAll(s => admins.Any(a => a.UserId == s.userId));
 					NotificationsService.SendNotification(subs, application);
 				}
-				catch (Exception e)
+				catch
 				{
 
 				}
