@@ -48,7 +48,7 @@ namespace BellumGens.Api
 		
 			app.UseSteamAuthentication(AppInfo.Config.steamApiKey);
 
-			app.UseTwitchAuthentication(AppInfo.Config.twitchClientId, AppInfo.Config.twitchSecret);
+			//app.UseTwitchAuthentication(AppInfo.Config.twitchClientId, AppInfo.Config.twitchSecret);
 
 			// Uncomment the following lines to enable logging in with third party login providers
 			//app.UseMicrosoftAccountAuthentication(
