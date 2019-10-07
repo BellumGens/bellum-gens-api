@@ -348,7 +348,8 @@ namespace BellumGens.Api.Controllers
 			ApplicationUser user = GetAuthUser();
 
 			bool hasRegistered = user != null;
-			string returnUrl = "";
+            KeyValuePair<string, string> returnUrlPair = Request.GetQueryNameValuePairs().FirstOrDefault(x => x.Key.Contains("returnUrl"));
+            string returnUrl = returnUrlPair.Key != null ? returnUrlPair.Value : "";
 
             if (!hasRegistered)
             {
