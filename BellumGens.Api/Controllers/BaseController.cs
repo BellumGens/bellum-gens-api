@@ -28,7 +28,7 @@ namespace BellumGens.Api.Controllers
 
 		protected ApplicationUser GetAuthUser()
 		{
-			return UserManager.FindByName(User.Identity.GetUserName());
+			return User.Identity.IsAuthenticated ? UserManager.FindByName(User.Identity.GetUserName()) : null;
 		}
 
 		protected override void Dispose(bool disposing)

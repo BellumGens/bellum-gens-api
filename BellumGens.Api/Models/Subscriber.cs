@@ -9,6 +9,7 @@ namespace BellumGens.Api.Models
 	public class Subscriber
 	{
 		[Key]
+        [EmailAddress]
 		public string Email { get; set; }
 
 		public bool Subscribed { get; set; } = true;
