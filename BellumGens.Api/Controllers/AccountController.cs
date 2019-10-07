@@ -21,7 +21,7 @@ namespace BellumGens.Api.Controllers
     public class AccountController : BaseController
     {
         private const string LocalLoginProvider = "Local";
-		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
 
 		private const string emailConfirmation = "Greetings,<br /><br />You have updated your account information on <a href='https://bellumgens.com' target='_blank'>bellumgens.com</a> with your email address.<br /><br />To confirm your email address click on this <a href='{0}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>";
 

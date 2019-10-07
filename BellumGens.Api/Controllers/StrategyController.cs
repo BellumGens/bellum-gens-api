@@ -11,7 +11,7 @@ namespace BellumGens.Api.Controllers
 	[Authorize]
 	public class StrategyController : BaseController
     {
-		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
 
 		[Route("Strategies")]
 		[AllowAnonymous]

@@ -12,7 +12,7 @@ namespace BellumGens.Api.Controllers
 	[RoutePrefix("api/Search")]
 	public class SearchController : BaseController
 	{
-		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
 
         [Route("Search")]
 		[HttpGet]

@@ -18,6 +18,7 @@ namespace BellumGens.Api.Models
 
 		public Guid TeamId { get; set; }
 
+        [Required]
 		public string CompanyId { get; set; }
 
 		public DateTimeOffset DateSubmitted { get; set; } = DateTimeOffset.Now;
@@ -51,10 +52,10 @@ namespace BellumGens.Api.Models
         {
             if (string.IsNullOrEmpty(Hash))
             {
-                Hash = Util.GenerateHashString(6);
+                Hash = Util.GenerateHashString(8);
                 while (context.TournamentApplications.Where(t => t.Hash == Hash).SingleOrDefault() != null)
                 {
-                    Hash = Util.GenerateHashString(6);
+                    Hash = Util.GenerateHashString(8);
                 }
             }
         }
