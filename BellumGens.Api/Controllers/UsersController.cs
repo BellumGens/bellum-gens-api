@@ -11,7 +11,7 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Users")]
 	public class UsersController : BaseController
     {
-		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
 
         [Route("Users")]
 		[AllowAnonymous]
