@@ -15,12 +15,4 @@ namespace BellumGens.Api.Models
 		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
 		public DateTimeOffset? Sent { get; set; }
 	}
-
-	public enum NotificationState
-	{
-		NotSeen,
-		Seen,
-		Rejected,
-		Accepted
-	}
 }
