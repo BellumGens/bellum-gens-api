@@ -178,6 +178,12 @@ namespace BellumGens.Api.Models
 
 		public DbSet<Subscriber> Subscribers { get; set; }
 
+        public DbSet<Tournament> Tournaments { get; set; }
+
+        public DbSet<TournamentApplication> TournamentApplications { get; set; }
+
+        public DbSet<Company> Companies { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

@@ -21,7 +21,7 @@ namespace BellumGens.Api.Controllers
     public class AccountController : BaseController
     {
         private const string LocalLoginProvider = "Local";
-		private BellumGensDbContext _dbContext = new BellumGensDbContext();
+		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
 
 		private const string emailConfirmation = "Greetings,<br /><br />You have updated your account information on <a href='https://bellumgens.com' target='_blank'>bellumgens.com</a> with your email address.<br /><br />To confirm your email address click on this <a href='{0}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>";
 
@@ -53,25 +53,26 @@ namespace BellumGens.Api.Controllers
 			return null;
         }
 
-		[HttpGet]
+		[HttpPost]
 		[AllowAnonymous]
 		[Route("Subscribe")]
-		public IHttpActionResult Subscribe(string email)
+		public IHttpActionResult Subscribe(Subscriber sub)
 		{
-			_dbContext.Subscribers.Add(new Subscriber()
-			{
-				Email = email
-			});
+            if (ModelState.IsValid)
+            {
+                _dbContext.Subscribers.Add(sub);
 
-			try
-			{
-				_dbContext.SaveChanges();
-			}
-			catch
-			{
-				return Ok("Already subscribed...");
-			}
-			return Ok("Subscribed successfully!");
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch
+                {
+                    return Ok("Already subscribed...");
+                }
+                return Ok("Subscribed successfully!");
+            }
+            return BadRequest("Email is not valid");
 		}
 
 		[HttpGet]
@@ -110,7 +111,7 @@ namespace BellumGens.Api.Controllers
 				if (newEmail)
 				{
 					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-					var callbackUrl = Url.Link("DefaultApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
+					var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
 					await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl));
 				}
 			}
@@ -341,7 +342,7 @@ namespace BellumGens.Api.Controllers
 				}
 				else
 				{
-					return new ChallengeResult(provider, this, Url.Link("DefaultApi", new { controller = "Account", action = "AddExternalLogin", userId = GetAuthUser().Id }));
+					return new ChallengeResult(provider, this, Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLogin", userId = GetAuthUser().Id }));
 				}
             }
 

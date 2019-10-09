@@ -1,8 +1,9 @@
 namespace BellumGens.Api.Migrations
 {
+    using BellumGens.Api.Models;
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<BellumGens.Api.Models.BellumGensDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<BellumGensDbContext>
     {
         public Configuration()
         {
@@ -10,7 +11,7 @@ namespace BellumGens.Api.Migrations
             ContextKey = "BellumGens.Api.Models.BellumGensDbContext";
         }
 
-        protected override void Seed(BellumGens.Api.Models.BellumGensDbContext context)
+        protected override void Seed(BellumGensDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
