@@ -9,11 +9,14 @@ using System.Web.Http;
 namespace BellumGens.Api.Controllers
 {
     [Authorize]
+    [RoutePrefix("api/Tournament")]
     public class TournamentController : BaseController
     {
         private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
         private const string emailConfirmation = "Greetings,<br /><br />You have successfully registered for the Esports Business League.<br /><br />To confirm your email address click on this <a href='{0}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>";
 
+        [HttpPost]
+        [Route("Register")]
         public IHttpActionResult Register(TournamentApplication application)
         {
             if (ModelState.IsValid)
@@ -40,6 +43,7 @@ namespace BellumGens.Api.Controllers
                         Name = application.CompanyId
                     });
                 }
+                application.UniqueHash(_dbContext);
                 _dbContext.TournamentApplications.Add(application);
                 
                 try
@@ -48,7 +52,7 @@ namespace BellumGens.Api.Controllers
                 }
                 catch (Exception e)
                 {
-
+                    return BadRequest("Something went wrong...");
                 }
                 return Ok(application);
             }

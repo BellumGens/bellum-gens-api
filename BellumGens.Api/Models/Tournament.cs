@@ -6,7 +6,7 @@ namespace BellumGens.Api.Models
 {
 	public class Tournament
 	{
-		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid ID { get; set; }
 
 		public string Name { get; set; }
@@ -15,8 +15,8 @@ namespace BellumGens.Api.Models
 
 		public DateTimeOffset EndDate { get; set; }
 
-		public virtual ICollection<CSGOTeam> Teams { get; set; }
+		//public virtual ICollection<CSGOTeam> Teams { get; set; }
 
-		public virtual ICollection<TournamentApplication> Applications { get; set; }
+		//public virtual ICollection<TournamentApplication> Applications { get; set; }
 	}
 }
