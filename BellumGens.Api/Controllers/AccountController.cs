@@ -314,7 +314,7 @@ namespace BellumGens.Api.Controllers
 		[HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
 		[AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
-        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
+        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null, string returnUrl = "")
         {
             if (error != null)
             {
@@ -349,7 +349,6 @@ namespace BellumGens.Api.Controllers
 			ApplicationUser user = GetAuthUser();
 
 			bool hasRegistered = user != null;
-			string returnUrl = "";
 
             if (!hasRegistered)
             {
@@ -371,9 +370,10 @@ namespace BellumGens.Api.Controllers
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
+            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignIn(identity);
 
-            return Redirect(CORSConfig.returnOrigin + '/' + returnUrl);
+            return Redirect(returnUrl.Length > 0 ? returnUrl : CORSConfig.returnOrigin);
 
 		}
 		// GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
@@ -407,6 +407,7 @@ namespace BellumGens.Api.Controllers
                         response_type = "token",
                         client_id = Startup.PublicClientId,
                         redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
+                       // domain = Request.Headers.Referrer.
                         state
                     }),
                     State = state
