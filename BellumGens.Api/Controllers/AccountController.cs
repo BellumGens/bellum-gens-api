@@ -314,11 +314,15 @@ namespace BellumGens.Api.Controllers
 		[HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
 		[AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
-        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null)
+        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null, string returnUrl = "")
         {
+            Uri returnUri = new Uri(returnUrl.Length > 0 ? returnUrl : CORSConfig.returnOrigin);
+            string returnHost = returnUri.GetLeftPart(UriPartial.Authority);
+            string returnPath = returnUri.AbsolutePath;
+
             if (error != null)
             {
-                return Redirect(CORSConfig.returnOrigin + "/unauthorized");
+                return Redirect(returnHost + "/unauthorized");
 			}
 
             if (!User.Identity.IsAuthenticated)
@@ -330,7 +334,7 @@ namespace BellumGens.Api.Controllers
 
             if (externalLogin == null)
             {
-                return Redirect(CORSConfig.returnOrigin + "/unauthorized");
+                return Redirect(returnHost + "/unauthorized");
 			}
 
             if (externalLogin.LoginProvider != provider)
@@ -349,8 +353,6 @@ namespace BellumGens.Api.Controllers
 			ApplicationUser user = GetAuthUser();
 
 			bool hasRegistered = user != null;
-            KeyValuePair<string, string> returnUrlPair = Request.GetQueryNameValuePairs().FirstOrDefault(x => x.Key.Contains("returnUrl"));
-            string returnUrl = returnUrlPair.Key != null ? returnUrlPair.Value : "";
 
             if (!hasRegistered)
             {
@@ -359,22 +361,22 @@ namespace BellumGens.Api.Controllers
 					IdentityResult x = await Register(externalLogin);
 					if (!x.Succeeded)
 					{
-						return Redirect(CORSConfig.returnOrigin + "/unauthorized");
+						return Redirect(returnHost + "/unauthorized");
 					}
 					user = GetAuthUser();
-					// Upon registration, redirect to the user's profile for information setup.
-					returnUrl = "players/" + user.Id + "/true";
+                    // Upon registration, redirect to the user's profile for information setup.
+                    returnPath = "/players/" + user.Id + "/true";
 				}
 				else
 				{
-					return Redirect(CORSConfig.returnOrigin + "/addsteam");
+					return Redirect(returnHost + "/addsteam");
 				}
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignIn(identity);
 
-            return Redirect(CORSConfig.returnOrigin + '/' + returnUrl);
+            return Redirect(returnHost + returnPath);
 
 		}
 		// GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
