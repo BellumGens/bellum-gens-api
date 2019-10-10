@@ -22,6 +22,7 @@ namespace BellumGens.Api.Controllers
             if (ModelState.IsValid)
             {
                 Company c = _dbContext.Companies.Find(application.CompanyId);
+                ApplicationUser user = GetAuthUser();
                 if (application.Game == Game.StarCraft2)
                 {
                     if (string.IsNullOrEmpty(application.BattleNetId))
@@ -44,19 +45,28 @@ namespace BellumGens.Api.Controllers
                     });
                 }
                 application.UniqueHash(_dbContext);
+                application.UserId = user.Id;
                 _dbContext.TournamentApplications.Add(application);
                 
                 try
                 {
                     _dbContext.SaveChanges();
                 }
-                catch (Exception e)
+                catch
                 {
                     return BadRequest("Something went wrong...");
                 }
                 return Ok(application);
             }
             return BadRequest("The application didn't validate");
+        }
+
+        [HttpGet]
+        [Route("Registrations")]
+        public IHttpActionResult GetRegistrations()
+        {
+            ApplicationUser user = GetAuthUser();
+            return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
         }
     }
 }
