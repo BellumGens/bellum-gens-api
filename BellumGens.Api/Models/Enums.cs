@@ -63,4 +63,10 @@ namespace BellumGens.Api.Models
         XL,
         XXL
     }
+
+    public enum TournamentApplicationState
+    {
+        Pending,
+        Confirmed
+    }
 }
