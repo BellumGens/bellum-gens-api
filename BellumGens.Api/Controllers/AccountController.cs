@@ -374,6 +374,7 @@ namespace BellumGens.Api.Controllers
 			}
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
+            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignIn(identity);
 
             return Redirect(returnHost + returnPath);
