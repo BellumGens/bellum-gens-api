@@ -9,14 +9,14 @@ namespace BellumGens.Api.Models
 {
 	public class TournamentApplication
 	{
-		[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
 
-		public Guid TournamentId { get; set; }
+		//public Guid TournamentId { get; set; }
 
         public string UserId { get; set; }
 
-		public Guid TeamId { get; set; }
+		public Guid? TeamId { get; set; }
 
         [Required]
 		public string CompanyId { get; set; }
@@ -32,6 +32,8 @@ namespace BellumGens.Api.Models
 
         public string BattleNetId { get; set; }
 
+        public TournamentApplicationState State { get; set; } = TournamentApplicationState.Pending;
+
         [ForeignKey("UserId")]
         [JsonIgnore]
         public virtual ApplicationUser User { get; set; }
@@ -44,11 +46,11 @@ namespace BellumGens.Api.Models
         [JsonIgnore]
         public virtual CSGOTeam Team { get; set; }
 
-		[ForeignKey("TournamentId")]
-        [JsonIgnore]
-		public virtual Tournament Tournament { get; set; }
+		//[ForeignKey("TournamentId")]
+        //[JsonIgnore]
+		//public virtual Tournament Tournament { get; set; }
 
-        public void UniqueCustomUrl(BellumGensDbContext context)
+        public void UniqueHash(BellumGensDbContext context)
         {
             if (string.IsNullOrEmpty(Hash))
             {

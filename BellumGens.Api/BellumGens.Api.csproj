@@ -486,6 +486,22 @@
     <Compile Include="Migrations\201910070901445_TestPending.Designer.cs">
       <DependentUpon>201910070901445_TestPending.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910091320358_TournamentApplicationState.cs" />
+    <Compile Include="Migrations\201910091320358_TournamentApplicationState.Designer.cs">
+      <DependentUpon>201910091320358_TournamentApplicationState.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910091557361_FixingTournamentId.cs" />
+    <Compile Include="Migrations\201910091557361_FixingTournamentId.Designer.cs">
+      <DependentUpon>201910091557361_FixingTournamentId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910091606189_TemporarilyRemoveTournament.cs" />
+    <Compile Include="Migrations\201910091606189_TemporarilyRemoveTournament.Designer.cs">
+      <DependentUpon>201910091606189_TemporarilyRemoveTournament.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910091610110_NullableForeignKey.cs" />
+    <Compile Include="Migrations\201910091610110_NullableForeignKey.Designer.cs">
+      <DependentUpon>201910091610110_NullableForeignKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -737,6 +753,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910070901445_TestPending.resx">
       <DependentUpon>201910070901445_TestPending.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910091320358_TournamentApplicationState.resx">
+      <DependentUpon>201910091320358_TournamentApplicationState.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910091557361_FixingTournamentId.resx">
+      <DependentUpon>201910091557361_FixingTournamentId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910091606189_TemporarilyRemoveTournament.resx">
+      <DependentUpon>201910091606189_TemporarilyRemoveTournament.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910091610110_NullableForeignKey.resx">
+      <DependentUpon>201910091610110_NullableForeignKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
