@@ -1,9 +1,11 @@
 ﻿using BellumGens.Api.Models;
+using BellumGens.Api.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace BellumGens.Api.Controllers
@@ -13,11 +15,10 @@ namespace BellumGens.Api.Controllers
     public class TournamentController : BaseController
     {
         private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
-        private const string emailConfirmation = "Greetings,<br /><br />You have successfully registered for the Esports Business League.<br /><br />To confirm your email address click on this <a href='{0}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>";
 
         [HttpPost]
         [Route("Register")]
-        public IHttpActionResult Register(TournamentApplication application)
+        public async Task<IHttpActionResult> Register(TournamentApplication application)
         {
             if (ModelState.IsValid)
             {
@@ -55,6 +56,28 @@ namespace BellumGens.Api.Controllers
                 catch
                 {
                     return BadRequest("Something went wrong...");
+                }
+
+                try
+                {
+                    string message = $@"Здравей, { user.UserName },
+                                    <p>Успешно получихме вашата регистрация за Esports Бизнес Лигата. В регистрацията сте посочили, че текущо работите в <b>{ application.CompanyId }</p>. Регистрация ще бъде потвърдена след като преведете таксата за участие (60лв. с ДДС за лигата по StarCraft II, или 300лв. с ДДС за лигата по CS:GO).</p>
+                                    <p>Банковата ни сметка е</p>
+                                    <ul>
+                                        <li>Име на Банката: <b>{ AppInfo.Config.bank }</b></li>
+                                        <li>Титуляр: <b>{ AppInfo.Config.bankAccountOwner }</b></li>
+                                        <li>Сметка: <b>{ AppInfo.Config.bankAccount }</b></span></li>
+                                        <li>BIC: <b>{ AppInfo.Config.bic }</b></li>
+                                    </ul>
+                                    <p>Моля при превода да сложите в основанието уникалния код, който сме генерирали за вашата регистрация: <b>{ application.Hash }</b>. Можете да намерите кода и през вашият профил на сайта ни.</p>
+                                    <p>Ако ви е нужна фактура, моля да се свържете с нас на <a href='mailto:info@eb-league.com'>info@eb-league.com</a>!</p>
+                                    <p>Поздрави от екипа на Bellum Gens!</p>
+                                    <a href='https://eb-league.com' target='_blank'>https://eb-league.com</a>";
+                    await EmailServiceProvider.SendNotificationEmail(application.Email, "Регистрацията ви е получена", message);
+                }
+                catch
+                {
+
                 }
                 return Ok(application);
             }
