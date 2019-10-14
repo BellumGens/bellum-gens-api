@@ -27,5 +27,27 @@ namespace BellumGens.Api.Providers
             };
             return client.SendMailAsync(msg);
 		}
-	}
+
+        public static Task SendNotificationEmail(string destination, string subject, string body, string bcc = "info@bellumgens.com")
+        {
+            MailMessage msg = new MailMessage();
+            msg.To.Add(new MailAddress(destination));
+            msg.Bcc.Add(new MailAddress(bcc));
+            msg.From = new MailAddress(AppInfo.Config.email, "Bellum Gens");
+            msg.Subject = subject;
+            msg.Body = body;
+            msg.IsBodyHtml = true;
+
+            SmtpClient client = new SmtpClient
+            {
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(AppInfo.Config.emailUsername, AppInfo.Config.emailPassword),
+                Port = 587,
+                Host = "smtp.office365.com",
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                EnableSsl = true
+            };
+            return client.SendMailAsync(msg);
+        }
+    }
 }

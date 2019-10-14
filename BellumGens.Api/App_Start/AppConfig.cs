@@ -13,6 +13,10 @@ namespace BellumGens.Api
 		public string email;
 		public string emailUsername;
 		public string emailPassword;
+        public string bank;
+        public string bankAccountOwner;
+        public string bic;
+        public string bankAccount;
 	}
 
 	public static class AppInfo
@@ -34,17 +38,21 @@ namespace BellumGens.Api
 		private static AppInfoDescriptior Initialize()
 		{
 			return new AppInfoDescriptior()
-				{
-					steamApiKey = ConfigurationManager.AppSettings["steamApiKey"],
-					gameId = ConfigurationManager.AppSettings["gameId"],
-					twitchClientId = ConfigurationManager.AppSettings["twitchClientId"],
-					twitchSecret = ConfigurationManager.AppSettings["twitchSecret"],
-					publicVapidKey = ConfigurationManager.AppSettings["publicVapidKey"],
-					privateVapidKey = ConfigurationManager.AppSettings["privateVapidKey"],
-					email = ConfigurationManager.AppSettings["email"],
-					emailUsername = ConfigurationManager.AppSettings["emailUsername"],
-					emailPassword = ConfigurationManager.AppSettings["emailPassword"]
-				};
+			{
+				steamApiKey = ConfigurationManager.AppSettings["steamApiKey"],
+				gameId = ConfigurationManager.AppSettings["gameId"],
+				twitchClientId = ConfigurationManager.AppSettings["twitchClientId"],
+				twitchSecret = ConfigurationManager.AppSettings["twitchSecret"],
+				publicVapidKey = ConfigurationManager.AppSettings["publicVapidKey"],
+				privateVapidKey = ConfigurationManager.AppSettings["privateVapidKey"],
+				email = ConfigurationManager.AppSettings["email"],
+				emailUsername = ConfigurationManager.AppSettings["emailUsername"],
+				emailPassword = ConfigurationManager.AppSettings["emailPassword"],
+                bank = ConfigurationManager.AppSettings["bank"],
+                bankAccountOwner = ConfigurationManager.AppSettings["bankAccountOwner"],
+                bic = ConfigurationManager.AppSettings["bic"],
+                bankAccount = ConfigurationManager.AppSettings["bankAccount"]
+            };
 		}
 
 	}
