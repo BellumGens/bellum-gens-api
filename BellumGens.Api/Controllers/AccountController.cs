@@ -363,9 +363,13 @@ namespace BellumGens.Api.Controllers
 					{
 						return Redirect(returnHost + "/unauthorized");
 					}
-					user = GetAuthUser();
-                    // Upon registration, redirect to the user's profile for information setup.
-                    returnPath = "/players/" + user.Id + "/true";
+
+                    if (!returnPath.StartsWith("/tournament-signup"))
+                    {
+                        user = GetAuthUser();
+                        // Upon registration, redirect to the user's profile for information setup.
+                        returnPath = "/players/" + user.Id + "/true";
+                    }
 				}
 				else
 				{
