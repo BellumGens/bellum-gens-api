@@ -68,5 +68,31 @@ namespace BellumGens.Api.Controllers
             ApplicationUser user = GetAuthUser();
             return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
         }
+
+        [HttpDelete]
+        [Route("Delete")]
+        public IHttpActionResult DeleteRegistraion(Guid id)
+        {
+            ApplicationUser user = GetAuthUser();
+            TournamentApplication application = _dbContext.TournamentApplications.Find(id);
+            if (application != null)
+            {
+                if (application.UserId == user.Id)
+                {
+                    _dbContext.TournamentApplications.Remove(application);
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch
+                    {
+                        return BadRequest("Something went wrong!");
+                    }
+                    return Ok(id);
+                }
+                return NotFound();
+            }
+            return NotFound();
+        }
     }
 }

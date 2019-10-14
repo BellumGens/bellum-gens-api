@@ -5,6 +5,7 @@ using System.Web.Http;
 using SteamModels;
 using System;
 using BellumGens.Api.Providers;
+using System.Data.Entity.Infrastructure;
 
 namespace BellumGens.Api.Controllers
 {
@@ -207,9 +208,12 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+                if (e is DbUpdateException)
+                    return BadRequest("Could not remove team because there's an active tournament registration associated with it!");
+                else
+                    return BadRequest("Something went wrong!");
 			}
 			return Ok(response);
 		}
