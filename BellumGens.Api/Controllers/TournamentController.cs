@@ -92,6 +92,20 @@ namespace BellumGens.Api.Controllers
             return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
         }
 
+        [HttpGet]
+        [Route("RegCount")]
+        [AllowAnonymous]
+        public IHttpActionResult GetRegistrationsCount()
+        {
+            List<TournamentApplication> registrations = _dbContext.TournamentApplications.ToList();
+            List<RegistrationCountViewModel> model = new List<RegistrationCountViewModel>()
+            {
+                new RegistrationCountViewModel(registrations, Game.CSGO),
+                new RegistrationCountViewModel(registrations, Game.StarCraft2)
+            };
+            return Ok(model);
+        }
+
         [HttpDelete]
         [Route("Delete")]
         public IHttpActionResult DeleteRegistraion(Guid id)

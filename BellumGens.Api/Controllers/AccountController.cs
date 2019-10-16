@@ -92,7 +92,7 @@ namespace BellumGens.Api.Controllers
 				{
 					return BadRequest("Something went wrong");
 				}
-				return Ok("Unsubscribed successfully!");
+				return Redirect(CORSConfig.returnOrigin + "/emailconfirm/unsubscribed");
 			}
 			return BadRequest("Couldn't find the subscription...");
 		}
