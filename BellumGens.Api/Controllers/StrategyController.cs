@@ -79,12 +79,19 @@ namespace BellumGens.Api.Controllers
 			CSGOStrategy entity = UserCanEdit(strategy.Id);
 			if (entity == null)
 			{
+                ApplicationUser user = GetAuthUser();
+                strategy.UserId = user.Id;
 				strategy.UniqueCustomUrl(_dbContext);
 				strategy.SaveStrategyImage();
 				entity = _dbContext.Strategies.Add(strategy);
 			}
 			else
 			{
+                if (string.IsNullOrEmpty(entity.UserId))
+                {
+                    ApplicationUser user = GetAuthUser();
+                    strategy.UserId = user.Id;
+                }
 				strategy.LastUpdated = DateTimeOffset.Now;
 				strategy.SaveStrategyImage();
 				_dbContext.Entry(entity).CurrentValues.SetValues(strategy);
@@ -244,7 +251,19 @@ namespace BellumGens.Api.Controllers
 		private CSGOStrategy UserCanEdit(Guid id)
 		{
 			ApplicationUser user = GetAuthUser();
-			return _dbContext.Strategies.FirstOrDefault(s => s.Id == id && s.UserId == user.Id);
+            CSGOStrategy strat = _dbContext.Strategies.Find(id);
+            if (strat?.TeamId != null)
+            {
+                if (strat.Team.Members.Any(m => m.IsEditor || m.IsAdmin && m.UserId == user.Id))
+                {
+                    return strat;
+                }
+            }
+            else if (strat?.UserId == user.Id)
+            {
+                return strat;
+            }
+            return null;
 		}
 
 		private bool UserIsTeamEditor(Guid teamId)
