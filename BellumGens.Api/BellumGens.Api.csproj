@@ -502,6 +502,10 @@
     <Compile Include="Migrations\201910091610110_NullableForeignKey.Designer.cs">
       <DependentUpon>201910091610110_NullableForeignKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910241419479_UserSteamDecoupling.cs" />
+    <Compile Include="Migrations\201910241419479_UserSteamDecoupling.Designer.cs">
+      <DependentUpon>201910241419479_UserSteamDecoupling.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -766,6 +770,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910091610110_NullableForeignKey.resx">
       <DependentUpon>201910091610110_NullableForeignKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910241419479_UserSteamDecoupling.resx">
+      <DependentUpon>201910241419479_UserSteamDecoupling.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

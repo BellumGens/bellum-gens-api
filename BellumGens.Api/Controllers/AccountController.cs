@@ -41,12 +41,17 @@ namespace BellumGens.Api.Controllers
         // GET api/Account/UserInfo
 		[AllowAnonymous]
         [Route("UserInfo")]
-        public UserInfoViewModel GetUserInfo()
+        public async Task<UserStatsViewModel> GetUserInfo()
         {
 			if (User.Identity.IsAuthenticated)
 			{
                 ApplicationUser user = GetAuthUser();
-                UserInfoViewModel model = new UserInfoViewModel(user);
+                UserStatsViewModel model = new UserStatsViewModel(user);
+                if (string.IsNullOrEmpty(user.AvatarFull))
+                {
+                    model = await SteamServiceProvider.GetSteamUserDetails(user.Id);
+                    model.SetUser(user);
+                }
                 model.externalLogins = UserManager.GetLogins(user.Id).Select(t => t.LoginProvider).ToList();
 				return model;
 			}
@@ -96,7 +101,7 @@ namespace BellumGens.Api.Controllers
 			}
 			return BadRequest("Couldn't find the subscription...");
 		}
-		
+
 		[Route("UserInfo")]
 		[HttpPut]
 		public async Task<IHttpActionResult> UpdateUserInfo(UserPreferencesViewModel preferences)
