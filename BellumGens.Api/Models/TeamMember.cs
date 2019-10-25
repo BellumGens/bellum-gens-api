@@ -35,6 +35,15 @@ namespace BellumGens.Api.Models
         }
 
         [NotMapped]
+        public string AvatarIcon
+        {
+            get
+            {
+                return Member?.AvatarIcon;
+            }
+        }
+
+        [NotMapped]
         public string AvatarMedium
         {
             get
@@ -67,6 +76,15 @@ namespace BellumGens.Api.Models
             get
             {
                 return Member?.Country;
+            }
+        }
+
+        [NotMapped]
+        public string RealName
+        {
+            get
+            {
+                return Member?.RealName;
             }
         }
 

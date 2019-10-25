@@ -16,7 +16,25 @@ namespace BellumGens.Api.Models
 		[Column(Order = 1)]
 		public Guid TeamId { get; set; }
 
-		[ForeignKey("ApplicantId")]
+        [NotMapped]
+        public string UserName
+        {
+            get
+            {
+                return User?.UserName;
+            }
+        }
+
+        [NotMapped]
+        public string AvatarIcon
+        {
+            get
+            {
+                return User?.AvatarIcon;
+            }
+        }
+
+        [ForeignKey("ApplicantId")]
 		[JsonIgnore]
 		public virtual ApplicationUser User { get; set; }
 
