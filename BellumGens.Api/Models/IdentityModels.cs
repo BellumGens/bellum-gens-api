@@ -15,8 +15,6 @@ namespace BellumGens.Api.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-		private SteamUser _user;
-
 		public ApplicationUser() : base()
 		{
 			Availability = new HashSet<UserAvailability>();
@@ -109,7 +107,19 @@ namespace BellumGens.Api.Models
 
         public bool SearchVisible { get; set; } = true;
 
-		public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
+        public string AvatarFull { get; set; }
+
+        public string AvatarMedium { get; set; }
+
+        public string AvatarIcon { get; set; }
+
+        public string RealName { get; set; }
+
+        public string CustomUrl { get; set; }
+
+        public string Country { get; set; }
+
+        public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
 
 		public DateTimeOffset LastSeen { get; set; } = DateTimeOffset.Now;
 
@@ -129,23 +139,6 @@ namespace BellumGens.Api.Models
 		public virtual ICollection<TeamMember> MemberOf { get; set; }
 
 		public virtual ICollection<TeamApplication> TeamApplications { get; set; }
-
-		[NotMapped]
-		public SteamUser SteamUser
-		{
-			get
-			{
-				if (_user == null)
-				{
-					_user = SteamServiceProvider.GetSteamUser(this.Id);
-				}
-				return _user;
-			}
-			set
-			{
-				_user = value;
-			}
-		}
     }
 
 	public class BellumGensDbContext : IdentityDbContext<ApplicationUser>

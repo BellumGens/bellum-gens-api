@@ -26,19 +26,69 @@ namespace BellumGens.Api.Models
 		public PlaystyleRole Role { get; set; }
 
         [NotMapped]
-        public SteamUser SteamUser
-        {
+        public string Username
+        { 
             get
             {
-				if (Member != null)
-				{
-					return Member.SteamUser;
-				}
-				return null;
+                return Member?.UserName;
             }
         }
 
-		[ForeignKey("TeamId")]
+        [NotMapped]
+        public string AvatarIcon
+        {
+            get
+            {
+                return Member?.AvatarIcon;
+            }
+        }
+
+        [NotMapped]
+        public string AvatarMedium
+        {
+            get
+            {
+                return Member?.AvatarMedium;
+            }
+        }
+
+        [NotMapped]
+        public string CustomUrl
+        {
+            get
+            {
+                return Member?.CustomUrl;
+            }
+        }
+
+        [NotMapped]
+        public string AvatarFull
+        {
+            get
+            {
+                return Member?.AvatarFull;
+            }
+        }
+
+        [NotMapped]
+        public string Country
+        {
+            get
+            {
+                return Member?.Country;
+            }
+        }
+
+        [NotMapped]
+        public string RealName
+        {
+            get
+            {
+                return Member?.RealName;
+            }
+        }
+
+        [ForeignKey("TeamId")]
         [JsonIgnore]
 		public virtual CSGOTeam Team { get; set; } 
 

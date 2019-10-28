@@ -32,8 +32,7 @@ namespace BellumGens.Api.Models
     {
         private List<CSGOTeamSummaryViewModel> _teams;
         private List<CSGOTeam> _teamAdmin;
-        private ApplicationUser _user;
-		private SteamUser _steamUser;
+        protected ApplicationUser _user;
 
 		public UserInfoViewModel() { }
 
@@ -41,11 +40,6 @@ namespace BellumGens.Api.Models
         {
             _user = user;
         }
-
-		public void SetUser(ApplicationUser user)
-		{
-			_user = user;
-		}
 
 		public bool registered
 		{
@@ -59,24 +53,6 @@ namespace BellumGens.Api.Models
                 return _user?.Id;
             }
         }
-
-		public SteamUser steamUser
-		{
-			get
-			{
-				if (_steamUser == null)
-				{
-					_steamUser = _user?.SteamUser;
-				}
-				return _steamUser;
-			}
-			set
-			{
-				_steamUser = value;
-				if (_user != null)
-					_user.SteamUser = value;
-			}
-		}
 
         public List<CSGOTeamSummaryViewModel> teams
         {
@@ -131,6 +107,60 @@ namespace BellumGens.Api.Models
             get
             {
                 return _user?.SearchVisible;
+            }
+        }
+
+        public string avatarIcon
+        {
+            get
+            {
+                return _user?.AvatarIcon;
+            }
+        }
+
+        public string avatarMedium
+        {
+            get
+            {
+                return _user?.AvatarMedium;
+            }
+        }
+
+        public string avatarFull
+        {
+            get
+            {
+                return _user?.AvatarFull;
+            }
+        }
+
+        public string username
+        {
+            get
+            {
+                return _user?.UserName;
+            }
+        }
+
+        public string realname
+        {
+            get
+            {
+                return _user?.RealName;
+            }
+        }
+        public string customURL
+        {
+            get
+            {
+                return _user?.CustomUrl;
+            }
+        }
+        public string country
+        {
+            get
+            {
+                return _user?.Country;
             }
         }
         public ICollection<UserAvailability> availability

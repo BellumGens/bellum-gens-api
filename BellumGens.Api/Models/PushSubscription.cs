@@ -68,8 +68,8 @@ namespace BellumGens.Api.Models
 			{
 				notification = new BellumGensNotification()
 				{
-					title = $"{invite.InvitedUser.SteamUser.steamID} has accepted your invitation to join {invite.TeamInfo.TeamName}!",
-					icon = invite.InvitedUser.SteamUser.avatarFull,
+					title = $"{invite.InvitedUser.UserName} has accepted your invitation to join {invite.TeamInfo.TeamName}!",
+					icon = invite.InvitedUser.AvatarFull,
 					data = invite.InvitedUserId,
 					renotify = true,
 					actions = new List<BellumGensNotificationAction>()
@@ -88,9 +88,9 @@ namespace BellumGens.Api.Models
 		{
 			notification = new BellumGensNotification()
 			{
-				title = $"{application.UserInfo.steamID} has applied to join {application.Team.TeamName}",
-				icon = application.UserInfo.avatarFull,
-				data = application.UserInfo.steamID64,
+				title = $"{application.User.UserName} has applied to join {application.Team.TeamName}",
+				icon = application.User.AvatarFull,
+				data = application.ApplicantId,
 				renotify = true,
 				actions = new List<BellumGensNotificationAction>()
 				{
