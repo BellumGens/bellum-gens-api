@@ -76,7 +76,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                if (_teamAdmin == null && _user != null)
+                if (_isAuthUser && _teamAdmin == null && _user != null)
                 {
                     _teamAdmin = new List<CSGOTeam>();
                     foreach (TeamMember memberof in _user.MemberOf)
@@ -93,7 +93,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _user?.Notifications.Where(n => n.State == NotificationState.NotSeen).ToList();
+                return _isAuthUser ? _user?.Notifications.Where(n => n.State == NotificationState.NotSeen).ToList() : null;
             }
         }
         public List<string> externalLogins { get; set; }
