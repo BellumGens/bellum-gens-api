@@ -33,12 +33,14 @@ namespace BellumGens.Api.Models
         private List<CSGOTeamSummaryViewModel> _teams;
         private List<CSGOTeam> _teamAdmin;
         protected ApplicationUser _user;
+        protected bool _isAuthUser;
 
 		public UserInfoViewModel() { }
 
-        public UserInfoViewModel(ApplicationUser user)
+        public UserInfoViewModel(ApplicationUser user, bool isAuthUser = false)
         {
             _user = user;
+            _isAuthUser = isAuthUser;
         }
 
 		public bool registered
@@ -95,11 +97,40 @@ namespace BellumGens.Api.Models
             }
         }
         public List<string> externalLogins { get; set; }
+
+        public bool? steamPrivate
+        {
+            get
+            {
+                return _user?.SteamPrivate;
+            }
+        }
+        public decimal? headshotPercentage
+        {
+            get
+            {
+                return _user?.HeadshotPercentage;
+            }
+        }
+        public decimal? killDeathRatio
+        {
+            get
+            {
+                return _user?.KillDeathRatio;
+            }
+        }
+        public decimal? accuracy
+        {
+            get
+            {
+                return _user?.Accuracy;
+            }
+        }
         public string email
         {
             get
             {
-                return _user?.Email;
+                return _isAuthUser ? _user?.Email : null;
             }
         }
         public bool? searchVisible

@@ -11,8 +11,8 @@ namespace BellumGens.Api.Models
 	{
 		public UserStatsViewModel() : base() { }
 
-		public UserStatsViewModel(ApplicationUser user)
-			: base(user) { }
+		public UserStatsViewModel(ApplicationUser user, bool isAuthUser = false)
+			: base(user, isAuthUser) { }
 
         public SteamUser steamUser { get; set; }
         public bool steamUserException { get; set; } = false;
@@ -73,6 +73,29 @@ namespace BellumGens.Api.Models
             {
                 _user.Country = steamUser.country;
                 changes = true;
+            }
+            if (userStatsException != _user.SteamPrivate)
+            {
+                _user.SteamPrivate = userStatsException;
+                changes = true;
+            }
+            if (!userStatsException)
+            {
+                if (userStats?.headshotPercentage != _user.HeadshotPercentage)
+                {
+                    _user.HeadshotPercentage = userStats.headshotPercentage;
+                    changes = true;
+                }
+                if (userStats?.killDeathRatio != _user.KillDeathRatio)
+                {
+                    _user.KillDeathRatio = userStats.killDeathRatio;
+                    changes = true;
+                }
+                if (userStats?.accuracy != _user.Accuracy)
+                {
+                    _user.Accuracy = userStats.accuracy;
+                    changes = true;
+                }
             }
             if (changes)
             {

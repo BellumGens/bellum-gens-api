@@ -119,6 +119,14 @@ namespace BellumGens.Api.Models
 
         public string Country { get; set; }
 
+        public decimal HeadshotPercentage { get; set; }
+
+        public decimal KillDeathRatio { get; set; }
+
+        public decimal Accuracy { get; set; }
+
+        public bool SteamPrivate { get; set; } = false;
+
         public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
 
 		public DateTimeOffset LastSeen { get; set; } = DateTimeOffset.Now;
