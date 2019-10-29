@@ -25,17 +25,14 @@ namespace BellumGens.Api.Controllers
 				results.Strategies = _dbContext.Strategies.Where(s => s.Visible && s.Title.Contains(name)).ToList();
 				List<ApplicationUser> activeUsers = _dbContext.Users.Where(u => u.SearchVisible && u.UserName.Contains(name)).ToList();
 
-				List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
 				foreach (ApplicationUser user in activeUsers)
 				{
-					var player = new UserStatsViewModel(user);
-					tasks.Add(player.GetSteamUserDetails());
+					results.Players.Add(new UserStatsViewModel(user));
 				}
 				if (!activeUsers.Any(u => u.UserName == name))
 				{
 					results.SteamUser = await SteamServiceProvider.GetSteamUserDetails(name);
 				}
-				results.Players = await Task.WhenAll(tasks);
 
 				return Ok(results);
 			}
@@ -79,25 +76,21 @@ namespace BellumGens.Api.Controllers
 
 		[Route("Players")]
 		[HttpGet]
-		public async Task<IHttpActionResult> SearchPlayers(PlaystyleRole? role, double overlap, Guid? teamid)
-		{
-			List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
-
-			if (overlap <= 0 && role == null)
+		public IHttpActionResult SearchPlayers(PlaystyleRole? role, double overlap, Guid? teamid)
+        {
+            List<ApplicationUser> users = new List<ApplicationUser>();
+            List<UserStatsViewModel> players = new List<UserStatsViewModel>();
+            if (overlap <= 0 && role == null)
 			{
-				var appusers = _dbContext.Users.Where(u => u.SearchVisible).OrderBy(u => u.Id).Take(50).ToList();
+				users = _dbContext.Users.Where(u => u.SearchVisible).OrderBy(u => u.Id).Take(50).ToList();
 
-				foreach (ApplicationUser user in appusers)
+				foreach (ApplicationUser user in users)
 				{
-					var player = new UserStatsViewModel(user);
-					tasks.Add(player.GetSteamUserDetails());
+					players.Add(new UserStatsViewModel(user));
 				}
 
-				
-				return Ok(await Task.WhenAll(tasks));
+				return Ok(players);
 			}
-
-			List<ApplicationUser> users;
 
 			if (role != null)
 			{
@@ -134,18 +127,16 @@ namespace BellumGens.Api.Controllers
 
 				foreach (ApplicationUser user in userIds)
 				{
-					var player = new UserStatsViewModel(user);
-					tasks.Add(player.GetSteamUserDetails());
+					players.Add(new UserStatsViewModel(user));
 				}
-				return Ok(await Task.WhenAll(tasks));
+				return Ok(players);
 			}
 
 			foreach (ApplicationUser user in users)
 			{
-				var player = new UserStatsViewModel(user);
-				tasks.Add(player.GetSteamUserDetails());
+				players.Add(new UserStatsViewModel(user));
 			}
-			return Ok(await Task.WhenAll(tasks));
+			return Ok(players);
 		}
     }
 }
