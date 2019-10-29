@@ -33,12 +33,14 @@ namespace BellumGens.Api.Models
         private List<CSGOTeamSummaryViewModel> _teams;
         private List<CSGOTeam> _teamAdmin;
         protected ApplicationUser _user;
+        protected bool _isAuthUser;
 
 		public UserInfoViewModel() { }
 
-        public UserInfoViewModel(ApplicationUser user)
+        public UserInfoViewModel(ApplicationUser user, bool isAuthUser = false)
         {
             _user = user;
+            _isAuthUser = isAuthUser;
         }
 
 		public bool registered
@@ -128,7 +130,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _user?.Email;
+                return _isAuthUser ? _user?.Email : null;
             }
         }
         public bool? searchVisible

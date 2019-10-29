@@ -46,7 +46,7 @@ namespace BellumGens.Api.Controllers
 			if (User.Identity.IsAuthenticated)
 			{
                 ApplicationUser user = GetAuthUser();
-                UserStatsViewModel model = new UserStatsViewModel(user);
+                UserStatsViewModel model = new UserStatsViewModel(user, true);
                 if (string.IsNullOrEmpty(user.AvatarFull))
                 {
                     model = await SteamServiceProvider.GetSteamUserDetails(user.Id);

@@ -11,8 +11,8 @@ namespace BellumGens.Api.Models
 	{
 		public UserStatsViewModel() : base() { }
 
-		public UserStatsViewModel(ApplicationUser user)
-			: base(user) { }
+		public UserStatsViewModel(ApplicationUser user, bool isAuthUser = false)
+			: base(user, isAuthUser) { }
 
         public SteamUser steamUser { get; set; }
         public bool steamUserException { get; set; } = false;
