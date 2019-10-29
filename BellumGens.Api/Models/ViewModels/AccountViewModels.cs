@@ -95,6 +95,35 @@ namespace BellumGens.Api.Models
             }
         }
         public List<string> externalLogins { get; set; }
+
+        public bool? steamPrivate
+        {
+            get
+            {
+                return _user?.SteamPrivate;
+            }
+        }
+        public decimal? headshotPercentage
+        {
+            get
+            {
+                return _user?.HeadshotPercentage;
+            }
+        }
+        public decimal? killDeathRatio
+        {
+            get
+            {
+                return _user?.KillDeathRatio;
+            }
+        }
+        public decimal? accuracy
+        {
+            get
+            {
+                return _user?.Accuracy;
+            }
+        }
         public string email
         {
             get

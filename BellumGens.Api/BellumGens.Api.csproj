@@ -506,6 +506,10 @@
     <Compile Include="Migrations\201910241419479_UserSteamDecoupling.Designer.cs">
       <DependentUpon>201910241419479_UserSteamDecoupling.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910290917089_CSGOPlayerStats.cs" />
+    <Compile Include="Migrations\201910290917089_CSGOPlayerStats.Designer.cs">
+      <DependentUpon>201910290917089_CSGOPlayerStats.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -773,6 +777,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910241419479_UserSteamDecoupling.resx">
       <DependentUpon>201910241419479_UserSteamDecoupling.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910290917089_CSGOPlayerStats.resx">
+      <DependentUpon>201910290917089_CSGOPlayerStats.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
