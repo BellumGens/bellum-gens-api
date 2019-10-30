@@ -1,6 +1,8 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -11,8 +13,6 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Users")]
 	public class UsersController : BaseController
     {
-		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
-
         [Route("Users")]
 		[AllowAnonymous]
 		public async Task<UserStatsViewModel []> GetUsers(int page = 0)
@@ -26,15 +26,19 @@ namespace BellumGens.Api.Controllers
 				tasks.Add(model.GetSteamUserDetails());
 			}
 
-			return await Task.WhenAll(tasks);
+			return await Task.WhenAll(tasks).ConfigureAwait(false);
 		}
 
 		[Route("User")]
 		[AllowAnonymous]
-		public async Task<IHttpActionResult> GetUser(string userid)
+		public async Task<IHttpActionResult> GetUserDetails(string userid)
 		{
-			UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid);
-			var registered = _dbContext.Users.Find(user.steamUser?.steamID64);
+			UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid).ConfigureAwait(false);
+            ApplicationUser registered = null;
+            if (user.steamUser != null)
+            {
+                registered = _dbContext.Users.Include(u => u.MemberOf).FirstOrDefault(u => u.Id == user.steamUser.steamID64);
+            }
 			if (registered != null)
 			{
 				user.SetUser(registered);
@@ -42,7 +46,15 @@ namespace BellumGens.Api.Controllers
 			return Ok(user);
 		}
 
-		[Route("Availability")]
+        [Route("UserGroups")]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> GetUserGroups(string userid)
+        {
+            UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid).ConfigureAwait(false);
+            return Ok(user?.steamUser?.groups);
+        }
+
+        [Route("Availability")]
 		[HttpPut]
 		public IHttpActionResult SetAvailability(UserAvailability newAvailability)
 		{
@@ -53,9 +65,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+            catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok(entity);
 		}
@@ -71,9 +83,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok(userMap);
 		}
@@ -88,9 +100,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok("success");
 		}
@@ -105,9 +117,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok("success");
 		}
@@ -119,7 +131,7 @@ namespace BellumGens.Api.Controllers
 			TeamInvite entity = _dbContext.TeamInvites.Find(invite.InvitingUserId, invite.InvitedUserId, invite.TeamId);
 			if (entity == null)
 			{
-				return BadRequest("Invite couldn't be found");
+				return NotFound();
 			}
 
 			ApplicationUser user = GetAuthUser();
@@ -140,9 +152,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong..." + e.Message);
 			}
 			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == entity.InvitingUser.Id).ToList();
 			NotificationsService.SendNotification(subs, entity, NotificationState.Accepted);
@@ -156,7 +168,7 @@ namespace BellumGens.Api.Controllers
 			TeamInvite entity = _dbContext.TeamInvites.Find(invite.InvitingUserId, invite.InvitedUserId, invite.TeamId);
 			if (entity == null)
 			{
-				return BadRequest("Invite couldn't be found");
+				return NotFound();
 			}
 
 			entity.State = NotificationState.Rejected;
@@ -164,9 +176,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok(entity);
 		}

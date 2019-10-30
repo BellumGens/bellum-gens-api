@@ -13,6 +13,7 @@ using BellumGens.Api.Providers;
 using BellumGens.Api.Results;
 using Microsoft.Owin.Security.Cookies;
 using System.Linq;
+using System.Data.Entity;
 
 namespace BellumGens.Api.Controllers
 {
@@ -21,7 +22,6 @@ namespace BellumGens.Api.Controllers
     public class AccountController : BaseController
     {
         private const string LocalLoginProvider = "Local";
-		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
 
 		private const string emailConfirmation = "Greetings,<br /><br />You have updated your account information on <a href='https://bellumgens.com' target='_blank'>bellumgens.com</a> with your email address.<br /><br />To confirm your email address click on this <a href='{0}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>";
 
@@ -45,11 +45,12 @@ namespace BellumGens.Api.Controllers
         {
 			if (User.Identity.IsAuthenticated)
 			{
-                ApplicationUser user = GetAuthUser();
+                string userId = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
+                ApplicationUser user = _dbContext.Users.Include(u => u.MemberOf).FirstOrDefault(e => e.Id == userId);
                 UserStatsViewModel model = new UserStatsViewModel(user, true);
                 if (string.IsNullOrEmpty(user.AvatarFull))
                 {
-                    model = await SteamServiceProvider.GetSteamUserDetails(user.Id);
+                    model = await SteamServiceProvider.GetSteamUserDetails(user.Id).ConfigureAwait(false);
                     model.SetUser(user);
                 }
                 model.externalLogins = UserManager.GetLogins(user.Id).Select(t => t.LoginProvider).ToList();
@@ -115,9 +116,9 @@ namespace BellumGens.Api.Controllers
 				_dbContext.SaveChanges();
 				if (newEmail)
 				{
-					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+					string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id).ConfigureAwait(false);
 					var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
-					await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl));
+					await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl)).ConfigureAwait(false);
 				}
 			}
 			catch
@@ -270,7 +271,7 @@ namespace BellumGens.Api.Controllers
 			}
 
 			IdentityResult result = await UserManager.AddLoginAsync(userId,
-				new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey));
+				new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey)).ConfigureAwait(false);
 
 			if (!result.Succeeded)
 			{
@@ -298,12 +299,12 @@ namespace BellumGens.Api.Controllers
 
             if (model.LoginProvider == LocalLoginProvider)
             {
-                result = await UserManager.RemovePasswordAsync(GetAuthUser().Id);
+                result = await UserManager.RemovePasswordAsync(GetAuthUser().Id).ConfigureAwait(false);
             }
             else
             {
                 result = await UserManager.RemoveLoginAsync(GetAuthUser().Id,
-                    new UserLoginInfo(model.LoginProvider, model.ProviderKey));
+                    new UserLoginInfo(model.LoginProvider, model.ProviderKey)).ConfigureAwait(false);
             }
 
             if (!result.Succeeded)
@@ -321,7 +322,7 @@ namespace BellumGens.Api.Controllers
         [Route("ExternalLogin", Name = "ExternalLogin")]
         public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null, string returnUrl = "")
         {
-            Uri returnUri = new Uri(returnUrl.Length > 0 ? returnUrl : CORSConfig.returnOrigin);
+            Uri returnUri = new Uri(!string.IsNullOrEmpty(returnUrl) ? returnUrl : CORSConfig.returnOrigin);
             string returnHost = returnUri.GetLeftPart(UriPartial.Authority);
             string returnPath = returnUri.AbsolutePath;
 
@@ -363,7 +364,7 @@ namespace BellumGens.Api.Controllers
             {
 				if (externalLogin.LoginProvider == "Steam")
 				{
-					IdentityResult x = await Register(externalLogin);
+					IdentityResult x = await Register(externalLogin).ConfigureAwait(false);
 					if (!x.Succeeded)
 					{
 						return Redirect(returnHost + "/unauthorized");
@@ -475,13 +476,13 @@ namespace BellumGens.Api.Controllers
 			};
 			user.InitializeDefaults();
 
-			IdentityResult result = await UserManager.CreateAsync(user);
+			IdentityResult result = await UserManager.CreateAsync(user).ConfigureAwait(false);
 			if (!result.Succeeded)
 			{
 				return result;
 			}
 		
-			return await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(info.LoginProvider, info.ProviderKey));
+			return await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(info.LoginProvider, info.ProviderKey)).ConfigureAwait(false);
 		}
 
 		private IAuthenticationManager Authentication
@@ -578,7 +579,7 @@ namespace BellumGens.Api.Controllers
 
                 if (strengthInBits % bitsPerByte != 0)
                 {
-                    throw new ArgumentException("strengthInBits must be evenly divisible by 8.", "strengthInBits");
+                    throw new ArgumentException("strengthInBits must be evenly divisible by 8.", nameof(strengthInBits));
                 }
 
                 int strengthInBytes = strengthInBits / bitsPerByte;

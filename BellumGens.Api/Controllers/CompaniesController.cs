@@ -16,12 +16,11 @@ namespace BellumGens.Api.Controllers
 {
     public class CompaniesController : BaseController
     {
-        private readonly BellumGensDbContext db = new BellumGensDbContext();
 
         // GET: api/Companies
         public List<string> GetCompanies()
         {
-            return db.Companies.Select(c => c.Name).ToList();
+            return _dbContext.Companies.Select(c => c.Name).ToList();
         }
 
         //// GET: api/Companies/5
@@ -118,18 +117,9 @@ namespace BellumGens.Api.Controllers
         //    return Ok(company);
         //}
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool CompanyExists(string id)
-        {
-            return db.Companies.Count(e => e.Name == id) > 0;
-        }
+        //private bool CompanyExists(string id)
+        //{
+        //    return _dbContext.Companies.Count(e => e.Name == id) > 0;
+        //}
     }
 }

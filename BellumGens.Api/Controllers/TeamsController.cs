@@ -13,8 +13,6 @@ namespace BellumGens.Api.Controllers
 	[RoutePrefix("api/Teams")]
 	public class TeamsController : BaseController
 	{
-		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
-
         [Route("Teams")]
 		[AllowAnonymous]
 		public List<CSGOTeam> GetTeams()
@@ -208,12 +206,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch (DbUpdateException e)
 			{
-                if (e is DbUpdateException)
-                    return BadRequest("Could not remove team because there's an active tournament registration associated with it!");
-                else
-                    return BadRequest("Something went wrong!");
+                return BadRequest("Could not remove team because there's an active tournament registration associated with it!");
 			}
 			return Ok(response);
 		}
