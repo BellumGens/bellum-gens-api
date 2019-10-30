@@ -14,8 +14,9 @@ namespace BellumGens.Api.Controllers
 	public class BaseController : ApiController
     {
 		private ApplicationUserManager _userManager;
+        protected readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
 
-		protected ApplicationUserManager UserManager
+        protected ApplicationUserManager UserManager
 		{
 			get
 			{
@@ -40,7 +41,12 @@ namespace BellumGens.Api.Controllers
 				_userManager = null;
 			}
 
-			base.Dispose(disposing);
+            if (disposing)
+            {
+                _dbContext.Dispose();
+            }
+
+            base.Dispose(disposing);
 		}
 	}
 }

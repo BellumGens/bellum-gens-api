@@ -6,8 +6,6 @@ namespace BellumGens.Api.Controllers
 	[RoutePrefix("api/Push")]
 	public class PushController : BaseController
     {
-		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
-
         [HttpPost]
 		[Route("Subscribe")]
 		public IHttpActionResult Subscribe(BellumGensPushSubscriptionViewModel sub)

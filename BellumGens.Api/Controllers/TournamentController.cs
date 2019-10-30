@@ -14,8 +14,6 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Tournament")]
     public class TournamentController : BaseController
     {
-        private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
-
         [HttpPost]
         [Route("Register")]
         public async Task<IHttpActionResult> Register(TournamentApplication application)

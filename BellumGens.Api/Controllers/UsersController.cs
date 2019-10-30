@@ -1,6 +1,7 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -11,8 +12,6 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Users")]
 	public class UsersController : BaseController
     {
-		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
-
         [Route("Users")]
 		[AllowAnonymous]
 		public async Task<UserStatsViewModel []> GetUsers(int page = 0)
@@ -34,7 +33,11 @@ namespace BellumGens.Api.Controllers
 		public async Task<IHttpActionResult> GetUser(string userid)
 		{
 			UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid);
-			var registered = _dbContext.Users.Find(user.steamUser?.steamID64);
+            ApplicationUser registered = null;
+            if (user.steamUser != null)
+            {
+                registered = _dbContext.Users.Include(u => u.MemberOf).FirstOrDefault(u => u.Id == user.steamUser.steamID64);
+            }
 			if (registered != null)
 			{
 				user.SetUser(registered);
@@ -42,7 +45,15 @@ namespace BellumGens.Api.Controllers
 			return Ok(user);
 		}
 
-		[Route("Availability")]
+        [Route("UserGroups")]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> GetUserGroups(string userid)
+        {
+            UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid);
+            return Ok(user?.steamUser?.groups);
+        }
+
+        [Route("Availability")]
 		[HttpPut]
 		public IHttpActionResult SetAvailability(UserAvailability newAvailability)
 		{

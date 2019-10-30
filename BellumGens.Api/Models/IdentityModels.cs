@@ -144,7 +144,7 @@ namespace BellumGens.Api.Models
 		public virtual ICollection<TeamInvite> Notifications { get; set; }
 
         [JsonIgnore]
-		public virtual ICollection<TeamMember> MemberOf { get; set; }
+		public ICollection<TeamMember> MemberOf { get; set; }
 
 		public virtual ICollection<TeamApplication> TeamApplications { get; set; }
     }

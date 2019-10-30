@@ -12,8 +12,6 @@ namespace BellumGens.Api.Controllers
 	[RoutePrefix("api/Search")]
 	public class SearchController : BaseController
 	{
-		private readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
-
         [Route("Search")]
 		[HttpGet]
 		public async Task<IHttpActionResult> Search(string name)
