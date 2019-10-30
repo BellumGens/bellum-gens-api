@@ -1,5 +1,6 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -25,14 +26,14 @@ namespace BellumGens.Api.Controllers
 				tasks.Add(model.GetSteamUserDetails());
 			}
 
-			return await Task.WhenAll(tasks);
+			return await Task.WhenAll(tasks).ConfigureAwait(false);
 		}
 
 		[Route("User")]
 		[AllowAnonymous]
-		public async Task<IHttpActionResult> GetUser(string userid)
+		public async Task<IHttpActionResult> GetUserDetails(string userid)
 		{
-			UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid);
+			UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid).ConfigureAwait(false);
             ApplicationUser registered = null;
             if (user.steamUser != null)
             {
@@ -49,7 +50,7 @@ namespace BellumGens.Api.Controllers
         [AllowAnonymous]
         public async Task<IHttpActionResult> GetUserGroups(string userid)
         {
-            UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid);
+            UserStatsViewModel user = await SteamServiceProvider.GetSteamUserDetails(userid).ConfigureAwait(false);
             return Ok(user?.steamUser?.groups);
         }
 
@@ -64,9 +65,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+            catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok(entity);
 		}
@@ -82,9 +83,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok(userMap);
 		}
@@ -99,9 +100,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok("success");
 		}
@@ -116,9 +117,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok("success");
 		}
@@ -130,7 +131,7 @@ namespace BellumGens.Api.Controllers
 			TeamInvite entity = _dbContext.TeamInvites.Find(invite.InvitingUserId, invite.InvitedUserId, invite.TeamId);
 			if (entity == null)
 			{
-				return BadRequest("Invite couldn't be found");
+				return NotFound();
 			}
 
 			ApplicationUser user = GetAuthUser();
@@ -151,9 +152,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong..." + e.Message);
 			}
 			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == entity.InvitingUser.Id).ToList();
 			NotificationsService.SendNotification(subs, entity, NotificationState.Accepted);
@@ -167,7 +168,7 @@ namespace BellumGens.Api.Controllers
 			TeamInvite entity = _dbContext.TeamInvites.Find(invite.InvitingUserId, invite.InvitedUserId, invite.TeamId);
 			if (entity == null)
 			{
-				return BadRequest("Invite couldn't be found");
+				return NotFound();
 			}
 
 			entity.State = NotificationState.Rejected;
@@ -175,9 +176,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (Exception e)
 			{
-				return BadRequest("Something went wrong...");
+				return BadRequest("Something went wrong... " + e.Message);
 			}
 			return Ok(entity);
 		}
