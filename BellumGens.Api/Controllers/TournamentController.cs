@@ -26,14 +26,22 @@ namespace BellumGens.Api.Controllers
                 {
                     if (string.IsNullOrEmpty(application.BattleNetId))
                     {
-                        return BadRequest("Please provide your Battle.net battle tag!");
+                        return BadRequest("Моля попълнете Battle.net battle tag!");
+                    }
+                    if (_dbContext.TournamentApplications.Where(a => a.BattleNetId == application.BattleNetId).SingleOrDefault() != null)
+                    {
+                        return BadRequest($"Вече има направена регистрация с battle tag {application.BattleNetId}!");
                     }
                 }
                 else
                 {
                     if (application.TeamId == Guid.Empty)
                     {
-                        return BadRequest("Please provide the team that you're registering!");
+                        return BadRequest("Моля попълнете отбор във формата за регистрация!");
+                    }
+                    if (_dbContext.TournamentApplications.Where(a => a.TeamId == application.TeamId).SingleOrDefault() != null)
+                    {
+                        return BadRequest("Вече има направена регистрация за този отбор!");
                     }
                 }
                 if (c == null)
