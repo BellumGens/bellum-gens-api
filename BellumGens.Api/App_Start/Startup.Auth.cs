@@ -17,6 +17,8 @@ namespace BellumGens.Api
 
         public static string PublicClientId { get; private set; }
 
+        private const bool allowInsecureHttp = true;
+
         // For more information on configuring authentication, please visit https://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -40,7 +42,7 @@ namespace BellumGens.Api
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(14),
-                AllowInsecureHttp = true
+                AllowInsecureHttp = allowInsecureHttp
             };
 
             // Enable the application to use bearer tokens to authenticate users

@@ -149,7 +149,6 @@ namespace BellumGens.Api.Controllers
 		[Route("Logout")]
         public IHttpActionResult Logout()
         {
-            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             return Ok();
         }
@@ -281,6 +280,7 @@ namespace BellumGens.Api.Controllers
 
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
+            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignIn(identity);
 
             return Redirect(CORSConfig.returnOrigin + "/players/" + userId);
