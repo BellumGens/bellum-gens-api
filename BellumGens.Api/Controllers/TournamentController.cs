@@ -53,7 +53,7 @@ namespace BellumGens.Api.Controllers
                 }
                 application.UniqueHash(_dbContext);
                 application.UserId = user.Id;
-                application = _dbContext.TournamentApplications.Add(application);
+                _dbContext.TournamentApplications.Add(application);
                 
                 try
                 {
