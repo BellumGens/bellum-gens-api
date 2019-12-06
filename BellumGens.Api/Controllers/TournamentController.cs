@@ -53,7 +53,7 @@ namespace BellumGens.Api.Controllers
                 }
                 application.UniqueHash(_dbContext);
                 application.UserId = user.Id;
-                _dbContext.TournamentApplications.Add(application);
+                application = _dbContext.TournamentApplications.Add(application);
                 
                 try
                 {
@@ -61,13 +61,15 @@ namespace BellumGens.Api.Controllers
                 }
                 catch
                 {
-                    return BadRequest("Something went wrong...");
+                    return BadRequest("Нещо се обърка...");
                 }
 
                 try
                 {
+                    string gameMsg = application.Game == Game.CSGO ? "Вашата регистрация е за участие в лигата по CS:GO" :
+                                                                    $"Вашата регистрация е за участие в лигата по StarCraft II, с battle tag {application.BattleNetId}";
                     string message = $@"Здравей, { user.UserName },
-                                    <p>Успешно получихме вашата регистрация за Esports Бизнес Лигата. В регистрацията сте посочили, че текущо работите в <b>{ application.CompanyId }</b>. Регистрация ще бъде потвърдена след като преведете таксата за участие (60лв. с ДДС за лигата по StarCraft II, или 300лв. с ДДС за лигата по CS:GO).</p>
+                                    <p>Успешно получихме вашата регистрация за Esports Бизнес Лигата. В регистрацията сте посочили, че текущо работите в <b>{ application.CompanyId }</b>. {gameMsg}. Регистрация ще бъде потвърдена след като преведете таксата за участие (60лв. с ДДС за лигата по StarCraft II, или 300лв. с ДДС за лигата по CS:GO).</p>
                                     <p>Банковата ни сметка е</p>
                                     <ul>
                                         <li>Име на Банката: <b>{ AppInfo.Config.bank }</b></li>
@@ -79,7 +81,7 @@ namespace BellumGens.Api.Controllers
                                     <p>Ако ви е нужна фактура, моля да се свържете с нас на <a href='mailto:info@eb-league.com'>info@eb-league.com</a>!</p>
                                     <p>Поздрави от екипа на Bellum Gens!</p>
                                     <a href='https://eb-league.com' target='_blank'>https://eb-league.com</a>";
-                    await EmailServiceProvider.SendNotificationEmail(application.Email, "Регистрацията ви е получена", message);
+                    await EmailServiceProvider.SendNotificationEmail(application.Email, "Регистрацията ви е получена", message).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -87,7 +89,7 @@ namespace BellumGens.Api.Controllers
                 }
                 return Ok(application);
             }
-            return BadRequest("The application didn't validate");
+            return BadRequest("Не успяхме да вилидираме информацията...");
         }
 
         [HttpGet]
