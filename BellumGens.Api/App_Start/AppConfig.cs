@@ -4,19 +4,19 @@ namespace BellumGens.Api
 {
 	public class AppInfoDescriptior
 	{
-		public string steamApiKey;
-		public string gameId;
-		public string twitchClientId;
-		public string twitchSecret;
-		public string publicVapidKey;
-		public string privateVapidKey;
-		public string email;
-		public string emailUsername;
-		public string emailPassword;
-        public string bank;
-        public string bankAccountOwner;
-        public string bic;
-        public string bankAccount;
+		public string steamApiKey { get; set; }
+		public string gameId { get; set; }
+		public string twitchClientId { get; set; }
+		public string twitchSecret { get; set; }
+		public string publicVapidKey { get; set; }
+		public string privateVapidKey { get; set; }
+		public string email { get; set; }
+		public string emailUsername { get; set; }
+		public string emailPassword { get; set; }
+        public string bank { get; set; }
+        public string bankAccountOwner { get; set; }
+        public string bic { get; set; }
+        public string bankAccount { get; set; }
 	}
 
 	public static class AppInfo
