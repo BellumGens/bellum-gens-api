@@ -527,8 +527,11 @@
     <Compile Include="Models\Subscriber.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\TournamentApplication.cs" />
+    <Compile Include="Models\TournamentCSGOGroup.cs" />
     <Compile Include="Models\TournamentCSGOMatch.cs" />
+    <Compile Include="Models\TournamentGroup.cs" />
     <Compile Include="Models\TournamentMatch.cs" />
+    <Compile Include="Models\TournamentSC2Group.cs" />
     <Compile Include="Models\TournamentSC2Match.cs" />
     <Compile Include="Models\ViewModels\CSGOTeamSummaryView.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
