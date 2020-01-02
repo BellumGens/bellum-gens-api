@@ -114,6 +114,15 @@ namespace BellumGens.Api.Controllers
             return Ok(model);
         }
 
+        [HttpGet]
+        [Route("CSGORegs")]
+        [AllowAnonymous]
+        public IHttpActionResult GetCSGORegistrations()
+        {
+            List<TournamentApplication> registrations = _dbContext.TournamentApplications.Where(r => r.Game == Game.CSGO).ToList();
+            return Ok(registrations);
+        }
+
         [HttpDelete]
         [Route("Delete")]
         public IHttpActionResult DeleteRegistraion(Guid id)
