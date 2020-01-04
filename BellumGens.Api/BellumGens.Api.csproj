@@ -554,6 +554,8 @@
     <Compile Include="Models\UserMessage.cs" />
     <Compile Include="Models\ViewModels\RegistrationCountViewModel.cs" />
     <Compile Include="Models\ViewModels\SearchResultViewModel.cs" />
+    <Compile Include="Models\ViewModels\TournamentCSGOParticipant.cs" />
+    <Compile Include="Models\ViewModels\TournamentSC2Participant.cs" />
     <Compile Include="Models\ViewModels\UserPreferencesViewModel.cs" />
     <Compile Include="Models\ViewModels\UserStatsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
