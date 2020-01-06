@@ -114,6 +114,34 @@ namespace BellumGens.Api.Controllers
             return Ok(model);
         }
 
+        [HttpGet]
+        [Route("CSGORegs")]
+        [AllowAnonymous]
+        public IHttpActionResult GetCSGORegistrations()
+        {
+            List<TournamentApplication> entities = _dbContext.TournamentApplications.Where(r => r.Game == Game.CSGO).ToList();
+            List<TournamentCSGOParticipant> registrations = new List<TournamentCSGOParticipant>();
+            foreach (TournamentApplication app in entities)
+            {
+                registrations.Add(new TournamentCSGOParticipant(app));
+            }
+            return Ok(registrations);
+        }
+
+        [HttpGet]
+        [Route("SC2Regs")]
+        [AllowAnonymous]
+        public IHttpActionResult GetSC2sRegistrations()
+        {
+            List<TournamentApplication> entities = _dbContext.TournamentApplications.Where(r => r.Game == Game.StarCraft2).ToList();
+            List<TournamentSC2Participant> registrations = new List<TournamentSC2Participant>();
+            foreach (TournamentApplication app in entities)
+            {
+                registrations.Add(new TournamentSC2Participant(app));
+            }
+            return Ok(registrations);
+        }
+
         [HttpDelete]
         [Route("Delete")]
         public IHttpActionResult DeleteRegistraion(Guid id)

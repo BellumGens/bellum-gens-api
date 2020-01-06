@@ -15,6 +15,9 @@ namespace BellumGens.Api.Models
 
 		public DateTimeOffset EndDate { get; set; }
 
+		//public ICollection<TournamentCSGOGroup> CSGOGroups { get; set; }
+
+		//public ICollection<TournamentSC2Group> SC2Groups { get; set; }
 		//public virtual ICollection<CSGOTeam> Teams { get; set; }
 
 		//public virtual ICollection<TournamentApplication> Applications { get; set; }
