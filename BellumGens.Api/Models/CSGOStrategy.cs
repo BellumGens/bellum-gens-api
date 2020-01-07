@@ -67,9 +67,9 @@ namespace BellumGens.Api.Models
 			}
 		}
 
-		public virtual ICollection<StrategyVote> Votes { get; set; }
+		public virtual ICollection<StrategyVote> Votes { get; }
 
-		public virtual ICollection<StrategyComment> Comments { get; set; }
+		public virtual ICollection<StrategyComment> Comments { get; }
 
 		[JsonIgnore]
 		[ForeignKey("TeamId")]

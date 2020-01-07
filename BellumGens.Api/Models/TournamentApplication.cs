@@ -34,6 +34,11 @@ namespace BellumGens.Api.Models
 
         public TournamentApplicationState State { get; set; } = TournamentApplicationState.Pending;
 
+        public Guid? TournamentCSGOGroupId { get; set; }
+
+        [ForeignKey("TournamentCSGOGroupId")]
+        public virtual TournamentCSGOGroup Group { get; set; }
+
         [ForeignKey("UserId")]
         [JsonIgnore]
         public virtual ApplicationUser User { get; set; }

@@ -515,6 +515,10 @@
     <Compile Include="Migrations\201910290917089_CSGOPlayerStats.Designer.cs">
       <DependentUpon>201910290917089_CSGOPlayerStats.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001071639121_CSGOGroups.cs" />
+    <Compile Include="Migrations\202001071639121_CSGOGroups.Designer.cs">
+      <DependentUpon>202001071639121_CSGOGroups.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -794,6 +798,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910290917089_CSGOPlayerStats.resx">
       <DependentUpon>201910290917089_CSGOPlayerStats.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001071639121_CSGOGroups.resx">
+      <DependentUpon>202001071639121_CSGOGroups.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
