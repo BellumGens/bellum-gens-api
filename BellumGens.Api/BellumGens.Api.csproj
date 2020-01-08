@@ -519,6 +519,10 @@
     <Compile Include="Migrations\202001071639121_CSGOGroups.Designer.cs">
       <DependentUpon>202001071639121_CSGOGroups.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001080924098_SC2Groups.cs" />
+    <Compile Include="Migrations\202001080924098_SC2Groups.Designer.cs">
+      <DependentUpon>202001080924098_SC2Groups.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -526,6 +530,7 @@
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
     <Compile Include="Models\PushSubscription.cs" />
+    <Compile Include="Models\SC2MatchMap.cs" />
     <Compile Include="Models\StrategyComment.cs" />
     <Compile Include="Models\StrategyVotes.cs" />
     <Compile Include="Models\Subscriber.cs" />
@@ -801,6 +806,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001071639121_CSGOGroups.resx">
       <DependentUpon>202001071639121_CSGOGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001080924098_SC2Groups.resx">
+      <DependentUpon>202001080924098_SC2Groups.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@ namespace BellumGens.Api.Models
 
 		[Key]
 		[Column(Order = 1)]
-		public CSGOMaps Map { get; set; }
+		public CSGOMap Map { get; set; }
 		public bool IsPlayed { get; set; }
 
 		[JsonIgnore]

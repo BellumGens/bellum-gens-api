@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,5 +17,7 @@ namespace BellumGens.Api.Models
 
         [ForeignKey("TournamentId")]
         public virtual Tournament Tournament { get; set; }
+
+        public virtual ICollection<TournamentApplication> Participants { get; }
     }
 }

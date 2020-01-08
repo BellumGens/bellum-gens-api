@@ -10,7 +10,7 @@ namespace BellumGens.Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        public CSGOMaps Map { get; set; }
+        public CSGOMap Map { get; set; }
 
         public Guid CSGOMatchId { get; set; }
 

@@ -7,9 +7,6 @@ namespace BellumGens.Api.Models
 {
     public class TournamentCSGOMatch : TournamentMatch
     {
-        [Key]
-        public Guid Id { get; set; }
-
         public Guid Team1Id { get; set; }
         public Guid Team2Id { get; set; }
 
