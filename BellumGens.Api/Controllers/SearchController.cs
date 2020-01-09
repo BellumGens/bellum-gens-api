@@ -29,7 +29,7 @@ namespace BellumGens.Api.Controllers
 				}
 				if (!activeUsers.Any(u => u.UserName == name))
 				{
-					results.SteamUser = await SteamServiceProvider.GetSteamUserDetails(name);
+					results.SteamUser = await SteamServiceProvider.GetSteamUserDetails(name).ConfigureAwait(false);
 				}
 
 				return Ok(results);

@@ -1,4 +1,5 @@
 ﻿using BellumGens.Api.Models;
+using System.Data.Entity.Infrastructure;
 using System.Web.Http;
 
 namespace BellumGens.Api.Controllers
@@ -24,8 +25,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError("Push notification sub error: " + e.Message);
 				return Ok("Sub already exists...");
 			}
 			return Ok(push);

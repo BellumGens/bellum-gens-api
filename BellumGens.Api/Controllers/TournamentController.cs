@@ -2,6 +2,7 @@
 using BellumGens.Api.Providers;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -59,8 +60,9 @@ namespace BellumGens.Api.Controllers
                 {
                     _dbContext.SaveChanges();
                 }
-                catch
+                catch (DbUpdateException e)
                 {
+                    System.Diagnostics.Trace.TraceError("Tournament registration error: " + e.Message);
                     return BadRequest("Нещо се обърка...");
                 }
 
@@ -83,9 +85,9 @@ namespace BellumGens.Api.Controllers
                                     <a href='https://eb-league.com' target='_blank'>https://eb-league.com</a>";
                     await EmailServiceProvider.SendNotificationEmail(application.Email, "Регистрацията ви е получена", message).ConfigureAwait(false);
                 }
-                catch
+                catch (Exception e)
                 {
-
+                    System.Diagnostics.Trace.TraceError("Tournament registration error: " + e.Message);
                 }
                 return Ok(application);
             }
@@ -157,8 +159,9 @@ namespace BellumGens.Api.Controllers
                     {
                         _dbContext.SaveChanges();
                     }
-                    catch
+                    catch (DbUpdateException e)
                     {
+                        System.Diagnostics.Trace.TraceError("Tournament registration delete error: " + e.Message);
                         return BadRequest("Something went wrong!");
                     }
                     return Ok(id);

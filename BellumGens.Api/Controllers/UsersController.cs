@@ -3,6 +3,7 @@ using BellumGens.Api.Providers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -65,9 +66,10 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-            catch (Exception e)
+            catch (DbUpdateException e)
 			{
-				return BadRequest("Something went wrong... " + e.Message);
+				System.Diagnostics.Trace.TraceError($"User availability error: ${e.Message}");
+				return BadRequest("Something went wrong... ");
 			}
 			return Ok(entity);
 		}
@@ -83,9 +85,10 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch (DbUpdateException e)
 			{
-				return BadRequest("Something went wrong... " + e.Message);
+				System.Diagnostics.Trace.TraceError($"User map pool error: ${e.Message}");
+				return BadRequest("Something went wrong... ");
 			}
 			return Ok(userMap);
 		}
@@ -100,9 +103,10 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch (DbUpdateException e)
 			{
-				return BadRequest("Something went wrong... " + e.Message);
+				System.Diagnostics.Trace.TraceError($"User primary role error: ${e.Message}");
+				return BadRequest("Something went wrong... ");
 			}
 			return Ok("success");
 		}
@@ -117,9 +121,10 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch (DbUpdateException e)
 			{
-				return BadRequest("Something went wrong... " + e.Message);
+				System.Diagnostics.Trace.TraceError($"User secondary role error: ${e.Message}");
+				return BadRequest("Something went wrong... ");
 			}
 			return Ok("success");
 		}
@@ -152,9 +157,10 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch (DbUpdateException e)
 			{
-				return BadRequest("Something went wrong..." + e.Message);
+				System.Diagnostics.Trace.TraceError($"User team invite accept error: ${e.Message}");
+				return BadRequest("Something went wrong...");
 			}
 			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == entity.InvitingUser.Id).ToList();
 			NotificationsService.SendNotification(subs, entity, NotificationState.Accepted);
@@ -176,9 +182,10 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch (Exception e)
+			catch (DbUpdateException e)
 			{
-				return BadRequest("Something went wrong... " + e.Message);
+				System.Diagnostics.Trace.TraceError($"User team invite reject error: ${e.Message}");
+				return BadRequest("Something went wrong... ");
 			}
 			return Ok(entity);
 		}
