@@ -10,10 +10,6 @@ namespace BellumGens.Api.Models
         public string Player1Id { get; set; }
         public string Player2Id { get; set; }
 
-        public Uri DemoLink { get; set; }
-
-        public Uri VideoLink { get; set; }
-
         public virtual ICollection<SC2MatchMap> Maps { get; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

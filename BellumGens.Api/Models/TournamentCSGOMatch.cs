@@ -10,10 +10,6 @@ namespace BellumGens.Api.Models
         public Guid Team1Id { get; set; }
         public Guid Team2Id { get; set; }
 
-        public Uri DemoLink { get; set; }
-
-        public Uri VideoLink { get; set; }
-
         public virtual ICollection<CSGOMatchMap> Maps { get; }
 
 
