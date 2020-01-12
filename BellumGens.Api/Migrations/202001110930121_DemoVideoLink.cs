@@ -3,7 +3,7 @@ namespace BellumGens.Api.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class MatchVideoDemoLinks : DbMigration
+    public partial class DemoVideoLink : DbMigration
     {
         public override void Up()
         {

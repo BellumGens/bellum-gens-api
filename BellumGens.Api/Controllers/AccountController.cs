@@ -286,7 +286,7 @@ namespace BellumGens.Api.Controllers
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            Authentication.SignIn(identity);
+            Authentication.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
 
             return Redirect(CORSConfig.returnOrigin + "/players/" + userId);
 		}
@@ -390,7 +390,7 @@ namespace BellumGens.Api.Controllers
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            Authentication.SignIn(identity);
+            Authentication.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
 
             return Redirect(returnHost + returnPath);
 

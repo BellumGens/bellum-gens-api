@@ -103,12 +103,19 @@ namespace BellumGens.Api.Models
             return userIdentity;
         }
 
+		[JsonProperty("id")]
+		public override string Id { get => base.Id; set => base.Id = value; }
+
+		[JsonProperty("username")]
+		public override string UserName { get => base.UserName; set => base.UserName = value; }
+
 		public string ESEA { get; set; }
 
         public bool SearchVisible { get; set; } = true;
 
         public string AvatarFull { get; set; }
 
+		[JsonProperty("avatarMedium")]
         public string AvatarMedium { get; set; }
 
         public string AvatarIcon { get; set; }

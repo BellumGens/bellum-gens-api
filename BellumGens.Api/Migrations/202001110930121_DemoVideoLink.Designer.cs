@@ -7,13 +7,13 @@ namespace BellumGens.Api.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class Test : IMigrationMetadata
+    public sealed partial class DemoVideoLink : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Test));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(DemoVideoLink));
         
         string IMigrationMetadata.Id
         {
-            get { return "202001091423260_Test"; }
+            get { return "202001110930121_DemoVideoLink"; }
         }
         
         string IMigrationMetadata.Source

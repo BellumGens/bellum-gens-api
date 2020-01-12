@@ -529,9 +529,9 @@
     <Compile Include="Migrations\202001080924098_SC2Groups.Designer.cs">
       <DependentUpon>202001080924098_SC2Groups.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202001091423260_MatchVideoDemoLinks.cs" />
-    <Compile Include="Migrations\202001091423260_MatchVideoDemoLinks.Designer.cs">
-      <DependentUpon>202001091423260_MatchVideoDemoLinks.cs</DependentUpon>
+    <Compile Include="Migrations\202001110930121_DemoVideoLink.cs" />
+    <Compile Include="Migrations\202001110930121_DemoVideoLink.Designer.cs">
+      <DependentUpon>202001110930121_DemoVideoLink.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -820,8 +820,8 @@
     <EmbeddedResource Include="Migrations\202001080924098_SC2Groups.resx">
       <DependentUpon>202001080924098_SC2Groups.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202001091423260_MatchVideoDemoLinks.resx">
-      <DependentUpon>202001091423260_MatchVideoDemoLinks.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202001110930121_DemoVideoLink.resx">
+      <DependentUpon>202001110930121_DemoVideoLink.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,40 +1,60 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
+using BellumGens.Api.Providers;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace BellumGens.Api.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize]
     [RoutePrefix("api/Admin")]
     public class AdminController : BaseController
     {
-        [AllowAnonymous]
         [Route("AppAdmin")]
         public bool GetUserIsAdmin()
         {
-            return User.Identity.IsAuthenticated && User.IsInRole("admin");
+            return UserManager.IsInRole(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), "admin");
         }
 
         [AllowAnonymous]
         [HttpGet]
         [Route("CreateRole")]
-        public IHttpActionResult CreateRole(string rolename)
+        public async Task<IHttpActionResult> CreateRole(string rolename)
         {
-            _dbContext.Roles.Add(new IdentityRole()
+            var result = await RoleManager.CreateAsync(new IdentityRole() { Name = rolename }).ConfigureAwait(false);
+            if (result.Succeeded)
             {
-                Name = rolename
-            });
-
-            _dbContext.SaveChanges();
-            return Ok();
+                return Ok();
+            }
+            return BadRequest();
         }
 
         [AllowAnonymous]
         [Route("Roles")]
         public IHttpActionResult GetRoles()
         {
-            return Ok(_dbContext.Roles.ToList());
+            return Ok(RoleManager.Roles.Select(r => r.Name).ToList());
+        }
+
+        [AllowAnonymous]
+        [Route("Users")]
+        public IHttpActionResult GetUsers()
+        {
+            return Ok(UserManager.Users.ToList());
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("AddUserRole")]
+        public async Task<IHttpActionResult> AddUserRoles(string userid, string role)
+        {
+            IdentityResult result = await UserManager.AddToRoleAsync(userid, role).ConfigureAwait(false);
+            if (result.Succeeded)
+            {
+                return Ok("Ok");
+            }
+            return BadRequest("Something went wrong");
         }
     }
 }

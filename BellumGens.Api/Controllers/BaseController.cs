@@ -1,6 +1,7 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.Cookies;
 using System.Net.Http;
@@ -14,7 +15,8 @@ namespace BellumGens.Api.Controllers
 	public class BaseController : ApiController
     {
 		private ApplicationUserManager _userManager;
-        protected readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
+		private ApplicationRoleManager _roleManager;
+		protected readonly BellumGensDbContext _dbContext = new BellumGensDbContext();
 
         protected ApplicationUserManager UserManager
 		{
@@ -25,6 +27,14 @@ namespace BellumGens.Api.Controllers
 			set
 			{
 				_userManager = value;
+			}
+		}
+
+		protected ApplicationRoleManager RoleManager
+		{
+			get
+			{
+				return _roleManager ?? Request.GetOwinContext().Get<ApplicationRoleManager>();
 			}
 		}
 
@@ -39,6 +49,12 @@ namespace BellumGens.Api.Controllers
 			{
 				_userManager.Dispose();
 				_userManager = null;
+			}
+
+			if (disposing && _roleManager != null)
+			{
+				_roleManager.Dispose();
+				_roleManager = null;
 			}
 
             if (disposing)
