@@ -58,39 +58,39 @@ namespace BellumGens.Api.Models
 			{
 				new UserMapPool
 				{
-					Map = CSGOMaps.Cache
+					Map = CSGOMap.Cache
 				},
 				new UserMapPool
 				{
-					Map = CSGOMaps.Dust2
+					Map = CSGOMap.Dust2
 				},
 				new UserMapPool
 				{
-					Map = CSGOMaps.Inferno
+					Map = CSGOMap.Inferno
 				},
 				new UserMapPool
 				{
-					Map = CSGOMaps.Mirage
+					Map = CSGOMap.Mirage
 				},
 				new UserMapPool
 				{
-					Map = CSGOMaps.Nuke
+					Map = CSGOMap.Nuke
 				},
 				new UserMapPool
 				{
-					Map = CSGOMaps.Overpass
+					Map = CSGOMap.Overpass
 				},
 				new UserMapPool
 				{
-					Map = CSGOMaps.Train
+					Map = CSGOMap.Train
 				},
 				new UserMapPool
 				{
-					Map = CSGOMaps.Vertigo
+					Map = CSGOMap.Vertigo
 				},
 				new UserMapPool
 				{
-					Map = CSGOMaps.Cobblestone
+					Map = CSGOMap.Cobblestone
 				}
 			};
 		}
@@ -103,12 +103,19 @@ namespace BellumGens.Api.Models
             return userIdentity;
         }
 
+		[JsonProperty("id")]
+		public override string Id { get => base.Id; set => base.Id = value; }
+
+		[JsonProperty("username")]
+		public override string UserName { get => base.UserName; set => base.UserName = value; }
+
 		public string ESEA { get; set; }
 
         public bool SearchVisible { get; set; } = true;
 
         public string AvatarFull { get; set; }
 
+		[JsonProperty("avatarMedium")]
         public string AvatarMedium { get; set; }
 
         public string AvatarIcon { get; set; }

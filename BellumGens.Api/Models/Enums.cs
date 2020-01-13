@@ -41,7 +41,7 @@ namespace BellumGens.Api.Models
         Down
     }
 
-    public enum CSGOMaps
+    public enum CSGOMap
     {
         Cache,
         Dust2,
@@ -52,6 +52,17 @@ namespace BellumGens.Api.Models
         Train,
         Vertigo,
         Cobblestone
+    }
+
+    public enum SC2Map
+    {
+        TritonLE,
+        EphemeronLE,
+        WorldofSleepersLE,
+        ZenLE,
+        SimulacrumLE,
+        NightshadeLE,
+        EternalEmpireLE
     }
 
     public enum TShirtSize

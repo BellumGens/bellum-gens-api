@@ -14,6 +14,7 @@ using BellumGens.Api.Results;
 using Microsoft.Owin.Security.Cookies;
 using System.Linq;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace BellumGens.Api.Controllers
 {
@@ -72,8 +73,9 @@ namespace BellumGens.Api.Controllers
                 {
                     _dbContext.SaveChanges();
                 }
-                catch
+                catch (DbUpdateException e)
                 {
+                    System.Diagnostics.Trace.TraceInformation("Email subscription exception: " + e.Message);
                     return Ok("Already subscribed...");
                 }
                 return Ok("Subscribed successfully!");
@@ -94,9 +96,10 @@ namespace BellumGens.Api.Controllers
 				{
 					_dbContext.SaveChanges();
 				}
-				catch
+				catch (DbUpdateException e)
 				{
-					return BadRequest("Something went wrong");
+                    System.Diagnostics.Trace.TraceError("Email sub unsubscribe error: " + e.Message);
+                    return BadRequest("Something went wrong");
 				}
 				return Redirect(CORSConfig.returnOrigin + "/emailconfirm/unsubscribed");
 			}
@@ -121,9 +124,10 @@ namespace BellumGens.Api.Controllers
 					await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl)).ConfigureAwait(false);
 				}
 			}
-			catch
-			{
-				return BadRequest("Something went wrong...");
+			catch (Exception e)
+            {
+                System.Diagnostics.Trace.TraceError("UserInfo update error: " + e.Message);
+                return BadRequest("Something went wrong...");
 			}
 			return Ok(new { newEmail, preferences.email });
 		}
@@ -170,9 +174,10 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
-				return BadRequest("Something went wrong...");
+                System.Diagnostics.Trace.TraceError("User account delete error: " + e.Message);
+                return BadRequest("Something went wrong...");
 			}
 			return Ok("Ok");
 		}
@@ -281,7 +286,7 @@ namespace BellumGens.Api.Controllers
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            Authentication.SignIn(identity);
+            Authentication.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
 
             return Redirect(CORSConfig.returnOrigin + "/players/" + userId);
 		}
@@ -385,7 +390,7 @@ namespace BellumGens.Api.Controllers
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            Authentication.SignIn(identity);
+            Authentication.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
 
             return Redirect(returnHost + returnPath);
 

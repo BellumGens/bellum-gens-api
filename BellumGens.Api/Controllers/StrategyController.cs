@@ -2,6 +2,7 @@
 using BellumGens.Api.Providers;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web.Http;
 
@@ -99,8 +100,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError("User Strategy submit error: " + e.Message);
 				return BadRequest("Something went wrong...");
 			}
 			return Ok(entity);
@@ -130,8 +132,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError("Delete user strategy error: " + e.Message);
 				return BadRequest("Something went wrong...");
 			}
 			return Ok("Ok");
@@ -171,8 +174,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError("Vote user strategy error: " + e.Message);
 				return BadRequest("Something went wrong...");
 			}
 			return Ok(vote);
@@ -202,8 +206,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError("Comment user strategy error: " + e.Message);
 				return BadRequest("Something went wrong...");
 			}
 
@@ -232,8 +237,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError("Delete user strategy comment error: " + e.Message);
 				return BadRequest("Something went wrong...");
 			}
 			return Ok(comment);

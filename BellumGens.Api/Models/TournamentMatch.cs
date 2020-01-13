@@ -13,6 +13,10 @@ namespace BellumGens.Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        public string DemoLink { get; set; }
+
+        public string VideoLink { get; set; }
+
         public DateTimeOffset StartTime { get; set; }
 
         public DateTimeOffset EndTime { get; set; }

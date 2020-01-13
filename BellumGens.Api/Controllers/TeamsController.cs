@@ -76,8 +76,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceWarning($"Attempting to register steam group twice: ${group.groupID64} msg: ${e.Message}");
 				return BadRequest(group.groupName + " Steam group has already been registered.");
 			}
 			return Ok(team);
@@ -101,8 +102,9 @@ namespace BellumGens.Api.Controllers
 				{
 					_dbContext.SaveChanges();
 				}
-				catch
+				catch (DbUpdateException e)
 				{
+					System.Diagnostics.Trace.TraceError($"Team update error: ${e.Message}");
 					return BadRequest("Something went wrong!");
 				}
 				return Ok(team);
@@ -132,8 +134,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError($"Team create error: ${e.Message}");
 				return BadRequest("Something went wrong...");
 			}
 			return Ok(team);
@@ -154,8 +157,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError($"Team member update error: ${e.Message}");
 				return BadRequest("Something went wrong...");
 			}
 			return Ok("ok");
@@ -176,8 +180,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError($"Team member delete error: ${e.Message}");
 				return BadRequest("Something went wrong...");
 			}
 			return Ok("ok");
@@ -208,7 +213,8 @@ namespace BellumGens.Api.Controllers
 			}
 			catch (DbUpdateException e)
 			{
-                return BadRequest("Could not remove team because there's an active tournament registration associated with it!");
+				System.Diagnostics.Trace.TraceError($"Team abandon error: ${e.Message}");
+				return BadRequest("Could not remove team because there's an active tournament registration associated with it!");
 			}
 			return Ok(response);
 		}
@@ -247,8 +253,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError($"Team invite error: ${e.Message}");
 				return BadRequest("Something went wrong...");
 			}
 			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(sub => sub.userId == invitedUserEntity.Id).ToList();
@@ -278,8 +285,9 @@ namespace BellumGens.Api.Controllers
 				{
 					_dbContext.SaveChanges();
 				}
-				catch
+				catch (DbUpdateException e)
 				{
+					System.Diagnostics.Trace.TraceError($"Team application error: ${e.Message}");
 					return BadRequest("Something went wrong...");
 				}
 				List<TeamMember> admins = _dbContext.Teams.Find(application.TeamId).Members.Where(m => m.IsAdmin).ToList();
@@ -289,9 +297,9 @@ namespace BellumGens.Api.Controllers
 					subs = subs.FindAll(s => admins.Any(a => a.UserId == s.userId));
 					NotificationsService.SendNotification(subs, application);
 				}
-				catch
+				catch (Exception e)
 				{
-
+					System.Diagnostics.Trace.TraceError($"Push sub error: ${e.Message}");
 				}
 				return Ok(application);
 			}
@@ -335,8 +343,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError($"Team application approve error: ${e.Message}");
 				return BadRequest("Something went wrong...");
 			}
 
@@ -361,8 +370,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError($"Team application reject error: ${e.Message}");
 				return BadRequest("Something went wrong... ");
 			}
 			return Ok("ok");
@@ -387,8 +397,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError($"Team map pool error: ${e.Message}");
 				return BadRequest("Something went wrong...");
 			}
 			return Ok("ok");
@@ -410,8 +421,9 @@ namespace BellumGens.Api.Controllers
 			{
 				_dbContext.SaveChanges();
 			}
-			catch
+			catch (DbUpdateException e)
 			{
+				System.Diagnostics.Trace.TraceError($"Team availability error: ${e.Message}");
 				return BadRequest("Something went wrong...");
 			}
 			return Ok(entity);
