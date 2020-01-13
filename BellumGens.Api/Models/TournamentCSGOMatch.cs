@@ -10,7 +10,7 @@ namespace BellumGens.Api.Models
         public Guid Team1Id { get; set; }
         public Guid Team2Id { get; set; }
 
-        public virtual ICollection<CSGOMatchMap> Maps { get; }
+        public virtual ICollection<CSGOMatchMap> Maps { get; set; }
 
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

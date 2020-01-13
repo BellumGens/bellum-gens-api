@@ -18,6 +18,6 @@ namespace BellumGens.Api.Models
         [ForeignKey("TournamentId")]
         public virtual Tournament Tournament { get; set; }
 
-        public virtual ICollection<TournamentApplication> Participants { get; }
+        public virtual ICollection<TournamentApplication> Participants { get; set; }
     }
 }

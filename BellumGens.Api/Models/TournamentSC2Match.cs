@@ -10,7 +10,7 @@ namespace BellumGens.Api.Models
         public string Player1Id { get; set; }
         public string Player2Id { get; set; }
 
-        public virtual ICollection<SC2MatchMap> Maps { get; }
+        public virtual ICollection<SC2MatchMap> Maps { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public int Player1Points { get; }
