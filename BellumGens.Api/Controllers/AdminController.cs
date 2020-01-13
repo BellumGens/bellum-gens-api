@@ -17,6 +17,12 @@ namespace BellumGens.Api.Controllers
             return UserManager.IsInRole(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), "admin");
         }
 
+        [Route("TournamentAdmin")]
+        public bool GetUserIsTournamentAdmin()
+        {
+            return UserManager.IsInRole(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), "event-admin");
+        }
+
         //[AllowAnonymous]
         //[HttpGet]
         //[Route("CreateRole")]
