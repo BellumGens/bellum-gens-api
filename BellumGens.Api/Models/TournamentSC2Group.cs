@@ -4,6 +4,6 @@ namespace BellumGens.Api.Models
 {
     public class TournamentSC2Group : TournamentGroup
     {
-        public virtual ICollection<TournamentSC2Match> Matches { get; }
+        public virtual ICollection<TournamentSC2Match> Matches { get; set; }
     }
 }
