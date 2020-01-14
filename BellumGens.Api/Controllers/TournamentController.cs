@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -169,6 +167,48 @@ namespace BellumGens.Api.Controllers
                 return NotFound();
             }
             return NotFound();
+        }
+
+        [HttpGet]
+        [Route("Leagues")]
+        [AllowAnonymous]
+        public IHttpActionResult GetLeagues()
+        {
+            return Ok(_dbContext.Tournaments.ToList());
+        }
+
+
+        [HttpPost]
+        [Route("League")]
+        public IHttpActionResult CreateLeague(Tournament tournament)
+        {
+            if (UserIsInRole("admin"))
+            {
+                if (ModelState.IsValid)
+                {
+                    var entity = _dbContext.Tournaments.Find(tournament.ID);
+                    if (entity != null)
+                    {
+                        _dbContext.Entry(entity).CurrentValues.SetValues(tournament);
+                    }
+                    else
+                    {
+                        _dbContext.Tournaments.Add(tournament);
+                    }
+
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament update exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                }
+                return BadRequest("Invalid tournament");
+            }
+            return Unauthorized();
         }
     }
 }

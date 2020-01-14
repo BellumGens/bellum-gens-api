@@ -12,7 +12,7 @@ namespace BellumGens.Api.Models
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
 
-		//public Guid TournamentId { get; set; }
+		public Guid? TournamentId { get; set; }
 
         public string UserId { get; set; }
 
@@ -58,9 +58,9 @@ namespace BellumGens.Api.Models
         [JsonIgnore]
         public virtual CSGOTeam Team { get; set; }
 
-		//[ForeignKey("TournamentId")]
-        //[JsonIgnore]
-		//public virtual Tournament Tournament { get; set; }
+        [ForeignKey("TournamentId")]
+        [JsonIgnore]
+        public virtual Tournament Tournament { get; set; }
 
         public void UniqueHash(BellumGensDbContext context)
         {
