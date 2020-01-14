@@ -27,6 +27,18 @@ namespace BellumGens.Api.Controllers
 			return ResolveTeam(teamId);
 		}
 
+		[Route("teamadmin")]
+		[HttpGet]
+		public IHttpActionResult GetIsTeamAdmin(string teamid)
+		{
+			CSGOTeam team = UserIsTeamAdmin(teamid);
+			if (team == null)
+			{
+				return Ok(false);
+			}
+			return Ok(true);
+		}
+
 		[Route("MapPool")]
 		public IHttpActionResult GetTeamMapPool(string teamId)
 		{
@@ -432,6 +444,13 @@ namespace BellumGens.Api.Controllers
 		private CSGOTeam UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);
+			ApplicationUser user = GetAuthUser();
+			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == user.Id) ? team : null;
+		}
+
+		private CSGOTeam UserIsTeamAdmin(string teamId)
+		{
+			CSGOTeam team = ResolveTeam(teamId);
 			ApplicationUser user = GetAuthUser();
 			return team != null && team.Members.Any(m => m.IsAdmin && m.UserId == user.Id) ? team : null;
 		}
