@@ -190,7 +190,11 @@ namespace BellumGens.Api.Models
 
         public DbSet<TournamentApplication> TournamentApplications { get; set; }
 
-        public DbSet<Company> Companies { get; set; }
+		public DbSet<TournamentCSGOGroup> TournamentCSGOGroups { get; set; }
+
+		public DbSet<TournamentSC2Group> TournamentSC2Groups { get; set; }
+
+		public DbSet<Company> Companies { get; set; }
 
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

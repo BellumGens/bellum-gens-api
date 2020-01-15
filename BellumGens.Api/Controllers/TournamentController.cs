@@ -92,7 +92,6 @@ namespace BellumGens.Api.Controllers
             return BadRequest("Не успяхме да вилидираме информацията...");
         }
 
-        [HttpGet]
         [Route("Registrations")]
         public IHttpActionResult GetRegistrations()
         {
@@ -100,7 +99,6 @@ namespace BellumGens.Api.Controllers
             return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
         }
 
-        [HttpGet]
         [Route("RegCount")]
         [AllowAnonymous]
         public IHttpActionResult GetRegistrationsCount()
@@ -114,7 +112,6 @@ namespace BellumGens.Api.Controllers
             return Ok(model);
         }
 
-        [HttpGet]
         [Route("CSGORegs")]
         [AllowAnonymous]
         public IHttpActionResult GetCSGORegistrations()
@@ -128,7 +125,6 @@ namespace BellumGens.Api.Controllers
             return Ok(registrations);
         }
 
-        [HttpGet]
         [Route("SC2Regs")]
         [AllowAnonymous]
         public IHttpActionResult GetSC2sRegistrations()
@@ -140,6 +136,20 @@ namespace BellumGens.Api.Controllers
                 registrations.Add(new TournamentSC2Participant(app));
             }
             return Ok(registrations);
+        }
+
+        [Route("CSGOGroups")]
+        [AllowAnonymous]
+        public IHttpActionResult GetCSGOGroups()
+        {
+            return Ok(_dbContext.TournamentCSGOGroups.ToList());
+        }
+
+        [Route("SC2Groups")]
+        [AllowAnonymous]
+        public IHttpActionResult GetSC2Groups()
+        {
+            return Ok(_dbContext.TournamentSC2Groups.ToList());
         }
 
         [HttpDelete]

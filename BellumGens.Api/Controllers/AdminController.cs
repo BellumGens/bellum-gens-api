@@ -60,7 +60,7 @@ namespace BellumGens.Api.Controllers
 
         [HttpPut]
         [Route("AddUserRole")]
-        public async Task<IHttpActionResult> AddUserRoles(string userid, string role)
+        public async Task<IHttpActionResult> AddUserToRole(string userid, string role)
         {
             if (UserIsInRole("admin"))
             {
