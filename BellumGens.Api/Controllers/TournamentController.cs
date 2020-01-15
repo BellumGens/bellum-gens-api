@@ -252,5 +252,36 @@ namespace BellumGens.Api.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpPut]
+        [Route("csgogroup")]
+        public IHttpActionResult SubmitGroup(Guid id, TournamentCSGOGroup group)
+        {
+            if (UserIsInRole("admin"))
+            {
+                TournamentCSGOGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(group);
+                }
+                else
+                {
+                    group.TournamentId = _dbContext.Tournaments.First().ID;
+                    _dbContext.TournamentCSGOGroups.Add(group);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament group update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(group);
+            }
+            return Unauthorized();
+        }
     }
 }

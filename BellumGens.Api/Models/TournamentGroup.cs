@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,7 @@ namespace BellumGens.Api.Models
         public Guid TournamentId { get; set; }
 
         [ForeignKey("TournamentId")]
+        [JsonIgnore]
         public virtual Tournament Tournament { get; set; }
 
         public virtual ICollection<TournamentApplication> Participants { get; set; }
