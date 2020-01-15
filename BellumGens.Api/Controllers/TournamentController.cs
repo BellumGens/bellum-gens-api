@@ -179,8 +179,8 @@ namespace BellumGens.Api.Controllers
 
 
         [HttpPost]
-        [Route("League")]
-        public IHttpActionResult CreateLeague(Tournament tournament)
+        [Route("Create")]
+        public IHttpActionResult CreateTournament(Tournament tournament)
         {
             if (UserIsInRole("admin"))
             {
@@ -205,8 +205,40 @@ namespace BellumGens.Api.Controllers
                         System.Diagnostics.Trace.TraceError("Tournament update exception: " + e.Message);
                         return BadRequest("Something went wrong...");
                     }
+                    return Ok(tournament);
                 }
                 return BadRequest("Invalid tournament");
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("AddApplications")]
+        public IHttpActionResult AddApplicationsToTournament(Guid id)
+        {
+            if (UserIsInRole("admin"))
+            {
+                Tournament tournament = _dbContext.Tournaments.Find(id);
+                if (tournament != null)
+                {
+                    List<TournamentApplication> applications = _dbContext.TournamentApplications.Where(a => a.TournamentId == null).ToList();
+                    foreach (var application in applications)
+                    {
+                        application.TournamentId = id;
+                    }
+
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament update exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok(tournament);
+                }
+                return NotFound();
             }
             return Unauthorized();
         }
