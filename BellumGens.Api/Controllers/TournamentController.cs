@@ -255,9 +255,9 @@ namespace BellumGens.Api.Controllers
 
         [HttpPut]
         [Route("csgogroup")]
-        public IHttpActionResult SubmitGroup(Guid? id, TournamentCSGOGroup group)
+        public IHttpActionResult SubmitCSGOGroup(Guid? id, TournamentCSGOGroup group)
         {
-            if (UserIsInRole("admin"))
+            if (UserIsInRole("event-admin"))
             {
                 TournamentCSGOGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
                 if (entity != null)
@@ -284,11 +284,42 @@ namespace BellumGens.Api.Controllers
             return Unauthorized();
         }
 
+        [HttpPut]
+        [Route("sc2group")]
+        public IHttpActionResult SubmitSC2Group(Guid? id, TournamentSC2Group group)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentSC2Group entity = _dbContext.TournamentSC2Groups.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(group);
+                }
+                else
+                {
+                    group.TournamentId = _dbContext.Tournaments.First().ID;
+                    _dbContext.TournamentSC2Groups.Add(group);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament group update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(group);
+            }
+            return Unauthorized();
+        }
+
         [HttpDelete]
         [Route("csgogroup")]
         public IHttpActionResult DeleteGroup(Guid id)
         {
-            if (UserIsInRole("admin"))
+            if (UserIsInRole("event-admin"))
             {
                 TournamentCSGOGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
                 if (entity != null)
@@ -318,7 +349,7 @@ namespace BellumGens.Api.Controllers
         [Route("participanttogroup")]
         public IHttpActionResult AddToGroup(Guid id, TournamentApplication participant)
         {
-            if (UserIsInRole("admin"))
+            if (UserIsInRole("event-admin"))
             {
                 TournamentGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
                 if (entity == null)
@@ -374,7 +405,7 @@ namespace BellumGens.Api.Controllers
         [Route("participanttogroup")]
         public IHttpActionResult RemoveFromGroup(Guid id)
         {
-            if (UserIsInRole("admin"))
+            if (UserIsInRole("event-admin"))
             {
                 TournamentApplication entity = _dbContext.TournamentApplications.Find(id);
                 if (entity != null)
