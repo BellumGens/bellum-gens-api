@@ -293,6 +293,10 @@ namespace BellumGens.Api.Controllers
                 TournamentCSGOGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
                 if (entity != null)
                 {
+                    foreach (var par in entity.Participants)
+                    {
+                        par.TournamentCSGOGroupId = null;
+                    }
                     _dbContext.TournamentCSGOGroups.Remove(entity);
                     try
                     {
