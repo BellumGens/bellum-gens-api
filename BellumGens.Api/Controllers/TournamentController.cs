@@ -318,11 +318,39 @@ namespace BellumGens.Api.Controllers
             {
                 TournamentGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
                 if (entity == null)
-                    entity = _dbContext.TournamentSC2Groups.Find(id);
-
-                if (entity != null)
                 {
-                    entity.Participants.Add(participant);
+                    entity = _dbContext.TournamentSC2Groups.Find(id);
+                    if (entity != null)
+                    {
+                        TournamentApplication app = _dbContext.TournamentApplications.Find(participant.Id);
+                        if (app == null)
+                        {
+                            return NotFound();
+                        }
+
+                        app.TournamentSC2GroupId = id;
+                        try
+                        {
+                            _dbContext.SaveChanges();
+                        }
+                        catch (DbUpdateException e)
+                        {
+                            System.Diagnostics.Trace.TraceError("Tournament group participant add exception: " + e.Message);
+                            return BadRequest("Something went wrong...");
+                        }
+                        return Ok("added");
+                    }
+                    return NotFound();
+                }
+                else
+                {
+                    TournamentApplication app = _dbContext.TournamentApplications.Find(participant.Id);
+                    if (app == null)
+                    {
+                        return NotFound(); 
+                    }
+
+                    app.TournamentCSGOGroupId = id;
                     try
                     {
                         _dbContext.SaveChanges();
@@ -334,7 +362,6 @@ namespace BellumGens.Api.Controllers
                     }
                     return Ok("added");
                 }
-                return NotFound();
             }
             return Unauthorized();
         }
