@@ -8,6 +8,11 @@ namespace BellumGens.Api.Models
 {
     public class TournamentGroup
     {
+        public TournamentGroup()
+        {
+            Participants = new HashSet<TournamentApplication>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

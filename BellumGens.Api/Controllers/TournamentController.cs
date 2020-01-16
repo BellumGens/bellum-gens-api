@@ -309,5 +309,61 @@ namespace BellumGens.Api.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpPut]
+        [Route("participanttogroup")]
+        public IHttpActionResult AddToGroup(Guid id, TournamentApplication participant)
+        {
+            if (UserIsInRole("admin"))
+            {
+                TournamentGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
+                if (entity == null)
+                    entity = _dbContext.TournamentSC2Groups.Find(id);
+
+                if (entity != null)
+                {
+                    entity.Participants.Add(participant);
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament group participant add exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok("added");
+                }
+                return NotFound();
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete]
+        [Route("participanttogroup")]
+        public IHttpActionResult RemoveFromGroup(Guid id)
+        {
+            if (UserIsInRole("admin"))
+            {
+                TournamentApplication entity = _dbContext.TournamentApplications.Find(id);
+                if (entity != null)
+                {
+                    entity.TournamentCSGOGroupId = null;
+                    entity.TournamentSC2GroupId = null;
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament group participant delete exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok("added");
+                }
+                return NotFound();
+            }
+            return Unauthorized();
+        }
     }
 }
