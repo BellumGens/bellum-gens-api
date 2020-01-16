@@ -283,5 +283,31 @@ namespace BellumGens.Api.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpDelete]
+        [Route("csgogroup")]
+        public IHttpActionResult DeleteGroup(Guid id)
+        {
+            if (UserIsInRole("admin"))
+            {
+                TournamentCSGOGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.TournamentCSGOGroups.Remove(entity);
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament group delete exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok("deleted");
+                }
+                return NotFound();
+            }
+            return Unauthorized();
+        }
     }
 }
