@@ -255,7 +255,7 @@ namespace BellumGens.Api.Controllers
 
         [HttpPut]
         [Route("csgogroup")]
-        public IHttpActionResult SubmitGroup(Guid id, TournamentCSGOGroup group)
+        public IHttpActionResult SubmitGroup(Guid? id, TournamentCSGOGroup group)
         {
             if (UserIsInRole("admin"))
             {
