@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,6 +7,13 @@ namespace BellumGens.Api.Models
 {
 	public class Tournament
 	{
+		public Tournament()
+		{
+			CSGOGroups = new HashSet<TournamentCSGOGroup>();
+			SC2Groups = new HashSet<TournamentSC2Group>();
+			Applications = new HashSet<TournamentApplication>();
+		}
+
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid ID { get; set; }
 
@@ -15,11 +23,13 @@ namespace BellumGens.Api.Models
 
 		public DateTimeOffset EndDate { get; set; }
 
-		public ICollection<TournamentCSGOGroup> CSGOGroups { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<TournamentCSGOGroup> CSGOGroups { get; set; }
 
-		public ICollection<TournamentSC2Group> SC2Groups { get; set; }
-		//public virtual ICollection<CSGOTeam> Teams { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<TournamentSC2Group> SC2Groups { get; set; }
 
-		//public virtual ICollection<TournamentApplication> Applications { get; set; }
+		[JsonIgnore]
+		public virtual ICollection<TournamentApplication> Applications { get; set; }
 	}
 }

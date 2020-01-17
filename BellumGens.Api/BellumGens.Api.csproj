@@ -533,6 +533,10 @@
     <Compile Include="Migrations\202001110930121_DemoVideoLink.Designer.cs">
       <DependentUpon>202001110930121_DemoVideoLink.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001141324006_ApplicationToTournament.cs" />
+    <Compile Include="Migrations\202001141324006_ApplicationToTournament.Designer.cs">
+      <DependentUpon>202001141324006_ApplicationToTournament.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -822,6 +826,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001110930121_DemoVideoLink.resx">
       <DependentUpon>202001110930121_DemoVideoLink.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001141324006_ApplicationToTournament.resx">
+      <DependentUpon>202001141324006_ApplicationToTournament.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

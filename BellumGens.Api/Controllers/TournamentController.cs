@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -94,7 +92,6 @@ namespace BellumGens.Api.Controllers
             return BadRequest("Не успяхме да вилидираме информацията...");
         }
 
-        [HttpGet]
         [Route("Registrations")]
         public IHttpActionResult GetRegistrations()
         {
@@ -102,7 +99,6 @@ namespace BellumGens.Api.Controllers
             return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
         }
 
-        [HttpGet]
         [Route("RegCount")]
         [AllowAnonymous]
         public IHttpActionResult GetRegistrationsCount()
@@ -116,7 +112,6 @@ namespace BellumGens.Api.Controllers
             return Ok(model);
         }
 
-        [HttpGet]
         [Route("CSGORegs")]
         [AllowAnonymous]
         public IHttpActionResult GetCSGORegistrations()
@@ -130,7 +125,6 @@ namespace BellumGens.Api.Controllers
             return Ok(registrations);
         }
 
-        [HttpGet]
         [Route("SC2Regs")]
         [AllowAnonymous]
         public IHttpActionResult GetSC2sRegistrations()
@@ -142,6 +136,20 @@ namespace BellumGens.Api.Controllers
                 registrations.Add(new TournamentSC2Participant(app));
             }
             return Ok(registrations);
+        }
+
+        [Route("CSGOGroups")]
+        [AllowAnonymous]
+        public IHttpActionResult GetCSGOGroups()
+        {
+            return Ok(_dbContext.TournamentCSGOGroups.ToList());
+        }
+
+        [Route("SC2Groups")]
+        [AllowAnonymous]
+        public IHttpActionResult GetSC2Groups()
+        {
+            return Ok(_dbContext.TournamentSC2Groups.ToList());
         }
 
         [HttpDelete]
@@ -169,6 +177,276 @@ namespace BellumGens.Api.Controllers
                 return NotFound();
             }
             return NotFound();
+        }
+
+        [HttpGet]
+        [Route("Leagues")]
+        [AllowAnonymous]
+        public IHttpActionResult GetLeagues()
+        {
+            return Ok(_dbContext.Tournaments.ToList());
+        }
+
+
+        [HttpPost]
+        [Route("Create")]
+        public IHttpActionResult CreateTournament(Tournament tournament)
+        {
+            if (UserIsInRole("admin"))
+            {
+                if (ModelState.IsValid)
+                {
+                    var entity = _dbContext.Tournaments.Find(tournament.ID);
+                    if (entity != null)
+                    {
+                        _dbContext.Entry(entity).CurrentValues.SetValues(tournament);
+                    }
+                    else
+                    {
+                        _dbContext.Tournaments.Add(tournament);
+                    }
+
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament update exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok(tournament);
+                }
+                return BadRequest("Invalid tournament");
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("AddApplications")]
+        public IHttpActionResult AddApplicationsToTournament(Guid id)
+        {
+            if (UserIsInRole("admin"))
+            {
+                Tournament tournament = _dbContext.Tournaments.Find(id);
+                if (tournament != null)
+                {
+                    List<TournamentApplication> applications = _dbContext.TournamentApplications.Where(a => a.TournamentId == null).ToList();
+                    foreach (var application in applications)
+                    {
+                        application.TournamentId = id;
+                    }
+
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament update exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok(tournament);
+                }
+                return NotFound();
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("csgogroup")]
+        public IHttpActionResult SubmitCSGOGroup(Guid? id, TournamentCSGOGroup group)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentCSGOGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(group);
+                }
+                else
+                {
+                    group.TournamentId = _dbContext.Tournaments.First().ID;
+                    _dbContext.TournamentCSGOGroups.Add(group);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament group update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(group);
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("sc2group")]
+        public IHttpActionResult SubmitSC2Group(Guid? id, TournamentSC2Group group)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentSC2Group entity = _dbContext.TournamentSC2Groups.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(group);
+                }
+                else
+                {
+                    group.TournamentId = _dbContext.Tournaments.First().ID;
+                    _dbContext.TournamentSC2Groups.Add(group);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament group update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(group);
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete]
+        [Route("group")]
+        public IHttpActionResult DeleteGroup(Guid id)
+        {
+            TournamentGroup entity;
+            if (UserIsInRole("event-admin"))
+            {
+                entity = _dbContext.TournamentCSGOGroups.Find(id);
+                if (entity != null)
+                {
+                    foreach (var par in entity.Participants)
+                    {
+                        par.TournamentCSGOGroupId = null;
+                    }
+                    _dbContext.TournamentCSGOGroups.Remove(entity as TournamentCSGOGroup);
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament group delete exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok("deleted");
+                }
+                entity = _dbContext.TournamentSC2Groups.Find(id);
+                if (entity != null)
+                {
+                    foreach (var par in entity.Participants)
+                    {
+                        par.TournamentSC2GroupId = null;
+                    }
+                    _dbContext.TournamentSC2Groups.Remove(entity as TournamentSC2Group);
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament group delete exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok("deleted");
+                }
+                return NotFound();
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("participanttogroup")]
+        public IHttpActionResult AddToGroup(Guid id, TournamentApplication participant)
+        {
+            TournamentGroup entity;
+            if (UserIsInRole("event-admin"))
+            {
+                entity = _dbContext.TournamentCSGOGroups.Find(id);
+                if (entity == null)
+                {
+                    entity = _dbContext.TournamentSC2Groups.Find(id);
+                    if (entity != null)
+                    {
+                        TournamentApplication app = _dbContext.TournamentApplications.Find(participant.Id);
+                        if (app == null)
+                        {
+                            return NotFound();
+                        }
+
+                        app.TournamentSC2GroupId = id;
+                        try
+                        {
+                            _dbContext.SaveChanges();
+                        }
+                        catch (DbUpdateException e)
+                        {
+                            System.Diagnostics.Trace.TraceError("Tournament group participant add exception: " + e.Message);
+                            return BadRequest("Something went wrong...");
+                        }
+                        return Ok("added");
+                    }
+                    return NotFound();
+                }
+                else
+                {
+                    TournamentApplication app = _dbContext.TournamentApplications.Find(participant.Id);
+                    if (app == null)
+                    {
+                        return NotFound(); 
+                    }
+
+                    app.TournamentCSGOGroupId = id;
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament group participant add exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok("added");
+                }
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete]
+        [Route("participanttogroup")]
+        public IHttpActionResult RemoveFromGroup(Guid id)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentApplication entity = _dbContext.TournamentApplications.Find(id);
+                if (entity != null)
+                {
+                    entity.TournamentCSGOGroupId = null;
+                    entity.TournamentSC2GroupId = null;
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament group participant delete exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok("added");
+                }
+                return NotFound();
+            }
+            return Unauthorized();
         }
     }
 }
