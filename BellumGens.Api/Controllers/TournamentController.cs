@@ -316,19 +316,39 @@ namespace BellumGens.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("csgogroup")]
+        [Route("group")]
         public IHttpActionResult DeleteGroup(Guid id)
         {
+            TournamentGroup entity;
             if (UserIsInRole("event-admin"))
             {
-                TournamentCSGOGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
+                entity = _dbContext.TournamentCSGOGroups.Find(id);
                 if (entity != null)
                 {
                     foreach (var par in entity.Participants)
                     {
                         par.TournamentCSGOGroupId = null;
                     }
-                    _dbContext.TournamentCSGOGroups.Remove(entity);
+                    _dbContext.TournamentCSGOGroups.Remove(entity as TournamentCSGOGroup);
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament group delete exception: " + e.Message);
+                        return BadRequest("Something went wrong...");
+                    }
+                    return Ok("deleted");
+                }
+                entity = _dbContext.TournamentSC2Groups.Find(id);
+                if (entity != null)
+                {
+                    foreach (var par in entity.Participants)
+                    {
+                        par.TournamentSC2GroupId = null;
+                    }
+                    _dbContext.TournamentSC2Groups.Remove(entity as TournamentSC2Group);
                     try
                     {
                         _dbContext.SaveChanges();
@@ -349,9 +369,10 @@ namespace BellumGens.Api.Controllers
         [Route("participanttogroup")]
         public IHttpActionResult AddToGroup(Guid id, TournamentApplication participant)
         {
+            TournamentGroup entity;
             if (UserIsInRole("event-admin"))
             {
-                TournamentGroup entity = _dbContext.TournamentCSGOGroups.Find(id);
+                entity = _dbContext.TournamentCSGOGroups.Find(id);
                 if (entity == null)
                 {
                     entity = _dbContext.TournamentSC2Groups.Find(id);

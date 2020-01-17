@@ -8,7 +8,6 @@ namespace BellumGens.Api.Models
 {
     public class TournamentGroup
     {
-        private List<TournamentCSGOParticipant> _participants;
         public TournamentGroup()
         {
             Participants = new HashSet<TournamentApplication>();
@@ -21,24 +20,6 @@ namespace BellumGens.Api.Models
         public string Name { get; set; }
 
         public Guid TournamentId { get; set; }
-
-        [NotMapped]
-        [JsonProperty("Participants")]
-        public List<TournamentCSGOParticipant> PublicParticipants
-        {
-            get
-            {
-                if (_participants == null)
-                {
-                    _participants = new List<TournamentCSGOParticipant>();
-                    foreach (TournamentApplication app in Participants)
-                    {
-                        _participants.Add(new TournamentCSGOParticipant(app));
-                    }
-                }
-                return _participants;
-            }
-        }
 
         [ForeignKey("TournamentId")]
         [JsonIgnore]
