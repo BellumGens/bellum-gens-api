@@ -361,8 +361,16 @@ namespace BellumGens.Api.Controllers
 				return BadRequest("Something went wrong...");
 			}
 
-			List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == entity.ApplicantId).ToList();
-			NotificationsService.SendNotification(subs, application, NotificationState.Accepted);
+			try
+			{
+				List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == entity.ApplicantId).ToList();
+				NotificationsService.SendNotification(subs, application, NotificationState.Accepted);
+			}
+			catch (Exception e)
+			{
+				System.Diagnostics.Trace.TraceWarning($"Team application approve push notification fail: ${e.Message}");
+			}
+
 			return Ok(entity);
 		}
 
