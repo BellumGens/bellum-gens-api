@@ -31,15 +31,20 @@ namespace BellumGens.Api.Providers
 
 		//private static readonly string _steamAppNewsUrl = "https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid={0}&maxlength=300&format=json";
 
-		public static CSGOPlayerStats GetStatsForGame(string username)
+		public static async Task<CSGOPlayerStats> GetStatsForGame(string username)
 		{
-			HttpClient client = new HttpClient();
-			var statsForGameResponse = client.GetStringAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, username));
-			CSGOPlayerStats statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse.Result);
+			CSGOPlayerStats statsForUser;
+			using (HttpClient client = new HttpClient())
+			{
+				Uri endpoint = new Uri(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, username));
+				var statsForGameResponse = await client.GetStringAsync(endpoint).ConfigureAwait(false);
+				statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse);
+
+			}
 			return statsForUser;
 		}
 
-        public static SteamUser GetSteamUser(string name)
+        public static async Task<SteamUser> GetSteamUser(string name)
         {
 			if (_cache.Get(name) is UserStatsViewModel)
 			{
@@ -47,17 +52,24 @@ namespace BellumGens.Api.Providers
 				return viewModel.steamUser;
 			}
 
-            HttpClient client = new HttpClient();
-            var playerDetailsResponse = client.GetStreamAsync(NormalizeUsername(name));
-            XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
-            return (SteamUser)serializer.Deserialize(playerDetailsResponse.Result);
+			SteamUser user;
+			using (HttpClient client = new HttpClient())
+			{
+				var playerDetailsResponse = await client.GetStreamAsync(NormalizeUsername(name)).ConfigureAwait(false);
+				XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
+				user = (SteamUser)serializer.Deserialize(playerDetailsResponse);
+			}
+			return user;
 		}
 
-		public static List<SteamUserSummary> GetSteamUsersSummary(string users)
+		public static async Task<List<SteamUserSummary>> GetSteamUsersSummary(string users)
 		{
-			HttpClient client = new HttpClient();
-			var playerDetailsResponse = client.GetStringAsync(string.Format(_steamUserUrl, AppInfo.Config.steamApiKey, users));
-			SteamUsersSummary result = JsonConvert.DeserializeObject<SteamUsersSummary>(playerDetailsResponse.Result);
+			SteamUsersSummary result;
+			using (HttpClient client = new HttpClient())
+			{
+				var playerDetailsResponse = await client.GetStringAsync(string.Format(_steamUserUrl, AppInfo.Config.steamApiKey, users)).ConfigureAwait(false);
+				result = JsonConvert.DeserializeObject<SteamUsersSummary>(playerDetailsResponse);
+			}
 			return result.response.players;
 		}
 
@@ -70,49 +82,53 @@ namespace BellumGens.Api.Providers
 					return _cache.Get(name) as UserStatsViewModel;
 				}
 			}
-			HttpClient client = new HttpClient();
+
 			UserStatsViewModel model = new UserStatsViewModel();
-			var playerDetailsResponse = await client.GetAsync(NormalizeUsername(name));
-
-			if (playerDetailsResponse.IsSuccessStatusCode)
+			using (HttpClient client = new HttpClient())
 			{
-				XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
+				var playerDetailsResponse = await client.GetAsync(NormalizeUsername(name)).ConfigureAwait(false);
 
-				try
+				if (playerDetailsResponse.IsSuccessStatusCode)
 				{
-					model.steamUser = (SteamUser)serializer.Deserialize(await playerDetailsResponse.Content.ReadAsStreamAsync());
+					XmlSerializer serializer = new XmlSerializer(typeof(SteamUser));
+
+					try
+					{
+						model.steamUser = (SteamUser)serializer.Deserialize(await playerDetailsResponse.Content.ReadAsStreamAsync().ConfigureAwait(false));
+					}
+					catch
+					{
+						model.steamUserException = true;
+						return model;
+					}
 				}
-				catch
+				else
 				{
 					model.steamUserException = true;
 					return model;
 				}
-			}
-			else
-			{
-				model.steamUserException = true;
-				return model;
-			}
 
-			var statsForGameResponse = await client.GetAsync(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, model.steamUser.steamID64));
-			if (statsForGameResponse.IsSuccessStatusCode)
-			{
-				try
+				Uri endpoint = new Uri(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, model.steamUser.steamID64));
+				var statsForGameResponse = await client.GetAsync(endpoint).ConfigureAwait(false);
+				if (statsForGameResponse.IsSuccessStatusCode)
 				{
-					model.userStats = JsonConvert.DeserializeObject<CSGOPlayerStats>(await statsForGameResponse.Content.ReadAsStringAsync());
-					lock (_cache)
+					try
 					{
-						_cache.Add(name, model, null, DateTime.Now.AddDays(2), Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
+						model.userStats = JsonConvert.DeserializeObject<CSGOPlayerStats>(await statsForGameResponse.Content.ReadAsStringAsync().ConfigureAwait(false));
+						lock (_cache)
+						{
+							_cache.Add(name, model, null, DateTime.Now.AddDays(2), Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
+						}
+						return model;
 					}
-					return model;
+					catch
+					{
+						model.userStatsException = true;
+						return model;
+					}
 				}
-				catch
-				{
-					model.userStatsException = true;
-					return model;
-				}
+				model.userStatsException = true;
 			}
-			model.userStatsException = true;
 			return model;
 		}
 
@@ -164,11 +180,11 @@ namespace BellumGens.Api.Providers
 		//	return news;
 		//}
 
-		public static string NormalizeUsername(string name)
+		public static Uri NormalizeUsername(string name)
 		{
 			string pattern = "^[0-9]{17}$",
 				   url = "^http(s)?://steamcommunity.com";
-			return Regex.IsMatch(name, url) ? name + "/?xml=1" : Regex.IsMatch(name, pattern) ? string.Format(_playerDetailsById, name) : string.Format(_playerDetailsByUrl, name);
+			return Regex.IsMatch(name, url) ? new Uri(name + "/?xml=1") : Regex.IsMatch(name, pattern) ? new Uri(string.Format(_playerDetailsById, name)) : new Uri(string.Format(_playerDetailsByUrl, name));
 		}
 
 		public static string SteamUserId(string userUri)

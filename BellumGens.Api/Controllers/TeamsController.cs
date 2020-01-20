@@ -6,6 +6,7 @@ using SteamModels;
 using System;
 using BellumGens.Api.Providers;
 using System.Data.Entity.Infrastructure;
+using System.Threading.Tasks;
 
 namespace BellumGens.Api.Controllers
 {
@@ -51,9 +52,9 @@ namespace BellumGens.Api.Controllers
 		}
 
 		[Route("SteamMembers")]
-		public IHttpActionResult GetSteamGroupMembers(string members)
+		public async Task<IHttpActionResult> GetSteamGroupMembers(string members)
 		{
-			List<SteamUserSummary> groupMembers = SteamServiceProvider.GetSteamUsersSummary(members);
+			List<SteamUserSummary> groupMembers = await SteamServiceProvider.GetSteamUsersSummary(members).ConfigureAwait(false);
 			return Ok(groupMembers);
 		}
 
