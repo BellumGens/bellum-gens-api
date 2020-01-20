@@ -224,6 +224,45 @@ namespace BellumGens.Api.Models
         }
     }
 
+    public class UserSummaryViewModel
+    {
+        private ApplicationUser user;
+
+        public UserSummaryViewModel(ApplicationUser user)
+        {
+            this.user = user;
+        }
+
+        public string id
+        {
+            get
+            {
+                return user.Id;
+            }
+        }
+        public string username
+        {
+            get
+            {
+                return user.UserName;
+            }
+        }
+        public string avatarMedium
+        {
+            get
+            {
+                return user.AvatarMedium;
+            }
+        }
+        public string customUrl
+        {
+            get
+            {
+                return user.CustomUrl;
+            }
+        }
+    }
+
     public class UserLoginInfoViewModel
     {
         public string LoginProvider { get; set; }

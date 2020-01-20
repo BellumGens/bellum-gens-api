@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
-using SteamModels;
 
 namespace BellumGens.Api.Models
 {
@@ -103,19 +100,12 @@ namespace BellumGens.Api.Models
             return userIdentity;
         }
 
-		[JsonProperty("id")]
-		public override string Id { get => base.Id; set => base.Id = value; }
-
-		[JsonProperty("username")]
-		public override string UserName { get => base.UserName; set => base.UserName = value; }
-
 		public string ESEA { get; set; }
 
         public bool SearchVisible { get; set; } = true;
 
         public string AvatarFull { get; set; }
 
-		[JsonProperty("avatarMedium")]
         public string AvatarMedium { get; set; }
 
         public string AvatarIcon { get; set; }

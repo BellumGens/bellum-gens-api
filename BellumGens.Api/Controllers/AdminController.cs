@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using BellumGens.Api.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -53,7 +52,8 @@ namespace BellumGens.Api.Controllers
         {
             if (UserIsInRole("admin"))
             {
-                return Ok(UserManager.Users.ToList());
+                var users = _dbContext.Users.Select(s => new { s.Id, s.UserName, s.AvatarMedium, s.Roles }).ToList();
+                return Ok(users);
             }
             return Unauthorized();
         }
