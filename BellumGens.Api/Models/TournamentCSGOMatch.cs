@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Models
@@ -9,6 +9,8 @@ namespace BellumGens.Api.Models
     {
         public Guid Team1Id { get; set; }
         public Guid Team2Id { get; set; }
+
+        public Guid? GroupId { get; set; }
 
         public virtual ICollection<CSGOMatchMap> Maps { get; set; }
 
@@ -22,9 +24,35 @@ namespace BellumGens.Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public int Team2Points { get; }
 
+        [NotMapped]
+        [JsonProperty("Team1")]
+        public CSGOTeamSummaryViewModel Team1Summary { 
+            get
+            {
+                return Team1 != null ? new CSGOTeamSummaryViewModel(Team1) : null;
+            }
+        }
+
+        [NotMapped]
+        [JsonProperty("Team2")]
+        public CSGOTeamSummaryViewModel Team2Summary
+        {
+            get
+            {
+                return Team2 != null ? new CSGOTeamSummaryViewModel(Team2) : null;
+            }
+        }
+
+        [JsonIgnore]
         [ForeignKey("Team1Id")]
-        public CSGOTeam Team1 { get; set; }
+        public virtual CSGOTeam Team1 { get; set; }
+
+        [JsonIgnore]
         [ForeignKey("Team2Id")]
-        public CSGOTeam Team2 { get; set; }
+        public virtual CSGOTeam Team2 { get; set; }
+
+        [JsonIgnore]
+        [ForeignKey("GroupId")]
+        public virtual TournamentCSGOGroup Group { get; set; }
     }
 }

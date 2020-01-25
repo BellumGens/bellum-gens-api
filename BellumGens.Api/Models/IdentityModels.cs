@@ -184,6 +184,10 @@ namespace BellumGens.Api.Models
 
 		public DbSet<TournamentSC2Group> TournamentSC2Groups { get; set; }
 
+		public DbSet<TournamentCSGOMatch> TournamentCSGOMatches { get; set; }
+
+		public DbSet<TournamentSC2Match> TournamentSC2Matches { get; set; }
+
 		public DbSet<Company> Companies { get; set; }
 
         public BellumGensDbContext()

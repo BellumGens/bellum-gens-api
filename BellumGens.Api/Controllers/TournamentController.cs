@@ -99,8 +99,8 @@ namespace BellumGens.Api.Controllers
             return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
         }
 
-        [Route("RegCount")]
         [AllowAnonymous]
+        [Route("RegCount")]
         public IHttpActionResult GetRegistrationsCount()
         {
             List<TournamentApplication> registrations = _dbContext.TournamentApplications.ToList();
@@ -112,8 +112,8 @@ namespace BellumGens.Api.Controllers
             return Ok(model);
         }
 
-        [Route("CSGORegs")]
         [AllowAnonymous]
+        [Route("CSGORegs")]
         public IHttpActionResult GetCSGORegistrations()
         {
             List<TournamentApplication> entities = _dbContext.TournamentApplications.Where(r => r.Game == Game.CSGO).ToList();
@@ -125,8 +125,8 @@ namespace BellumGens.Api.Controllers
             return Ok(registrations);
         }
 
-        [Route("SC2Regs")]
         [AllowAnonymous]
+        [Route("SC2Regs")]
         public IHttpActionResult GetSC2sRegistrations()
         {
             List<TournamentApplication> entities = _dbContext.TournamentApplications.Where(r => r.Game == Game.StarCraft2).ToList();
@@ -138,15 +138,15 @@ namespace BellumGens.Api.Controllers
             return Ok(registrations);
         }
 
-        [Route("CSGOGroups")]
         [AllowAnonymous]
+        [Route("CSGOGroups")]
         public IHttpActionResult GetCSGOGroups()
         {
             return Ok(_dbContext.TournamentCSGOGroups.ToList());
         }
 
-        [Route("SC2Groups")]
         [AllowAnonymous]
+        [Route("SC2Groups")]
         public IHttpActionResult GetSC2Groups()
         {
             return Ok(_dbContext.TournamentSC2Groups.ToList());
@@ -180,8 +180,8 @@ namespace BellumGens.Api.Controllers
         }
 
         [HttpGet]
-        [Route("Leagues")]
         [AllowAnonymous]
+        [Route("Leagues")]
         public IHttpActionResult GetLeagues()
         {
             return Ok(_dbContext.Tournaments.ToList());
@@ -445,6 +445,43 @@ namespace BellumGens.Api.Controllers
                     return Ok("added");
                 }
                 return NotFound();
+            }
+            return Unauthorized();
+        }
+
+        [AllowAnonymous]
+        [Route("csgomatches")]
+        public IHttpActionResult GetCSGOMatches()
+        {
+            return Ok(_dbContext.TournamentCSGOMatches.ToList());
+        }
+
+        [HttpPut]
+        [Route("csgomatch")]
+        public IHttpActionResult SubmitCSGOMatch(Guid? id, TournamentCSGOMatch match)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentCSGOMatch entity = _dbContext.TournamentCSGOMatches.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(match);
+                }
+                else
+                {
+                    entity = _dbContext.TournamentCSGOMatches.Add(match);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
             }
             return Unauthorized();
         }

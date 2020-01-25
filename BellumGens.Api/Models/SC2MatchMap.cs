@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,9 +15,21 @@ namespace BellumGens.Api.Models
 
         public Guid SC2MatchId { get; set; }
 
+        public string PlayerPickId { get; set; }
+
+        public string PlayerBanId { get; set; }
+
         public string Winner { get; set; }
 
         [ForeignKey("SC2MatchId")]
         public virtual TournamentSC2Match Match { get; set; }
+
+        [JsonIgnore]
+        [ForeignKey("PlayerPickId")]
+        public virtual ApplicationUser PickingPlayer { get; set; }
+
+        [JsonIgnore]
+        [ForeignKey("PlayerBanId")]
+        public virtual ApplicationUser BanningPlayer { get; set; }
     }
 }
