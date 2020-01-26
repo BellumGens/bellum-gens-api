@@ -456,6 +456,13 @@ namespace BellumGens.Api.Controllers
             return Ok(_dbContext.TournamentCSGOMatches.ToList());
         }
 
+        [AllowAnonymous]
+        [Route("sc2matches")]
+        public IHttpActionResult GetSC2Matches()
+        {
+            return Ok(_dbContext.TournamentSC2Matches.ToList());
+        }
+
         [HttpPut]
         [Route("csgomatch")]
         public IHttpActionResult SubmitCSGOMatch(Guid? id, TournamentCSGOMatch match)
@@ -479,6 +486,36 @@ namespace BellumGens.Api.Controllers
                 catch (DbUpdateException e)
                 {
                     System.Diagnostics.Trace.TraceError("Tournament CS:GO match update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("sc2match")]
+        public IHttpActionResult SubmitSC2Match(Guid? id, TournamentSC2Match match)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentSC2Match entity = _dbContext.TournamentSC2Matches.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(match);
+                }
+                else
+                {
+                    entity = _dbContext.TournamentSC2Matches.Add(match);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament StarCraft II match update exception: " + e.Message);
                     return BadRequest("Something went wrong...");
                 }
                 return Ok(entity);
