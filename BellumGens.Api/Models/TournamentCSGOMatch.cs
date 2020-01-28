@@ -18,11 +18,9 @@ namespace BellumGens.Api.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public Guid WinnerTeamId { get; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public int Team1Points { get; }
+        public int Team1Points { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public int Team2Points { get; }
+        public int Team2Points { get; set; }
 
         [NotMapped]
         [JsonProperty("Team1")]

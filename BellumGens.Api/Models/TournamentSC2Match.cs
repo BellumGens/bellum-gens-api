@@ -15,11 +15,9 @@ namespace BellumGens.Api.Models
 
         public virtual ICollection<SC2MatchMap> Maps { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public int Player1Points { get; }
+        public int Player1Points { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public int Player2Points { get; }
+        public int Player2Points { get; set; }
 
         [ForeignKey("Player1Id")]
         public ApplicationUser Player1 { get; set; }
