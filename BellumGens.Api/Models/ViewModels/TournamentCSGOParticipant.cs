@@ -17,6 +17,7 @@ namespace BellumGens.Api.Models
         public Guid? TournamentCSGOGroupId { get; set; }
         public string UserId { get; set; }
         public CSGOTeamSummaryViewModel Team { get; set; }
+        public int TeamPoints { get; set; }
         public TournamentApplicationState State { get; set; }
     }
 }

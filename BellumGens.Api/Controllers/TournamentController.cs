@@ -130,10 +130,12 @@ namespace BellumGens.Api.Controllers
         public IHttpActionResult GetSC2sRegistrations()
         {
             List<TournamentApplication> entities = _dbContext.TournamentApplications.Where(r => r.Game == Game.StarCraft2).ToList();
+            List<TournamentSC2Match> matches = _dbContext.TournamentSC2Matches.ToList();
             List<TournamentSC2Participant> registrations = new List<TournamentSC2Participant>();
+            
             foreach (TournamentApplication app in entities)
             {
-                registrations.Add(new TournamentSC2Participant(app));
+                registrations.Add(new TournamentSC2Participant(app, matches.FindAll(m => m.Player1Id == app.UserId || m.Player2Id == app.UserId)));
             }
             return Ok(registrations);
         }
