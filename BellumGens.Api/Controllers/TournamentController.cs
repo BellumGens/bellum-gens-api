@@ -117,10 +117,11 @@ namespace BellumGens.Api.Controllers
         public IHttpActionResult GetCSGORegistrations()
         {
             List<TournamentApplication> entities = _dbContext.TournamentApplications.Where(r => r.Game == Game.CSGO).ToList();
+            List<TournamentCSGOMatch> matches = _dbContext.TournamentCSGOMatches.ToList();
             List<TournamentCSGOParticipant> registrations = new List<TournamentCSGOParticipant>();
             foreach (TournamentApplication app in entities)
             {
-                registrations.Add(new TournamentCSGOParticipant(app));
+                registrations.Add(new TournamentCSGOParticipant(app, matches.FindAll(m => m.Team1Id == app.TeamId || m.Team2Id == app.TeamId)));
             }
             return Ok(registrations);
         }

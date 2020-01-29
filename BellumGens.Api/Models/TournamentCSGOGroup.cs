@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace BellumGens.Api.Models
 {
@@ -19,7 +20,7 @@ namespace BellumGens.Api.Models
                     _participants = new List<TournamentCSGOParticipant>();
                     foreach (TournamentApplication app in Participants)
                     {
-                        _participants.Add(new TournamentCSGOParticipant(app));
+                        _participants.Add(new TournamentCSGOParticipant(app, Matches.Where(m => m.Team1Id == app.TeamId || m.Team2Id == app.TeamId).ToList()));
                     }
                 }
                 return _participants;
