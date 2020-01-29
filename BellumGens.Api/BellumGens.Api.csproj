@@ -537,6 +537,14 @@
     <Compile Include="Migrations\202001141324006_ApplicationToTournament.Designer.cs">
       <DependentUpon>202001141324006_ApplicationToTournament.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001250843431_UpdatingMatches.cs" />
+    <Compile Include="Migrations\202001250843431_UpdatingMatches.Designer.cs">
+      <DependentUpon>202001250843431_UpdatingMatches.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001271400137_AddingPointsToMatches.cs" />
+    <Compile Include="Migrations\202001271400137_AddingPointsToMatches.Designer.cs">
+      <DependentUpon>202001271400137_AddingPointsToMatches.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -829,6 +837,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001141324006_ApplicationToTournament.resx">
       <DependentUpon>202001141324006_ApplicationToTournament.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001250843431_UpdatingMatches.resx">
+      <DependentUpon>202001250843431_UpdatingMatches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001271400137_AddingPointsToMatches.resx">
+      <DependentUpon>202001271400137_AddingPointsToMatches.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

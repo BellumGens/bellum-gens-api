@@ -99,8 +99,8 @@ namespace BellumGens.Api.Controllers
             return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
         }
 
-        [Route("RegCount")]
         [AllowAnonymous]
+        [Route("RegCount")]
         public IHttpActionResult GetRegistrationsCount()
         {
             List<TournamentApplication> registrations = _dbContext.TournamentApplications.ToList();
@@ -112,41 +112,44 @@ namespace BellumGens.Api.Controllers
             return Ok(model);
         }
 
-        [Route("CSGORegs")]
         [AllowAnonymous]
+        [Route("CSGORegs")]
         public IHttpActionResult GetCSGORegistrations()
         {
             List<TournamentApplication> entities = _dbContext.TournamentApplications.Where(r => r.Game == Game.CSGO).ToList();
+            List<TournamentCSGOMatch> matches = _dbContext.TournamentCSGOMatches.ToList();
             List<TournamentCSGOParticipant> registrations = new List<TournamentCSGOParticipant>();
             foreach (TournamentApplication app in entities)
             {
-                registrations.Add(new TournamentCSGOParticipant(app));
+                registrations.Add(new TournamentCSGOParticipant(app, matches.FindAll(m => m.Team1Id == app.TeamId || m.Team2Id == app.TeamId)));
             }
             return Ok(registrations);
         }
 
-        [Route("SC2Regs")]
         [AllowAnonymous]
+        [Route("SC2Regs")]
         public IHttpActionResult GetSC2sRegistrations()
         {
             List<TournamentApplication> entities = _dbContext.TournamentApplications.Where(r => r.Game == Game.StarCraft2).ToList();
+            List<TournamentSC2Match> matches = _dbContext.TournamentSC2Matches.ToList();
             List<TournamentSC2Participant> registrations = new List<TournamentSC2Participant>();
+            
             foreach (TournamentApplication app in entities)
             {
-                registrations.Add(new TournamentSC2Participant(app));
+                registrations.Add(new TournamentSC2Participant(app, matches.FindAll(m => m.Player1Id == app.UserId || m.Player2Id == app.UserId)));
             }
             return Ok(registrations);
         }
 
-        [Route("CSGOGroups")]
         [AllowAnonymous]
+        [Route("CSGOGroups")]
         public IHttpActionResult GetCSGOGroups()
         {
             return Ok(_dbContext.TournamentCSGOGroups.ToList());
         }
 
-        [Route("SC2Groups")]
         [AllowAnonymous]
+        [Route("SC2Groups")]
         public IHttpActionResult GetSC2Groups()
         {
             return Ok(_dbContext.TournamentSC2Groups.ToList());
@@ -180,8 +183,8 @@ namespace BellumGens.Api.Controllers
         }
 
         [HttpGet]
-        [Route("Leagues")]
         [AllowAnonymous]
+        [Route("Leagues")]
         public IHttpActionResult GetLeagues()
         {
             return Ok(_dbContext.Tournaments.ToList());
@@ -445,6 +448,80 @@ namespace BellumGens.Api.Controllers
                     return Ok("added");
                 }
                 return NotFound();
+            }
+            return Unauthorized();
+        }
+
+        [AllowAnonymous]
+        [Route("csgomatches")]
+        public IHttpActionResult GetCSGOMatches()
+        {
+            return Ok(_dbContext.TournamentCSGOMatches.ToList());
+        }
+
+        [AllowAnonymous]
+        [Route("sc2matches")]
+        public IHttpActionResult GetSC2Matches()
+        {
+            return Ok(_dbContext.TournamentSC2Matches.ToList());
+        }
+
+        [HttpPut]
+        [Route("csgomatch")]
+        public IHttpActionResult SubmitCSGOMatch(Guid? id, TournamentCSGOMatch match)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentCSGOMatch entity = _dbContext.TournamentCSGOMatches.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(match);
+                }
+                else
+                {
+                    entity = _dbContext.TournamentCSGOMatches.Add(match);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("sc2match")]
+        public IHttpActionResult SubmitSC2Match(Guid? id, TournamentSC2Match match)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentSC2Match entity = _dbContext.TournamentSC2Matches.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(match);
+                }
+                else
+                {
+                    entity = _dbContext.TournamentSC2Matches.Add(match);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament StarCraft II match update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
             }
             return Unauthorized();
         }
