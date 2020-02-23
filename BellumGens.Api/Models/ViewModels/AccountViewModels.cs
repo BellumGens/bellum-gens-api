@@ -93,7 +93,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _isAuthUser ? _user?.Notifications.Where(n => n.State == NotificationState.NotSeen).ToList() : null;
+                return _isAuthUser ? _user?.Notifications.OrderByDescending(n => n.Sent).ToList() : null;
             }
         }
         public List<string> externalLogins { get; set; }
