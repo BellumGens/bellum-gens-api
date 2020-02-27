@@ -545,6 +545,10 @@
     <Compile Include="Migrations\202001271400137_AddingPointsToMatches.Designer.cs">
       <DependentUpon>202001271400137_AddingPointsToMatches.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002271111121_ChangingSC2Match.cs" />
+    <Compile Include="Migrations\202002271111121_ChangingSC2Match.Designer.cs">
+      <DependentUpon>202002271111121_ChangingSC2Match.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -843,6 +847,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001271400137_AddingPointsToMatches.resx">
       <DependentUpon>202001271400137_AddingPointsToMatches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002271111121_ChangingSC2Match.resx">
+      <DependentUpon>202002271111121_ChangingSC2Match.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -460,10 +460,30 @@ namespace BellumGens.Api.Controllers
         }
 
         [AllowAnonymous]
+        [Route("csgomatch")]
+        public IHttpActionResult GetCSGOMatch(Guid id)
+        {
+            TournamentCSGOMatch match = _dbContext.TournamentCSGOMatches.Find(id);
+            if (match != null)
+                return Ok(match);
+            return NotFound();
+        }
+
+        [AllowAnonymous]
         [Route("sc2matches")]
         public IHttpActionResult GetSC2Matches()
         {
             return Ok(_dbContext.TournamentSC2Matches.ToList());
+        }
+
+        [AllowAnonymous]
+        [Route("sc2match")]
+        public IHttpActionResult GetSC2Match(Guid id)
+        {
+            TournamentSC2Match match = _dbContext.TournamentSC2Matches.Find(id);
+            if (match != null)
+                return Ok(match);
+            return NotFound();
         }
 
         [HttpPut]

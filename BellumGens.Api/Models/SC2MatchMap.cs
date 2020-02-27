@@ -19,8 +19,9 @@ namespace BellumGens.Api.Models
 
         public string PlayerBanId { get; set; }
 
-        public string Winner { get; set; }
+        public string WinnerId { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("SC2MatchId")]
         public virtual TournamentSC2Match Match { get; set; }
 

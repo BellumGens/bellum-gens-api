@@ -19,8 +19,11 @@ namespace BellumGens.Api.Models
 
         public int Player2Points { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("Player1Id")]
         public ApplicationUser Player1 { get; set; }
+
+        [JsonIgnore]
         [ForeignKey("Player2Id")]
         public ApplicationUser Player2 { get; set; }
 

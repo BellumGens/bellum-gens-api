@@ -16,7 +16,12 @@ namespace BellumGens.Api.Models
 
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public Guid WinnerTeamId { get; }
+        public Guid WinnerTeamId { 
+            get
+            {
+                return Team1Points > Team2Points ? Team1Id : Team2Id;
+            }
+        }
 
         public int Team1Points { get; set; }
 
