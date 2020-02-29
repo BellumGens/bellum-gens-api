@@ -548,7 +548,7 @@ namespace BellumGens.Api.Controllers
 
         [HttpDelete]
         [Route("csgomatchmap")]
-        public IHttpActionResult SubmitCSGOMatchMap(Guid? id)
+        public IHttpActionResult DeleteCSGOMatchMap(Guid? id)
         {
             if (UserIsInRole("event-admin"))
             {
@@ -592,6 +592,59 @@ namespace BellumGens.Api.Controllers
                 catch (DbUpdateException e)
                 {
                     System.Diagnostics.Trace.TraceError("Tournament StarCraft II match update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("sc2matchmap")]
+        public IHttpActionResult SubmitSC2MatchMap(Guid? id, SC2MatchMap map)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                SC2MatchMap entity = _dbContext.TournamentSC2MatchMaps.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(map);
+                }
+                else
+                {
+                    entity = _dbContext.TournamentSC2MatchMaps.Add(map);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match map update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete]
+        [Route("sc2matchmap")]
+        public IHttpActionResult DeleteSC2MatchMap(Guid? id)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                SC2MatchMap entity = _dbContext.TournamentSC2MatchMaps.Find(id);
+                _dbContext.TournamentSC2MatchMaps.Remove(entity);
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match map delete exception: " + e.Message);
                     return BadRequest("Something went wrong...");
                 }
                 return Ok(entity);
