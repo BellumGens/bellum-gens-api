@@ -517,6 +517,59 @@ namespace BellumGens.Api.Controllers
         }
 
         [HttpPut]
+        [Route("csgomatchmap")]
+        public IHttpActionResult SubmitCSGOMatchMap(Guid? id, CSGOMatchMap map)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                CSGOMatchMap entity = _dbContext.TournamentCSGOMatchMaps.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(map);
+                }
+                else
+                {
+                    entity = _dbContext.TournamentCSGOMatchMaps.Add(map);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match map update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete]
+        [Route("csgomatchmap")]
+        public IHttpActionResult SubmitCSGOMatchMap(Guid? id)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                CSGOMatchMap entity = _dbContext.TournamentCSGOMatchMaps.Find(id);
+                _dbContext.TournamentCSGOMatchMaps.Remove(entity);
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match map delete exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
         [Route("sc2match")]
         public IHttpActionResult SubmitSC2Match(Guid? id, TournamentSC2Match match)
         {
