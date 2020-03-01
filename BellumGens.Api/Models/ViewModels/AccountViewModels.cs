@@ -254,7 +254,7 @@ namespace BellumGens.Api.Models
                 return user.AvatarMedium;
             }
         }
-        public string customUrl
+        public string customURL
         {
             get
             {
