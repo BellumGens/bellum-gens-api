@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace BellumGens.Api.Models
+{
+    public class TournamentParticipant
+    {
+        public TournamentParticipant(TournamentApplication application)
+        {
+            Id = application.Id;
+            UserId = application.UserId;
+            State = application.State;
+            Company = application.CompanyId;
+        }
+
+        public Guid Id { get; set; }
+        public string UserId { get; set; }
+        public string Company { get; set; }
+        public TournamentApplicationState State { get; set; }
+    }
+}
