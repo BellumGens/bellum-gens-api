@@ -269,7 +269,9 @@ namespace BellumGens.Api.Controllers
                 }
                 else
                 {
-                    group.TournamentId = _dbContext.Tournaments.First().ID;
+                    Tournament tournament = _dbContext.Tournaments.FirstOrDefault();
+                    if (tournament != null)
+                        group.TournamentId = tournament.ID;
                     _dbContext.TournamentCSGOGroups.Add(group);
                 }
 
