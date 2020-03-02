@@ -261,6 +261,13 @@ namespace BellumGens.Api.Models
                 return user.CustomUrl;
             }
         }
+        public string battleNetId
+        {
+            get
+            {
+                return user.BattleNetId;
+            }
+        }
     }
 
     public class UserLoginInfoViewModel

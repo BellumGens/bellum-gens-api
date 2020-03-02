@@ -122,6 +122,10 @@ namespace BellumGens.Api.Models
 
         public decimal Accuracy { get; set; }
 
+		public string BattleNetId { get; set; }
+
+		public string SteamID { get; set; }
+
         public bool SteamPrivate { get; set; } = false;
 
         public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;

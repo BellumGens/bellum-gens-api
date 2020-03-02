@@ -553,6 +553,10 @@
     <Compile Include="Migrations\202002290643078_TournamentDetails.Designer.cs">
       <DependentUpon>202002290643078_TournamentDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003021237246_BattleNetAndSteamIDs.cs" />
+    <Compile Include="Migrations\202003021237246_BattleNetAndSteamIDs.Designer.cs">
+      <DependentUpon>202003021237246_BattleNetAndSteamIDs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -858,6 +862,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002290643078_TournamentDetails.resx">
       <DependentUpon>202002290643078_TournamentDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003021237246_BattleNetAndSteamIDs.resx">
+      <DependentUpon>202003021237246_BattleNetAndSteamIDs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
