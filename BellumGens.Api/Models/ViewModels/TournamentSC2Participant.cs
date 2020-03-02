@@ -4,15 +4,13 @@ using System.Linq;
 
 namespace BellumGens.Api.Models
 {
-    public class TournamentSC2Participant
+    public class TournamentSC2Participant : TournamentParticipant
     {
         public TournamentSC2Participant(TournamentApplication application, List<TournamentSC2Match> matches)
+            : base(application)
         {
-            Id = application.Id;
-            UserId = application.UserId;
             BattleTag = application.BattleNetId;
             User = new UserSummaryViewModel(application.User);
-            State = application.State;
             TournamentSC2GroupId = application.TournamentSC2GroupId;
             if (matches != null)
             {
@@ -26,12 +24,9 @@ namespace BellumGens.Api.Models
             }
         }
 
-        public Guid Id { get; set; }
         public Guid? TournamentSC2GroupId { get; set; }
-        public string UserId { get; set; }
         public string BattleTag { get; set; }
         public int PlayerPoints { get; set; } = 0;
         public UserSummaryViewModel User { get; set; }
-        public TournamentApplicationState State { get; set; }
     }
 }

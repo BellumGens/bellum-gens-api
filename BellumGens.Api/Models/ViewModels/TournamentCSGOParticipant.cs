@@ -3,15 +3,13 @@ using System.Collections.Generic;
 
 namespace BellumGens.Api.Models
 {
-    public class TournamentCSGOParticipant
+    public class TournamentCSGOParticipant : TournamentParticipant
     {
         public TournamentCSGOParticipant(TournamentApplication application, List<TournamentCSGOMatch> matches)
+            : base(application)
         {
-            Id = application.Id;
-            UserId = application.UserId;
             TeamId = application.TeamId;
             Team = new CSGOTeamSummaryViewModel(application.Team);
-            State = application.State;
             TournamentCSGOGroupId = application.TournamentCSGOGroupId;
             if (matches != null)
             {
@@ -25,12 +23,9 @@ namespace BellumGens.Api.Models
             }
         }
 
-        public Guid Id { get; set; }
         public Guid? TeamId { get; set; }
         public Guid? TournamentCSGOGroupId { get; set; }
-        public string UserId { get; set; }
         public int TeamPoints { get; set; } = 0;
         public CSGOTeamSummaryViewModel Team { get; set; }
-        public TournamentApplicationState State { get; set; }
     }
 }

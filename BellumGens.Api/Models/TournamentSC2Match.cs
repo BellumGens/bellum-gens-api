@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Models
@@ -19,10 +18,33 @@ namespace BellumGens.Api.Models
 
         public int Player2Points { get; set; }
 
+        [NotMapped]
+        [JsonProperty("Player1")]
+        public UserSummaryViewModel Player1Summary
+        {
+            get
+            {
+                return Player1 != null ? new UserSummaryViewModel(Player1) : null;
+            }
+        }
+
+        [NotMapped]
+        [JsonProperty("Player2")]
+        public UserSummaryViewModel Player2Summary
+        {
+            get
+            {
+                return Player2 != null ? new UserSummaryViewModel(Player2) : null;
+            }
+        }
+
+        [JsonIgnore]
         [ForeignKey("Player1Id")]
-        public ApplicationUser Player1 { get; set; }
+        public virtual ApplicationUser Player1 { get; set; }
+
+        [JsonIgnore]
         [ForeignKey("Player2Id")]
-        public ApplicationUser Player2 { get; set; }
+        public virtual ApplicationUser Player2 { get; set; }
 
         [JsonIgnore]
         [ForeignKey("GroupId")]

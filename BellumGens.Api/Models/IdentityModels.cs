@@ -122,6 +122,10 @@ namespace BellumGens.Api.Models
 
         public decimal Accuracy { get; set; }
 
+		public string BattleNetId { get; set; }
+
+		public string SteamID { get; set; }
+
         public bool SteamPrivate { get; set; } = false;
 
         public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
@@ -186,7 +190,11 @@ namespace BellumGens.Api.Models
 
 		public DbSet<TournamentCSGOMatch> TournamentCSGOMatches { get; set; }
 
+		public DbSet<CSGOMatchMap> TournamentCSGOMatchMaps { get; set; }
+
 		public DbSet<TournamentSC2Match> TournamentSC2Matches { get; set; }
+
+		public DbSet<SC2MatchMap> TournamentSC2MatchMaps { get; set; }
 
 		public DbSet<Company> Companies { get; set; }
 

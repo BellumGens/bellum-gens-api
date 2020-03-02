@@ -269,7 +269,9 @@ namespace BellumGens.Api.Controllers
                 }
                 else
                 {
-                    group.TournamentId = _dbContext.Tournaments.First().ID;
+                    Tournament tournament = _dbContext.Tournaments.FirstOrDefault();
+                    if (tournament != null)
+                        group.TournamentId = tournament.ID;
                     _dbContext.TournamentCSGOGroups.Add(group);
                 }
 
@@ -460,10 +462,30 @@ namespace BellumGens.Api.Controllers
         }
 
         [AllowAnonymous]
+        [Route("csgomatch")]
+        public IHttpActionResult GetCSGOMatch(Guid id)
+        {
+            TournamentCSGOMatch match = _dbContext.TournamentCSGOMatches.Find(id);
+            if (match != null)
+                return Ok(match);
+            return NotFound();
+        }
+
+        [AllowAnonymous]
         [Route("sc2matches")]
         public IHttpActionResult GetSC2Matches()
         {
             return Ok(_dbContext.TournamentSC2Matches.ToList());
+        }
+
+        [AllowAnonymous]
+        [Route("sc2match")]
+        public IHttpActionResult GetSC2Match(Guid id)
+        {
+            TournamentSC2Match match = _dbContext.TournamentSC2Matches.Find(id);
+            if (match != null)
+                return Ok(match);
+            return NotFound();
         }
 
         [HttpPut]
@@ -497,6 +519,59 @@ namespace BellumGens.Api.Controllers
         }
 
         [HttpPut]
+        [Route("csgomatchmap")]
+        public IHttpActionResult SubmitCSGOMatchMap(Guid? id, CSGOMatchMap map)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                CSGOMatchMap entity = _dbContext.TournamentCSGOMatchMaps.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(map);
+                }
+                else
+                {
+                    entity = _dbContext.TournamentCSGOMatchMaps.Add(map);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match map update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete]
+        [Route("csgomatchmap")]
+        public IHttpActionResult DeleteCSGOMatchMap(Guid? id)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                CSGOMatchMap entity = _dbContext.TournamentCSGOMatchMaps.Find(id);
+                _dbContext.TournamentCSGOMatchMaps.Remove(entity);
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match map delete exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
         [Route("sc2match")]
         public IHttpActionResult SubmitSC2Match(Guid? id, TournamentSC2Match match)
         {
@@ -519,6 +594,59 @@ namespace BellumGens.Api.Controllers
                 catch (DbUpdateException e)
                 {
                     System.Diagnostics.Trace.TraceError("Tournament StarCraft II match update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpPut]
+        [Route("sc2matchmap")]
+        public IHttpActionResult SubmitSC2MatchMap(Guid? id, SC2MatchMap map)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                SC2MatchMap entity = _dbContext.TournamentSC2MatchMaps.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(map);
+                }
+                else
+                {
+                    entity = _dbContext.TournamentSC2MatchMaps.Add(map);
+                }
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match map update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+        [HttpDelete]
+        [Route("sc2matchmap")]
+        public IHttpActionResult DeleteSC2MatchMap(Guid? id)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                SC2MatchMap entity = _dbContext.TournamentSC2MatchMaps.Find(id);
+                _dbContext.TournamentSC2MatchMaps.Remove(entity);
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match map delete exception: " + e.Message);
                     return BadRequest("Something went wrong...");
                 }
                 return Ok(entity);
