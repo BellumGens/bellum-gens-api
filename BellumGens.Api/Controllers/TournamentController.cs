@@ -458,7 +458,7 @@ namespace BellumGens.Api.Controllers
         [Route("csgomatches")]
         public IHttpActionResult GetCSGOMatches()
         {
-            return Ok(_dbContext.TournamentCSGOMatches.ToList());
+            return Ok(_dbContext.TournamentCSGOMatches.OrderBy(m => m.StartTime).ToList());
         }
 
         [AllowAnonymous]
@@ -475,7 +475,7 @@ namespace BellumGens.Api.Controllers
         [Route("sc2matches")]
         public IHttpActionResult GetSC2Matches()
         {
-            return Ok(_dbContext.TournamentSC2Matches.ToList());
+            return Ok(_dbContext.TournamentSC2Matches.OrderBy(m => m.StartTime).ToList());
         }
 
         [AllowAnonymous]
