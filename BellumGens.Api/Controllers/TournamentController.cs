@@ -518,6 +518,29 @@ namespace BellumGens.Api.Controllers
             return Unauthorized();
         }
 
+        [HttpDelete]
+        [Route("csgomatch")]
+        public IHttpActionResult DeleteCSGOMatch(Guid? id)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentCSGOMatch entity = _dbContext.TournamentCSGOMatches.Find(id);
+                _dbContext.TournamentCSGOMatches.Remove(entity);
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament CS:GO match delete exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
         [HttpPut]
         [Route("csgomatchmap")]
         public IHttpActionResult SubmitCSGOMatchMap(Guid? id, CSGOMatchMap map)
@@ -594,6 +617,31 @@ namespace BellumGens.Api.Controllers
                 catch (DbUpdateException e)
                 {
                     System.Diagnostics.Trace.TraceError("Tournament StarCraft II match update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
+
+
+        [HttpDelete]
+        [Route("sc2match")]
+        public IHttpActionResult DeleteSC2Match(Guid? id)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentSC2Match entity = _dbContext.TournamentSC2Matches.Find(id);
+                _dbContext.TournamentSC2Matches.Remove(entity);
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament StarCraft II match delete exception: " + e.Message);
                     return BadRequest("Something went wrong...");
                 }
                 return Ok(entity);
