@@ -624,6 +624,31 @@ namespace BellumGens.Api.Controllers
             return Unauthorized();
         }
 
+
+
+        [HttpDelete]
+        [Route("sc2match")]
+        public IHttpActionResult DeleteSC2Match(Guid? id)
+        {
+            if (UserIsInRole("event-admin"))
+            {
+                TournamentSC2Match entity = _dbContext.TournamentSC2Matches.Find(id);
+                _dbContext.TournamentSC2Matches.Remove(entity);
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Tournament StarCraft II match delete exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+                return Ok(entity);
+            }
+            return Unauthorized();
+        }
+
         [HttpPut]
         [Route("sc2matchmap")]
         public IHttpActionResult SubmitSC2MatchMap(Guid? id, SC2MatchMap map)
