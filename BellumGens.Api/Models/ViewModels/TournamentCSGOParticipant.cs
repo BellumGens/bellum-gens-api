@@ -16,13 +16,44 @@ namespace BellumGens.Api.Models
                 foreach (TournamentCSGOMatch match in matches)
                 {
                     if (match.Team1Id == Team.TeamId)
+                    {
                         TeamPoints += match.Team1Points;
+                        foreach (CSGOMatchMap map in match.Maps)
+                        {
+                            RoundDifference += map.Team1Score;
+                            RoundDifference -= map.Team2Score;
+                        }
+                        if (match.Team1Points + match.Team2Points > 0)
+                        {
+                            Matches++;
+                            if (match.Team1Points > match.Team2Points)
+                                Wins++;
+                            else
+                                Losses++;
+                        }
+                    }
                     else if (match.Team2Id == Team.TeamId)
+                    {
                         TeamPoints += match.Team2Points;
+                        foreach (CSGOMatchMap map in match.Maps)
+                        {
+                            RoundDifference -= map.Team1Score;
+                            RoundDifference += map.Team2Score;
+                        }
+                        if (match.Team1Points + match.Team2Points > 0)
+                        {
+                            Matches++;
+                            if (match.Team2Points > match.Team1Points)
+                                Wins++;
+                            else
+                                Losses++;
+                        }
+                    }
                 }
             }
         }
 
+        public int RoundDifference { get; set; } = 0;
         public Guid? TeamId { get; set; }
         public Guid? TournamentCSGOGroupId { get; set; }
         public int TeamPoints { get; set; } = 0;

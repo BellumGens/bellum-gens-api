@@ -17,9 +17,29 @@ namespace BellumGens.Api.Models
                 foreach (TournamentSC2Match match in matches)
                 {
                     if (match.Player1Id == UserId)
+                    {
                         PlayerPoints += match.Player1Points;
+                        if (match.Player1Points + match.Player2Points > 0)
+                        {
+                            Matches++;
+                            if (match.Player1Points > match.Player2Points)
+                                Wins++;
+                            else
+                                Losses++;
+                        }
+                    }
                     else if (match.Player2Id == UserId)
+                    {
                         PlayerPoints += match.Player2Points;
+                        if (match.Player1Points + match.Player2Points > 0)
+                        {
+                            Matches++;
+                            if (match.Player2Points > match.Player1Points)
+                                Wins++;
+                            else
+                                Losses++;
+                        }
+                    }
                 }
             }
         }

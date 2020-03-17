@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace BellumGens.Api.Models
 {
@@ -16,6 +13,8 @@ namespace BellumGens.Api.Models
         public string DemoLink { get; set; }
 
         public string VideoLink { get; set; }
+
+        public bool NoShow { get; set; } = false;
 
         public DateTimeOffset StartTime { get; set; }
 
