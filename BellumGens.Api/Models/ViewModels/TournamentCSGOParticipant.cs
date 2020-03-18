@@ -27,9 +27,19 @@ namespace BellumGens.Api.Models
                         {
                             Matches++;
                             if (match.Team1Points > match.Team2Points)
-                                Wins++;
+                            {
+                                if (match.Team1Points + match.Team2Points > 30)
+                                    OTWins++;
+                                else 
+                                    Wins++;
+                            }
                             else
-                                Losses++;
+                            {
+                                if (match.Team1Points + match.Team2Points > 30)
+                                    OTLosses++;
+                                else
+                                    Losses++;
+                            }
                         }
                     }
                     else if (match.Team2Id == Team.TeamId)
@@ -44,9 +54,20 @@ namespace BellumGens.Api.Models
                         {
                             Matches++;
                             if (match.Team2Points > match.Team1Points)
-                                Wins++;
+                            {
+
+                                if (match.Team1Points + match.Team2Points > 30)
+                                    OTWins++;
+                                else
+                                    Wins++;
+                            }
                             else
-                                Losses++;
+                            {
+                                if (match.Team1Points + match.Team2Points > 30)
+                                    OTLosses++;
+                                else
+                                    Losses++;
+                            }
                         }
                     }
                 }
@@ -54,6 +75,8 @@ namespace BellumGens.Api.Models
         }
 
         public int RoundDifference { get; set; } = 0;
+        public int OTWins { get; set; } = 0;
+        public int OTLosses { get; set; } = 0;
         public Guid? TeamId { get; set; }
         public Guid? TournamentCSGOGroupId { get; set; }
         public int TeamPoints { get; set; } = 0;
