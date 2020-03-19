@@ -31,12 +31,12 @@ namespace BellumGens.Api.Providers
 
 		//private static readonly string _steamAppNewsUrl = "https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid={0}&maxlength=300&format=json";
 
-		public static async Task<CSGOPlayerStats> GetStatsForGame(string username)
+		public static async Task<CSGOPlayerStats> GetStatsForCSGOUser(string username)
 		{
 			CSGOPlayerStats statsForUser;
 			using (HttpClient client = new HttpClient())
 			{
-				Uri endpoint = new Uri(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, username));
+				Uri endpoint = new Uri(string.Format(_statsForGameUrl, AppInfo.Config.csgoGameId, AppInfo.Config.steamApiKey, username));
 				var statsForGameResponse = await client.GetStringAsync(endpoint).ConfigureAwait(false);
 				statsForUser = JsonConvert.DeserializeObject<CSGOPlayerStats>(statsForGameResponse);
 
@@ -108,7 +108,7 @@ namespace BellumGens.Api.Providers
 					return model;
 				}
 
-				Uri endpoint = new Uri(string.Format(_statsForGameUrl, AppInfo.Config.gameId, AppInfo.Config.steamApiKey, model.steamUser.steamID64));
+				Uri endpoint = new Uri(string.Format(_statsForGameUrl, AppInfo.Config.csgoGameId, AppInfo.Config.steamApiKey, model.steamUser.steamID64));
 				var statsForGameResponse = await client.GetAsync(endpoint).ConfigureAwait(false);
 				if (statsForGameResponse.IsSuccessStatusCode)
 				{
