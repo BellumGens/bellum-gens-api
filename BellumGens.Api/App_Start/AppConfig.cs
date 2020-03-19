@@ -5,7 +5,7 @@ namespace BellumGens.Api
 	public class AppInfoDescriptior
 	{
 		public string steamApiKey { get; set; }
-		public string gameId { get; set; }
+		public string csgoGameId { get; set; } = "730";
 		public string twitchClientId { get; set; }
 		public string twitchSecret { get; set; }
 		public string publicVapidKey { get; set; }
@@ -40,7 +40,7 @@ namespace BellumGens.Api
 			return new AppInfoDescriptior()
 			{
 				steamApiKey = ConfigurationManager.AppSettings["steamApiKey"],
-				gameId = ConfigurationManager.AppSettings["gameId"],
+				csgoGameId = ConfigurationManager.AppSettings["gameId"],
 				twitchClientId = ConfigurationManager.AppSettings["twitchClientId"],
 				twitchSecret = ConfigurationManager.AppSettings["twitchSecret"],
 				publicVapidKey = ConfigurationManager.AppSettings["publicVapidKey"],

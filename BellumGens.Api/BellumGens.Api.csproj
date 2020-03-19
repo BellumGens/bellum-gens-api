@@ -557,6 +557,10 @@
     <Compile Include="Migrations\202003021237246_BattleNetAndSteamIDs.Designer.cs">
       <DependentUpon>202003021237246_BattleNetAndSteamIDs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003171051183_NoShowField.cs" />
+    <Compile Include="Migrations\202003171051183_NoShowField.Designer.cs">
+      <DependentUpon>202003171051183_NoShowField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -865,6 +869,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003021237246_BattleNetAndSteamIDs.resx">
       <DependentUpon>202003021237246_BattleNetAndSteamIDs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003171051183_NoShowField.resx">
+      <DependentUpon>202003171051183_NoShowField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

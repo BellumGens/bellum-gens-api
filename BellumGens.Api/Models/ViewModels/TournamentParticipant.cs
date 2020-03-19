@@ -13,11 +13,15 @@ namespace BellumGens.Api.Models
             UserId = application.UserId;
             State = application.State;
             Company = application.CompanyId;
+
         }
 
         public Guid Id { get; set; }
         public string UserId { get; set; }
         public string Company { get; set; }
+        public int Matches { get; set; } = 0;
+        public int Wins { get; set; } = 0;
+        public int Losses { get; set; } = 0;
         public TournamentApplicationState State { get; set; }
     }
 }
