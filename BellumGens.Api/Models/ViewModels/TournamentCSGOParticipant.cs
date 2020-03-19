@@ -23,6 +23,9 @@ namespace BellumGens.Api.Models
                             RoundDifference += map.Team1Score;
                             RoundDifference -= map.Team2Score;
                         }
+                        if (match.NoShow && match.Team1Points > match.Team2Points)
+                            RoundDifference += 8;
+
                         if (match.Team1Points + match.Team2Points > 0)
                         {
                             Matches++;
@@ -50,6 +53,9 @@ namespace BellumGens.Api.Models
                             RoundDifference -= map.Team1Score;
                             RoundDifference += map.Team2Score;
                         }
+                        if (match.NoShow && match.Team2Points > match.Team1Points)
+                            RoundDifference += 8;
+                            
                         if (match.Team1Points + match.Team2Points > 0)
                         {
                             Matches++;
