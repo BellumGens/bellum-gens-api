@@ -450,6 +450,29 @@ namespace BellumGens.Api.Controllers
 			return Ok(entity);
 		}
 
+		//[Route("tournaments")]
+		//public IHttpActionResult GetTournaments(Guid teamid)
+		//{
+		//	List<Tournament> team = UserIsTeamAdmin(day.TeamId);
+		//	if (team == null)
+		//	{
+		//		return BadRequest("You need to be team admin.");
+		//	}
+
+		//	TeamAvailability entity = team.PracticeSchedule.FirstOrDefault(s => s.Day == day.Day);
+		//	_dbContext.Entry(entity).CurrentValues.SetValues(day);
+		//	try
+		//	{
+		//		_dbContext.SaveChanges();
+		//	}
+		//	catch (DbUpdateException e)
+		//	{
+		//		System.Diagnostics.Trace.TraceError($"Team availability error: ${e.Message}");
+		//		return BadRequest("Something went wrong...");
+		//	}
+		//	return Ok(entity);
+		//}
+
 		private CSGOTeam UserIsTeamAdmin(Guid teamId)
 		{
 			CSGOTeam team = _dbContext.Teams.Find(teamId);

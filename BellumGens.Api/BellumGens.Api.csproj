@@ -561,6 +561,10 @@
     <Compile Include="Migrations\202003171051183_NoShowField.Designer.cs">
       <DependentUpon>202003171051183_NoShowField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003301608330_RemoveEndTimeFromMatches.cs" />
+    <Compile Include="Migrations\202003301608330_RemoveEndTimeFromMatches.designer.cs">
+      <DependentUpon>202003301608330_RemoveEndTimeFromMatches.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -601,6 +605,7 @@
     <Compile Include="Models\UserMessage.cs" />
     <Compile Include="Models\ViewModels\RegistrationCountViewModel.cs" />
     <Compile Include="Models\ViewModels\SearchResultViewModel.cs" />
+    <Compile Include="Models\ViewModels\TeamTournamentsViewModel.cs" />
     <Compile Include="Models\ViewModels\TournamentCSGOParticipant.cs" />
     <Compile Include="Models\ViewModels\TournamentParticipant.cs" />
     <Compile Include="Models\ViewModels\TournamentSC2Participant.cs" />
@@ -872,6 +877,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003171051183_NoShowField.resx">
       <DependentUpon>202003171051183_NoShowField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003301608330_RemoveEndTimeFromMatches.resx">
+      <DependentUpon>202003301608330_RemoveEndTimeFromMatches.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

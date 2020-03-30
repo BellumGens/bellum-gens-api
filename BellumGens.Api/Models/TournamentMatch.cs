@@ -17,7 +17,5 @@ namespace BellumGens.Api.Models
         public bool NoShow { get; set; } = false;
 
         public DateTimeOffset StartTime { get; set; }
-
-        public DateTimeOffset EndTime { get; set; }
     }
 }
