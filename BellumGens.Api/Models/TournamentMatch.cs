@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,6 +19,9 @@ namespace BellumGens.Api.Models
 
         public DateTimeOffset StartTime { get; set; }
 
-        public DateTimeOffset EndTime { get; set; }
+        public Guid? TournamentId { get; set; }
+
+        [JsonIgnore]
+        public virtual Tournament Tournament { get; set; }
     }
 }

@@ -495,6 +495,11 @@ namespace BellumGens.Api.Controllers
             if (UserIsInRole("event-admin"))
             {
                 TournamentCSGOMatch entity = _dbContext.TournamentCSGOMatches.Find(id);
+                if (match.TournamentId == null)
+                {
+                    match.TournamentId = _dbContext.Tournaments.First().ID;
+                }
+
                 if (entity != null)
                 {
                     _dbContext.Entry(entity).CurrentValues.SetValues(match);

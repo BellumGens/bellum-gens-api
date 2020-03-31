@@ -19,7 +19,7 @@ namespace BellumGens.Api
 			var migrator = new DbMigrator(configuration);
 			migrator.Update();
 
-			//ApplyEntityUpdates();
+			ApplyEntityUpdates();
 
 			ConfigureAuth(app);
 		}
@@ -28,15 +28,11 @@ namespace BellumGens.Api
 		{
 			using (BellumGensDbContext context = new BellumGensDbContext())
 			{
-				List<TournamentApplication> applications = context.TournamentApplications.Where(a => !string.IsNullOrEmpty(a.BattleNetId)).ToList();
-				foreach (TournamentApplication application in applications)
+				Tournament tournament = context.Tournaments.FirstOrDefault();
+				if (tournament != null)
 				{
-					application.User.BattleNetId = application.BattleNetId;
-				}
-				List<ApplicationUser> users = context.Users.Where(u => string.IsNullOrEmpty(u.SteamID)).ToList();
-				foreach (ApplicationUser user in users)
-				{
-					user.SteamID = user.Id;
+					tournament.CSGOMatches = context.TournamentCSGOMatches.ToList();
+					tournament.SC2Matches = context.TournamentSC2Matches.ToList();
 				}
 
 				try
