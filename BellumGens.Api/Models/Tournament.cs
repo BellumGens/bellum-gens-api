@@ -7,13 +7,6 @@ namespace BellumGens.Api.Models
 {
 	public class Tournament
 	{
-		public Tournament()
-		{
-			CSGOGroups = new HashSet<TournamentCSGOGroup>();
-			SC2Groups = new HashSet<TournamentSC2Group>();
-			Applications = new HashSet<TournamentApplication>();
-		}
-
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid ID { get; set; }
 
@@ -28,12 +21,18 @@ namespace BellumGens.Api.Models
 		public DateTimeOffset EndDate { get; set; }
 
 		[JsonIgnore]
-		public virtual ICollection<TournamentCSGOGroup> CSGOGroups { get; set; }
+		public virtual ICollection<TournamentCSGOMatch> CSGOMatches { get; set; } = new HashSet<TournamentCSGOMatch>();
 
 		[JsonIgnore]
-		public virtual ICollection<TournamentSC2Group> SC2Groups { get; set; }
+		public virtual ICollection<TournamentSC2Match> SC2Matches { get; set; } = new HashSet<TournamentSC2Match>();
 
 		[JsonIgnore]
-		public virtual ICollection<TournamentApplication> Applications { get; set; }
+		public virtual ICollection<TournamentCSGOGroup> CSGOGroups { get; set; } = new HashSet<TournamentCSGOGroup>();
+
+		[JsonIgnore]
+		public virtual ICollection<TournamentSC2Group> SC2Groups { get; set; } = new HashSet<TournamentSC2Group>();
+
+		[JsonIgnore]
+		public virtual ICollection<TournamentApplication> Applications { get; set; } = new HashSet<TournamentApplication>();
 	}
 }

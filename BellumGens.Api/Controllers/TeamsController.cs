@@ -28,6 +28,21 @@ namespace BellumGens.Api.Controllers
 			return ResolveTeam(teamId);
 		}
 
+		[Route("Tournaments")]
+		[AllowAnonymous]
+		public IHttpActionResult GetTournaments(string teamid)
+		{
+			CSGOTeam team = ResolveTeam(teamid);
+			List<Tournament> tournaments = _dbContext.Tournaments.ToList();
+			List<TeamTournamentViewModel> model = new List<TeamTournamentViewModel>();
+			foreach (var tournament in tournaments)
+			{
+				if (tournament.CSGOMatches.Any(m => m.Team1Id == team.TeamId || m.Team2Id == team.TeamId))
+					model.Add(new TeamTournamentViewModel(tournament, team.TeamId));
+			}
+			return Ok(model);
+		}
+
 		[Route("teamadmin")]
 		[HttpGet]
 		public IHttpActionResult GetIsTeamAdmin(string teamid)
@@ -449,29 +464,6 @@ namespace BellumGens.Api.Controllers
 			}
 			return Ok(entity);
 		}
-
-		//[Route("tournaments")]
-		//public IHttpActionResult GetTournaments(Guid teamid)
-		//{
-		//	List<Tournament> team = UserIsTeamAdmin(day.TeamId);
-		//	if (team == null)
-		//	{
-		//		return BadRequest("You need to be team admin.");
-		//	}
-
-		//	TeamAvailability entity = team.PracticeSchedule.FirstOrDefault(s => s.Day == day.Day);
-		//	_dbContext.Entry(entity).CurrentValues.SetValues(day);
-		//	try
-		//	{
-		//		_dbContext.SaveChanges();
-		//	}
-		//	catch (DbUpdateException e)
-		//	{
-		//		System.Diagnostics.Trace.TraceError($"Team availability error: ${e.Message}");
-		//		return BadRequest("Something went wrong...");
-		//	}
-		//	return Ok(entity);
-		//}
 
 		private CSGOTeam UserIsTeamAdmin(Guid teamId)
 		{

@@ -565,6 +565,10 @@
     <Compile Include="Migrations\202003301608330_RemoveEndTimeFromMatches.designer.cs">
       <DependentUpon>202003301608330_RemoveEndTimeFromMatches.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202003310654426_BindingTournamentAndMatches.cs" />
+    <Compile Include="Migrations\202003310654426_BindingTournamentAndMatches.designer.cs">
+      <DependentUpon>202003310654426_BindingTournamentAndMatches.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -880,6 +884,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003301608330_RemoveEndTimeFromMatches.resx">
       <DependentUpon>202003301608330_RemoveEndTimeFromMatches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202003310654426_BindingTournamentAndMatches.resx">
+      <DependentUpon>202003310654426_BindingTournamentAndMatches.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

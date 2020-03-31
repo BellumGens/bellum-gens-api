@@ -9,11 +9,7 @@ namespace BellumGens.Api.Models
     {
         public Guid Team1Id { get; set; }
         public Guid Team2Id { get; set; }
-
         public Guid? GroupId { get; set; }
-
-        public virtual ICollection<CSGOMatchMap> Maps { get; set; }
-
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public Guid WinnerTeamId { 
@@ -45,6 +41,8 @@ namespace BellumGens.Api.Models
                 return Team2 != null ? new CSGOTeamSummaryViewModel(Team2) : null;
             }
         }
+
+        public virtual ICollection<CSGOMatchMap> Maps { get; set; } = new HashSet<CSGOMatchMap>();
 
         [JsonIgnore]
         [ForeignKey("Team1Id")]
