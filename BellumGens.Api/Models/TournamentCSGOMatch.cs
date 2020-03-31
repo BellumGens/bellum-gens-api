@@ -11,11 +11,12 @@ namespace BellumGens.Api.Models
         public Guid Team2Id { get; set; }
         public Guid? GroupId { get; set; }
 
+        [NotMapped]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public Guid WinnerTeamId { 
             get
             {
-                return Team1Points > Team2Points ? Team1Id : Team2Id;
+                return Team1Points == Team2Points ? Guid.Empty : Team1Points > Team2Points ? Team1Id : Team2Id;
             }
         }
 

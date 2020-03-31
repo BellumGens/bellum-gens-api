@@ -42,7 +42,7 @@ namespace BellumGens.Api.Models
             {
                 if (_matches == null)
                 {
-                    _matches = _tournament.CSGOMatches.Where(m => m.Team1Id == _teamid || m.Team2Id == _teamid).ToList();
+                    _matches = _tournament.CSGOMatches.Where(m => m.Team1Id == _teamid || m.Team2Id == _teamid).OrderByDescending(m => m.StartTime).ToList();
                 }
                 return _matches;
             }
