@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,7 @@ namespace BellumGens.Api.Models
         [JsonProperty("id")]
         public Guid Id { get; set; }
         [JsonProperty("email")]
+        [EmailAddress]
         public string Email { get; set; }
         [JsonProperty("firstName")]
         public string FirstName { get; set; }
