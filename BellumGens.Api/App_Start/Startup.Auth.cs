@@ -31,7 +31,9 @@ namespace BellumGens.Api
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
 			{
-				ExpireTimeSpan = TimeSpan.FromDays(14)
+				ExpireTimeSpan = TimeSpan.FromDays(14),
+                CookieSameSite = SameSiteMode.None,
+                CookieSecure = CookieSecureOption.SameAsRequest
 			});
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 

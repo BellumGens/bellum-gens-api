@@ -23,7 +23,7 @@ namespace BellumGens.Api.Models
                         _participants.Add(new TournamentSC2Participant(app, Matches.Where(m => m.Player1Id == app.UserId || m.Player2Id == app.UserId).ToList()));
                     }
                 }
-                return _participants;
+                return _participants.OrderByDescending(p => p.PlayerPoints).ToList();
             }
         }
 

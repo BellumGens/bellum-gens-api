@@ -14,16 +14,9 @@ namespace BellumGens.Api.Models
 	{
 		private SteamGroup _steamGroup;
 
-        public CSGOTeam() : base()
-        {
-            this.Members = new HashSet<TeamMember>();
-			this.Invites = new HashSet<TeamInvite>();
-			this.PracticeSchedule = new HashSet<TeamAvailability>();
-		}
-
 		public void InitializeDefaults()
 		{
-			this.PracticeSchedule = new HashSet<TeamAvailability>() {
+			PracticeSchedule = new HashSet<TeamAvailability>() {
 				new TeamAvailability
 				{
 					Day = DayOfWeek.Monday
@@ -53,7 +46,7 @@ namespace BellumGens.Api.Models
 					Day = DayOfWeek.Sunday
 				}
 			};
-			this.MapPool = new HashSet<TeamMapPool>()
+			MapPool = new HashSet<TeamMapPool>()
 			{
 				new TeamMapPool
 				{
@@ -143,17 +136,17 @@ namespace BellumGens.Api.Models
 		public string CustomUrl { get; set; }
 
 		[JsonIgnore]
-		public virtual ICollection<CSGOStrategy> Strategies { get; set; }
+		public virtual ICollection<CSGOStrategy> Strategies { get; set; } = new HashSet<CSGOStrategy>();
 
 		public virtual ICollection<TeamAvailability> PracticeSchedule { get; set; }
 
-		public virtual ICollection<TeamMember> Members { get; set; }
+		public virtual ICollection<TeamMember> Members { get; set; } = new HashSet<TeamMember>();
 
 		[JsonIgnore]
-		public virtual ICollection<TeamInvite> Invites { get; set; }
+		public virtual ICollection<TeamInvite> Invites { get; set; } = new HashSet<TeamInvite>();
 
 		[JsonIgnore]
-		public virtual ICollection<TeamApplication> Applications { get; set; }
+		public virtual ICollection<TeamApplication> Applications { get; set; } = new HashSet<TeamApplication>();
 
 		[JsonIgnore]
 		public virtual ICollection<TeamMapPool> MapPool { get; set; }

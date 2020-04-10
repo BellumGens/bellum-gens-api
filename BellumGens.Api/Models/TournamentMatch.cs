@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace BellumGens.Api.Models
 {
@@ -17,8 +15,13 @@ namespace BellumGens.Api.Models
 
         public string VideoLink { get; set; }
 
+        public bool NoShow { get; set; } = false;
+
         public DateTimeOffset StartTime { get; set; }
 
-        public DateTimeOffset EndTime { get; set; }
+        public Guid? TournamentId { get; set; }
+
+        [JsonIgnore]
+        public virtual Tournament Tournament { get; set; }
     }
 }

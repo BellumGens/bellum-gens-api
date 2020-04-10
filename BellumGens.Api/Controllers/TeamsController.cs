@@ -28,6 +28,21 @@ namespace BellumGens.Api.Controllers
 			return ResolveTeam(teamId);
 		}
 
+		[Route("Tournaments")]
+		[AllowAnonymous]
+		public IHttpActionResult GetTournaments(string teamid)
+		{
+			CSGOTeam team = ResolveTeam(teamid);
+			List<Tournament> tournaments = _dbContext.Tournaments.ToList();
+			List<TeamTournamentViewModel> model = new List<TeamTournamentViewModel>();
+			foreach (var tournament in tournaments)
+			{
+				if (tournament.CSGOMatches.Any(m => m.Team1Id == team.TeamId || m.Team2Id == team.TeamId))
+					model.Add(new TeamTournamentViewModel(tournament, team.TeamId));
+			}
+			return Ok(model);
+		}
+
 		[Route("teamadmin")]
 		[HttpGet]
 		public IHttpActionResult GetIsTeamAdmin(string teamid)
