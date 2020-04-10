@@ -35,7 +35,7 @@ namespace BellumGens.Api.Controllers
                                 <a href='https://eb-league.com' target='_blank'>https://eb-league.com</a>";
                 try
                 {
-                    await EmailServiceProvider.SendNotificationEmail(order.Email, "Регистрацията ви е получена", message).ConfigureAwait(false);
+                    await EmailServiceProvider.SendNotificationEmail(order.Email, "Поръчката ви е получена", message).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
