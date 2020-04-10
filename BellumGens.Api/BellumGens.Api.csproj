@@ -293,6 +293,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PushController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Controllers\StrategyController.cs" />
     <Compile Include="Controllers\TeamsController.cs" />
     <Compile Include="Controllers\TournamentController.cs" />
@@ -569,12 +570,18 @@
     <Compile Include="Migrations\202003310654426_BindingTournamentAndMatches.designer.cs">
       <DependentUpon>202003310654426_BindingTournamentAndMatches.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004101910019_JerseyOrders.cs" />
+    <Compile Include="Migrations\202004101910019_JerseyOrders.Designer.cs">
+      <DependentUpon>202004101910019_JerseyOrders.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\CSGOMatchMap.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Extensions\Util.cs" />
+    <Compile Include="Models\JerseyDetails.cs" />
+    <Compile Include="Models\JerseyOrder.cs" />
     <Compile Include="Models\PushSubscription.cs" />
     <Compile Include="Models\SC2MatchMap.cs" />
     <Compile Include="Models\StrategyComment.cs" />
@@ -887,6 +894,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202003310654426_BindingTournamentAndMatches.resx">
       <DependentUpon>202003310654426_BindingTournamentAndMatches.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004101910019_JerseyOrders.resx">
+      <DependentUpon>202004101910019_JerseyOrders.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

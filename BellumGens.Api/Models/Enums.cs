@@ -80,4 +80,21 @@ namespace BellumGens.Api.Models
         Pending,
         Confirmed
     }
+
+    public enum JerseyCut
+    {
+        Male,
+        Female
+    }
+
+    public enum JerseySize
+    {
+        XS,
+        S,
+        M,
+        L,
+        XL,
+        XXL,
+        XXXL
+    }
 }
