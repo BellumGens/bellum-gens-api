@@ -26,6 +26,8 @@ namespace BellumGens.Api.Models
         public string City { get; set; }
         [JsonProperty("streetAddress")]
         public string StreetAddress { get; set; }
+        [JsonProperty("orderDate")]
+        public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
 
         [JsonProperty("jerseys")]
         public virtual ICollection<JerseyDetails> Jerseys { get; set; } = new HashSet<JerseyDetails>();

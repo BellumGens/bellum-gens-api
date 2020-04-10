@@ -574,6 +574,10 @@
     <Compile Include="Migrations\202004101910019_JerseyOrders.Designer.cs">
       <DependentUpon>202004101910019_JerseyOrders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202004102142000_OrderDate.cs" />
+    <Compile Include="Migrations\202004102142000_OrderDate.designer.cs">
+      <DependentUpon>202004102142000_OrderDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -897,6 +901,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004101910019_JerseyOrders.resx">
       <DependentUpon>202004101910019_JerseyOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202004102142000_OrderDate.resx">
+      <DependentUpon>202004102142000_OrderDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
