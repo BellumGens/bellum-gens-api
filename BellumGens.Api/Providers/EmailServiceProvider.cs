@@ -28,7 +28,7 @@ namespace BellumGens.Api.Providers
             return client.SendMailAsync(msg);
 		}
 
-        public static Task SendNotificationEmail(string destination, string subject, string body, string bcc = "info@bellumgens.com")
+        public static Task SendNotificationEmail(string destination, string subject, string body, string bcc = "info@eb-league.com")
         {
             MailMessage msg = new MailMessage();
             msg.To.Add(new MailAddress(destination));
