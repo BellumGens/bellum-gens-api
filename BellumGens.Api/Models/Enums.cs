@@ -62,7 +62,10 @@ namespace BellumGens.Api.Models
         ZenLE,
         SimulacrumLE,
         NightshadeLE,
-        EternalEmpireLE
+        EternalEmpireLE,
+        GoldenWallLE,
+        PurityAndIndustryLE,
+        EverDreamLE
     }
 
     public enum TShirtSize
