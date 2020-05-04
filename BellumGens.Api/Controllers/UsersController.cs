@@ -14,21 +14,21 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Users")]
 	public class UsersController : BaseController
     {
-        [Route("Users")]
-		[AllowAnonymous]
-		public async Task<UserStatsViewModel []> GetUsers(int page = 0)
-		{
-			List<ApplicationUser> activeUsers = _dbContext.Users.OrderBy(e => e.Id).Skip(page * 10).Take(10).ToList();
+		//[Route("Users")]
+		//[AllowAnonymous]
+		//public async Task<UserStatsViewModel []> GetUsers(int page = 0)
+		//{
+		//	List<ApplicationUser> activeUsers = _dbContext.Users.OrderBy(e => e.Id).Skip(page * 10).Take(10).ToList();
 
-			List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
-			foreach (ApplicationUser user in activeUsers)
-			{
-				var model = new UserStatsViewModel(user);
-				tasks.Add(model.GetSteamUserDetails());
-			}
+		//	List<Task<UserStatsViewModel>> tasks = new List<Task<UserStatsViewModel>>();
+		//	foreach (ApplicationUser user in activeUsers)
+		//	{
+		//		var model = new UserStatsViewModel(user);
+		//		tasks.Add(model.GetSteamUserDetails());
+		//	}
 
-			return await Task.WhenAll(tasks).ConfigureAwait(false);
-		}
+		//	return await Task.WhenAll(tasks).ConfigureAwait(false);
+		//}
 
 		[Route("User")]
 		[AllowAnonymous]

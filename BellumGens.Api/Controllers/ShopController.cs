@@ -2,6 +2,7 @@
 using BellumGens.Api.Providers;
 using System;
 using System.Data.Entity.Infrastructure;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -10,6 +11,13 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Shop")]
     public class ShopController : BaseController
     {
+        [HttpGet]
+        [Route("Promo")]
+        public IHttpActionResult CheckPromo(string code)
+        {
+            return Ok(_dbContext.PromoCodes.Find(code.ToUpperInvariant()));
+        }
+
         [HttpPost]
         [Route("Order")]
         public async Task<IHttpActionResult> SubmitOrder(JerseyOrder order)
@@ -29,7 +37,7 @@ namespace BellumGens.Api.Controllers
                 }
 
 
-                string message = @"Здравейте,
+                string message = $@"Здравейте {order.FirstName} {order.LastName},
                                 <p>Успешно получихме вашата поръчка. Очаквайте обаждане на посоченият от вас телефонен номер за потвърждение!</p>
                                 <p>Поздрави от екипа на Bellum Gens!</p>
                                 <a href='https://eb-league.com' target='_blank'>https://eb-league.com</a>";
@@ -43,7 +51,7 @@ namespace BellumGens.Api.Controllers
                 }
                 return Ok(order);
             }
-            return BadRequest("Order couldn't be validated");
+            return BadRequest("Order couldn't be validated...");
         }
     }
 }

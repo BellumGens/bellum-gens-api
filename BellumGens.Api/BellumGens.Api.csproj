@@ -578,6 +578,14 @@
     <Compile Include="Migrations\202004102142000_OrderDate.designer.cs">
       <DependentUpon>202004102142000_OrderDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005040824134_PromoCodes.cs" />
+    <Compile Include="Migrations\202005040824134_PromoCodes.designer.cs">
+      <DependentUpon>202005040824134_PromoCodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005041004296_Test.cs" />
+    <Compile Include="Migrations\202005041004296_Test.designer.cs">
+      <DependentUpon>202005041004296_Test.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -586,6 +594,7 @@
     <Compile Include="Models\Extensions\Util.cs" />
     <Compile Include="Models\JerseyDetails.cs" />
     <Compile Include="Models\JerseyOrder.cs" />
+    <Compile Include="Models\PromoCode.cs" />
     <Compile Include="Models\PushSubscription.cs" />
     <Compile Include="Models\SC2MatchMap.cs" />
     <Compile Include="Models\StrategyComment.cs" />
@@ -904,6 +913,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202004102142000_OrderDate.resx">
       <DependentUpon>202004102142000_OrderDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005040824134_PromoCodes.resx">
+      <DependentUpon>202005040824134_PromoCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005041004296_Test.resx">
+      <DependentUpon>202005041004296_Test.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
