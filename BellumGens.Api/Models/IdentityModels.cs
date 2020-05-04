@@ -200,6 +200,8 @@ namespace BellumGens.Api.Models
 
 		public DbSet<JerseyOrder> JerseyOrders { get; set; }
 
+		public DbSet<Promo> PromoCodes { get; set; }
+
         public BellumGensDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

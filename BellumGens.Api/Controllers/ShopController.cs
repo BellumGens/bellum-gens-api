@@ -2,6 +2,7 @@
 using BellumGens.Api.Providers;
 using System;
 using System.Data.Entity.Infrastructure;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -10,6 +11,13 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Shop")]
     public class ShopController : BaseController
     {
+        [HttpGet]
+        [Route("Promo")]
+        public IHttpActionResult CheckPromo(string code)
+        {
+            return Ok(_dbContext.PromoCodes.Find(code.ToUpperInvariant()));
+        }
+
         [HttpPost]
         [Route("Order")]
         public async Task<IHttpActionResult> SubmitOrder(JerseyOrder order)

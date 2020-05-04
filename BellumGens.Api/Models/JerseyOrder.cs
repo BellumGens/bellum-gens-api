@@ -26,8 +26,14 @@ namespace BellumGens.Api.Models
         public string City { get; set; }
         [JsonProperty("streetAddress")]
         public string StreetAddress { get; set; }
+        [JsonProperty("promocode")]
+        public string PromoCode { get; set; }
+
         [JsonProperty("orderDate")]
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
+
+        [ForeignKey("PromoCode")]
+        public virtual Promo Promo { get; set; }
 
         [JsonProperty("jerseys")]
         public virtual ICollection<JerseyDetails> Jerseys { get; set; } = new HashSet<JerseyDetails>();

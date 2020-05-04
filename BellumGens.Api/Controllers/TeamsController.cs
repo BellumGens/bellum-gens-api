@@ -14,12 +14,12 @@ namespace BellumGens.Api.Controllers
 	[RoutePrefix("api/Teams")]
 	public class TeamsController : BaseController
 	{
-        [Route("Teams")]
-		[AllowAnonymous]
-		public List<CSGOTeam> GetTeams()
-		{
-			return _dbContext.Teams.ToList();
-		}
+		//[Route("Teams")]
+		//[AllowAnonymous]
+		//public List<CSGOTeam> GetTeams()
+		//{
+		//	return _dbContext.Teams.ToList();
+		//}
 
 		[Route("Team")]
 		[AllowAnonymous]

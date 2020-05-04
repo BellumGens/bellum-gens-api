@@ -105,12 +105,11 @@ namespace BellumGens.Api.Controllers
 					return BadRequest("You must sign in to perform search by availability...");
 				}
 				
-				List<ApplicationUser> userIds;
 				if (teamid != null)
 				{
 					CSGOTeam team = _dbContext.Teams.Find(teamid);
 					overlap = Math.Min(overlap, team.GetTotalAvailability());
-					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && team.GetTotalOverlap(u) >= overlap).ToList();
+					users = users.Where(u => u.GetTotalAvailability() >= overlap && team.GetTotalOverlap(u) >= overlap).ToList();
 				}
 				else
 				{
@@ -120,10 +119,10 @@ namespace BellumGens.Api.Controllers
 					{
 						return BadRequest("You must provide your availability in your user profile...");
 					}
-					userIds = users.Where(u => u.GetTotalAvailability() >= overlap && u.GetTotalOverlap(user) >= overlap).ToList();
+					users = users.Where(u => u.GetTotalAvailability() >= overlap && u.GetTotalOverlap(user) >= overlap).ToList();
 				}
 
-				foreach (ApplicationUser user in userIds)
+				foreach (ApplicationUser user in users)
 				{
 					players.Add(new UserStatsViewModel(user));
 				}
