@@ -582,6 +582,10 @@
     <Compile Include="Migrations\202005040824134_PromoCodes.designer.cs">
       <DependentUpon>202005040824134_PromoCodes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005041004296_Test.cs" />
+    <Compile Include="Migrations\202005041004296_Test.designer.cs">
+      <DependentUpon>202005041004296_Test.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -912,6 +916,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005040824134_PromoCodes.resx">
       <DependentUpon>202005040824134_PromoCodes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005041004296_Test.resx">
+      <DependentUpon>202005041004296_Test.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
