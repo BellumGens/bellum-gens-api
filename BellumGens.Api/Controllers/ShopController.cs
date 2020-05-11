@@ -1,6 +1,7 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
 using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,32 @@ namespace BellumGens.Api.Controllers
             return Unauthorized();
         }
 
+
+
+        [Authorize]
+        [HttpPut]
+        [Route("Edit")]
+        public IHttpActionResult EditOrder(Guid orderId, JerseyOrder order)
+        {
+            if (UserIsInRole("admin"))
+            {
+                _dbContext.Entry(order).State = EntityState.Modified;
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Order update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+
+                return Ok(order);
+            }
+            return Unauthorized();
+        }
+
         [HttpPost]
         [Route("Order")]
         public async Task<IHttpActionResult> SubmitOrder(JerseyOrder order)
@@ -43,7 +70,7 @@ namespace BellumGens.Api.Controllers
                 }
                 catch (DbUpdateException e)
                 {
-                    System.Diagnostics.Trace.TraceError("Order update exception: " + e.Message);
+                    System.Diagnostics.Trace.TraceError("Order submit exception: " + e.Message);
                     return BadRequest("Something went wrong...");
                 }
 
