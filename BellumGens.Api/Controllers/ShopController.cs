@@ -1,8 +1,9 @@
 ﻿using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
 using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -16,6 +17,43 @@ namespace BellumGens.Api.Controllers
         public IHttpActionResult CheckPromo(string code)
         {
             return Ok(_dbContext.PromoCodes.Find(code.ToUpperInvariant()));
+        }
+
+        [Authorize]
+        [Route("Orders")]
+        public IHttpActionResult GetOrders()
+        {
+            if (UserIsInRole("admin"))
+            {
+                return Ok(_dbContext.JerseyOrders.ToList());
+            }
+            return Unauthorized();
+        }
+
+
+
+        [Authorize]
+        [HttpPut]
+        [Route("Edit")]
+        public IHttpActionResult EditOrder(Guid orderId, JerseyOrder order)
+        {
+            if (UserIsInRole("admin"))
+            {
+                _dbContext.Entry(order).State = EntityState.Modified;
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    System.Diagnostics.Trace.TraceError("Order update exception: " + e.Message);
+                    return BadRequest("Something went wrong...");
+                }
+
+                return Ok(order);
+            }
+            return Unauthorized();
         }
 
         [HttpPost]
@@ -32,7 +70,7 @@ namespace BellumGens.Api.Controllers
                 }
                 catch (DbUpdateException e)
                 {
-                    System.Diagnostics.Trace.TraceError("Order update exception: " + e.Message);
+                    System.Diagnostics.Trace.TraceError("Order submit exception: " + e.Message);
                     return BadRequest("Something went wrong...");
                 }
 

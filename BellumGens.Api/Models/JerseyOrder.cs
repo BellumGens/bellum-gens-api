@@ -34,6 +34,10 @@ namespace BellumGens.Api.Models
         public string StreetAddress { get; set; }
         [JsonProperty("promocode")]
         public string PromoCode { get; set; }
+        [JsonProperty("confirmed")]
+        public bool Confirmed { get; set; } = false;
+        [JsonProperty("shipped")]
+        public bool Shipped { get; set; } = false;
 
         [JsonProperty("orderDate")]
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.Now;
