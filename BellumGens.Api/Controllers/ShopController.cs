@@ -2,7 +2,7 @@
 using BellumGens.Api.Providers;
 using System;
 using System.Data.Entity.Infrastructure;
-using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -16,6 +16,17 @@ namespace BellumGens.Api.Controllers
         public IHttpActionResult CheckPromo(string code)
         {
             return Ok(_dbContext.PromoCodes.Find(code.ToUpperInvariant()));
+        }
+
+        [Authorize]
+        [Route("Orders")]
+        public IHttpActionResult GetOrders()
+        {
+            if (UserIsInRole("admin"))
+            {
+                return Ok(_dbContext.JerseyOrders.ToList());
+            }
+            return Unauthorized();
         }
 
         [HttpPost]
