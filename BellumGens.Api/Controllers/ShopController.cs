@@ -1,9 +1,11 @@
-﻿using BellumGens.Api.Models;
+﻿using BellumGens.Api.Common;
+using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -62,6 +64,11 @@ namespace BellumGens.Api.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (order.PromoCode != null)
+                {
+                    order.PromoCode = order.PromoCode.ToUpperInvariant();
+                }
+
                 _dbContext.JerseyOrders.Add(order);
 
                 try
@@ -74,14 +81,29 @@ namespace BellumGens.Api.Controllers
                     return BadRequest("Something went wrong...");
                 }
 
-
-                string message = $@"Здравейте {order.FirstName} {order.LastName},
-                                <p>Успешно получихме вашата поръчка. Очаквайте обаждане на посоченият от вас телефонен номер за потвърждение!</p>
-                                <p>Поздрави от екипа на Bellum Gens!</p>
-                                <a href='https://eb-league.com' target='_blank'>https://eb-league.com</a>";
                 try
                 {
-                    await EmailServiceProvider.SendNotificationEmail(order.Email, "Поръчката ви е получена", message).ConfigureAwait(false);
+                    await _dbContext.Entry(order).Reference(o => o.Promo).LoadAsync().ConfigureAwait(false);
+
+                    decimal discount = 0;
+                    if (order.Promo != null)
+                    {
+                        discount = order.Promo.Discount;
+                    }
+
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append($@"Здравейте {order.FirstName} {order.LastName},
+                                <p>Успешно получихме вашата поръчка. Очаквайте обаждане на посоченият от вас телефонен номер за потвърждение!</p>
+                                <p>Детайли за вашата поръчка:</p>");
+                    foreach (JerseyDetails jersey in order.Jerseys)
+                    {
+                        builder.Append($"<p>{Util.JerseyCutNames[jersey.Cut]} тениска, размер {Util.JerseySizeNames[jersey.Size]}</p>");
+                    }
+                    builder.Append($"Обща цена: {(order.Jerseys.Count * 60) * (1 - order.Promo.Discount) + 5}лв.");
+                    builder.Append(@"<p>Поздрави от екипа на Bellum Gens!</p>
+                                <a href='https://eb-league.com' target='_blank'>https://eb-league.com</a>");
+
+                    await EmailServiceProvider.SendNotificationEmail(order.Email, "Поръчката ви е получена", builder.ToString()).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {

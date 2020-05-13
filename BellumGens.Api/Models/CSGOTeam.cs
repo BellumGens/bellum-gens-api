@@ -1,5 +1,5 @@
 ﻿using BellumGens.Api.Providers;
-using BellumGens.Api.Utils;
+using BellumGens.Api.Common;
 using Newtonsoft.Json;
 using SteamModels;
 using System;
