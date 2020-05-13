@@ -1,9 +1,8 @@
-﻿using System;
+﻿using BellumGens.Api.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace BellumGens.Api.Utils
+namespace BellumGens.Api.Common
 {
 	public static class Util
 	{
@@ -20,5 +19,22 @@ namespace BellumGens.Api.Utils
 
 			return text;
 		}
+
+		public static Dictionary<JerseyCut, string> JerseyCutNames = new Dictionary<JerseyCut, string>()
+		{
+			{ JerseyCut.Male, "Мъжка" },
+			{ JerseyCut.Female, "Дамска" }
+		};
+
+		public static Dictionary<JerseySize, string> JerseySizeNames = new Dictionary<JerseySize, string>()
+		{
+			{ JerseySize.XS, "XS" },
+			{ JerseySize.S, "S" },
+			{ JerseySize.M, "M" },
+			{ JerseySize.L, "L" },
+			{ JerseySize.XL, "XL" },
+			{ JerseySize.XXL, "XXL" },
+			{ JerseySize.XXXL, "XXXL" }
+		};
 	}
 }
