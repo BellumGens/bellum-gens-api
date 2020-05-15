@@ -12,85 +12,7 @@ namespace BellumGens.Api.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-		public ApplicationUser() : base()
-		{
-			Availability = new HashSet<UserAvailability>();
-			MapPool = new HashSet<UserMapPool>();
-			MemberOf = new HashSet<TeamMember>();
-		}
-
-		public void InitializeDefaults()
-		{
-			Availability = new HashSet<UserAvailability>() {
-				new UserAvailability
-				{
-					Day = DayOfWeek.Monday
-				},
-				new UserAvailability
-				{
-					Day = DayOfWeek.Tuesday
-				},
-				new UserAvailability
-				{
-					Day = DayOfWeek.Wednesday
-				},
-				new UserAvailability
-				{
-					Day = DayOfWeek.Thursday
-				},
-				new UserAvailability
-				{
-					Day = DayOfWeek.Friday
-				},
-				new UserAvailability
-				{
-					Day = DayOfWeek.Saturday
-				},
-				new UserAvailability
-				{
-					Day = DayOfWeek.Sunday
-				}
-			};
-			MapPool = new HashSet<UserMapPool>()
-			{
-				new UserMapPool
-				{
-					Map = CSGOMap.Cache
-				},
-				new UserMapPool
-				{
-					Map = CSGOMap.Dust2
-				},
-				new UserMapPool
-				{
-					Map = CSGOMap.Inferno
-				},
-				new UserMapPool
-				{
-					Map = CSGOMap.Mirage
-				},
-				new UserMapPool
-				{
-					Map = CSGOMap.Nuke
-				},
-				new UserMapPool
-				{
-					Map = CSGOMap.Overpass
-				},
-				new UserMapPool
-				{
-					Map = CSGOMap.Train
-				},
-				new UserMapPool
-				{
-					Map = CSGOMap.Vertigo
-				},
-				new UserMapPool
-				{
-					Map = CSGOMap.Cobblestone
-				}
-			};
-		}
+		public ApplicationUser() : base() { }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
@@ -138,14 +60,81 @@ namespace BellumGens.Api.Models
 
 		public virtual ICollection<Languages> LanguagesSpoken { get; set; }
 
-		public virtual ICollection<UserAvailability> Availability { get; set; }
+		public virtual ICollection<UserAvailability> Availability { get; set; } = new HashSet<UserAvailability>() {
+				new UserAvailability
+				{
+					Day = DayOfWeek.Monday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Tuesday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Wednesday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Thursday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Friday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Saturday
+				},
+				new UserAvailability
+				{
+					Day = DayOfWeek.Sunday
+				}
+			};
 
-		public virtual ICollection<UserMapPool> MapPool { get; set; }
+		public virtual ICollection<UserMapPool> MapPool { get; set; } = new HashSet<UserMapPool>()
+			{
+				new UserMapPool
+				{
+					Map = CSGOMap.Cache
+				},
+				new UserMapPool
+				{
+					Map = CSGOMap.Dust2
+				},
+				new UserMapPool
+				{
+					Map = CSGOMap.Inferno
+				},
+				new UserMapPool
+				{
+					Map = CSGOMap.Mirage
+				},
+				new UserMapPool
+				{
+					Map = CSGOMap.Nuke
+				},
+				new UserMapPool
+				{
+					Map = CSGOMap.Overpass
+				},
+				new UserMapPool
+				{
+					Map = CSGOMap.Train
+				},
+				new UserMapPool
+				{
+					Map = CSGOMap.Vertigo
+				},
+				new UserMapPool
+				{
+					Map = CSGOMap.Cobblestone
+				}
+			};
 
 		public virtual ICollection<TeamInvite> Notifications { get; set; }
 
         [JsonIgnore]
-		public ICollection<TeamMember> MemberOf { get; set; }
+		public ICollection<TeamMember> MemberOf { get; set; } = new HashSet<TeamMember>();
 
 		public virtual ICollection<TeamApplication> TeamApplications { get; set; }
     }

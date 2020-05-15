@@ -477,9 +477,9 @@ namespace BellumGens.Api.Controllers
 
 			var user = new ApplicationUser() {
 				Id = id,
-				UserName = User.Identity.Name
+				UserName = User.Identity.Name,
+                SteamID = id
 			};
-			user.InitializeDefaults();
 
 			IdentityResult result = await UserManager.CreateAsync(user).ConfigureAwait(false);
 			if (!result.Succeeded)
