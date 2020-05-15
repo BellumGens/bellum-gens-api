@@ -226,37 +226,6 @@ namespace BellumGens.Api.Controllers
         }
 
         [HttpPut]
-        [Route("AddApplications")]
-        public IHttpActionResult AddApplicationsToTournament(Guid id)
-        {
-            if (UserIsInRole("admin"))
-            {
-                Tournament tournament = _dbContext.Tournaments.Find(id);
-                if (tournament != null)
-                {
-                    List<TournamentApplication> applications = _dbContext.TournamentApplications.Where(a => a.TournamentId == null).ToList();
-                    foreach (var application in applications)
-                    {
-                        application.TournamentId = id;
-                    }
-
-                    try
-                    {
-                        _dbContext.SaveChanges();
-                    }
-                    catch (DbUpdateException e)
-                    {
-                        System.Diagnostics.Trace.TraceError("Tournament update exception: " + e.Message);
-                        return BadRequest("Something went wrong...");
-                    }
-                    return Ok(tournament);
-                }
-                return NotFound();
-            }
-            return Unauthorized();
-        }
-
-        [HttpPut]
         [Route("csgogroup")]
         public IHttpActionResult SubmitCSGOGroup(Guid? id, TournamentCSGOGroup group)
         {

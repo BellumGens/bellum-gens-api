@@ -107,7 +107,7 @@ namespace BellumGens.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    System.Diagnostics.Trace.TraceError("Order update exception: " + e.Message);
+                    System.Diagnostics.Trace.TraceError("Order submit exception: " + e.Message);
                 }
                 return Ok(order);
             }
