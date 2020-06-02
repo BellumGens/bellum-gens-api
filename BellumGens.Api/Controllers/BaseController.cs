@@ -40,7 +40,7 @@ namespace BellumGens.Api.Controllers
 
 		protected ApplicationUser GetAuthUser()
 		{
-			return User.Identity.IsAuthenticated ? UserManager.FindById(SteamServiceProvider.SteamUserId(User.Identity.GetUserId())) : null;
+			return User.Identity.IsAuthenticated ? UserManager.FindBySteamId(SteamServiceProvider.SteamUserId(User.Identity.GetUserId())) : null;
 		}
 
 		protected bool UserIsInRole(string role)

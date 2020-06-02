@@ -5,10 +5,22 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
+using System.Security.Claims;
+using System.Data.Entity;
+using System.Linq;
 
 namespace BellumGens.Api
 {
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
+    public class BellumGensUserStore : UserStore<ApplicationUser>
+    {
+        public BellumGensUserStore(DbContext context) : base(context) { }
+
+        public ApplicationUser FindBySteamId(string id)
+        {
+            return Context.Set<ApplicationUser>().Where(u => u.SteamID == id).SingleOrDefault();
+        }
+    }
 
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
@@ -18,9 +30,14 @@ namespace BellumGens.Api
 			EmailService = emailService;
         }
 
+        public ApplicationUser FindBySteamId(string steamid)
+        {
+            return (Store as BellumGensUserStore).FindBySteamId(steamid);
+        }
+
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<BellumGensDbContext>()), new EmailService());
+            var manager = new ApplicationUserManager(new BellumGensUserStore(context.Get<BellumGensDbContext>()), new EmailService());
 			// Configure validation logic for usernames
 			manager.UserValidator = new UserValidator<ApplicationUser>(manager)
 			{

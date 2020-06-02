@@ -476,8 +476,7 @@ namespace BellumGens.Api.Controllers
 			string id = SteamServiceProvider.SteamUserId(info.ProviderKey);
 
 			var user = new ApplicationUser() {
-				Id = id,
-				UserName = User.Identity.Name,
+				Id = Guid.NewGuid().ToString(),
                 SteamID = id
 			};
 
