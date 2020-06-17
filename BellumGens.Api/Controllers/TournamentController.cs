@@ -93,7 +93,7 @@ namespace BellumGens.Api.Controllers
         }
 
         [Route("Registrations")]
-        public IHttpActionResult GetRegistrations()
+        public IHttpActionResult GetUserRegistrations()
         {
             ApplicationUser user = GetAuthUser();
             return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
@@ -101,7 +101,7 @@ namespace BellumGens.Api.Controllers
 
         [AllowAnonymous]
         [Route("RegCount")]
-        public IHttpActionResult GetRegistrationsCount()
+        public IHttpActionResult GetTotalRegistrationsCount()
         {
             List<TournamentApplication> registrations = _dbContext.TournamentApplications.ToList();
             List<RegistrationCountViewModel> model = new List<RegistrationCountViewModel>()
@@ -191,7 +191,7 @@ namespace BellumGens.Api.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPut]
         [Route("Create")]
         public IHttpActionResult CreateTournament(Tournament tournament)
         {

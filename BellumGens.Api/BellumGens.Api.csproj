@@ -590,6 +590,10 @@
     <Compile Include="Migrations\202005111250300_OrderProcessing.designer.cs">
       <DependentUpon>202005111250300_OrderProcessing.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006170744459_TournamentActive.cs" />
+    <Compile Include="Migrations\202006170744459_TournamentActive.designer.cs">
+      <DependentUpon>202006170744459_TournamentActive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\Company.cs" />
@@ -926,6 +930,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005111250300_OrderProcessing.resx">
       <DependentUpon>202005111250300_OrderProcessing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006170744459_TournamentActive.resx">
+      <DependentUpon>202006170744459_TournamentActive.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
