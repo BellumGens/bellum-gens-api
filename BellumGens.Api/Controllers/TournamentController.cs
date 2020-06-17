@@ -13,6 +13,14 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Tournament")]
     public class TournamentController : BaseController
     {
+        [AllowAnonymous]
+        [Route("ActiveTournament")]
+        public IHttpActionResult GetActiveTournament()
+        {
+            var tournament = _dbContext.Tournaments.FirstOrDefault(t => t.Active);
+            return Ok(tournament);
+        }
+
         [HttpPost]
         [Route("Register")]
         public async Task<IHttpActionResult> Register(TournamentApplication application)
@@ -96,14 +104,14 @@ namespace BellumGens.Api.Controllers
         public IHttpActionResult GetUserRegistrations()
         {
             ApplicationUser user = GetAuthUser();
-            return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id).ToList());
+            return Ok(_dbContext.TournamentApplications.Where(a => a.UserId == user.Id && a.Tournament.Active).ToList());
         }
 
         [AllowAnonymous]
         [Route("RegCount")]
-        public IHttpActionResult GetTotalRegistrationsCount()
+        public IHttpActionResult GetTotalRegistrationsCount(Guid tournamentId)
         {
-            List<TournamentApplication> registrations = _dbContext.TournamentApplications.ToList();
+            List<TournamentApplication> registrations = _dbContext.TournamentApplications.Where(a => a.Tournament.ID == tournamentId).ToList();
             List<RegistrationCountViewModel> model = new List<RegistrationCountViewModel>()
             {
                 new RegistrationCountViewModel(registrations, Game.CSGO),
