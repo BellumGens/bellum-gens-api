@@ -88,7 +88,7 @@ namespace BellumGens.Api.Controllers
                                     </ul>
                                     <p>Моля при превода да сложите в основанието уникалния код, който сме генерирали за вашата регистрация: <b>{ application.Hash }</b>. Можете да намерите кода и през вашият профил на сайта ни.</p>
                                     <p>Ако ви е нужна фактура, моля да се свържете с нас на <a href='mailto:info@eb-league.com'>info@eb-league.com</a>!</p>
-                                    <p>Заповядайте и в нашият дискорд сървър <a href='https://discord.gg/bnTcpa9'>https://discord.gg/bnTcpa9</a></p>
+                                    <p>Заповядайте и в нашият <a href='https://discord.gg/bnTcpa9'>дискорд сървър</a>!</p>
                                     <p>Поздрави от екипа на Bellum Gens!</p>
                                     <a href='https://eb-league.com' target='_blank'>https://eb-league.com</a>";
                     await EmailServiceProvider.SendNotificationEmail(application.Email, "Регистрацията ви е получена", message).ConfigureAwait(false);
