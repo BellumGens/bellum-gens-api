@@ -122,6 +122,41 @@ namespace BellumGens.Api.Controllers
             return Ok(model);
         }
 
+        [Route("AllRegistrations")]
+        public IHttpActionResult GetAllApplications()
+        {
+            if (UserIsInRole("admin"))
+                return Ok(_dbContext.TournamentApplications.Where(a => a.Tournament.Active).ToList());
+            return Unauthorized();
+        }
+        
+        [HttpPut]
+        [Route("Confirm")]
+        public IHttpActionResult ConfirmRegistration(Guid id, TournamentApplication application)
+        {
+            if (UserIsInRole("admin"))
+            {
+                TournamentApplication entity = _dbContext.TournamentApplications.Find(id);
+                if (entity != null)
+                {
+                    _dbContext.Entry(entity).CurrentValues.SetValues(application);
+
+                    try
+                    {
+                        _dbContext.SaveChanges();
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Tournament registration update error: " + e.Message);
+                        return BadRequest("Something went wrong!");
+                    }
+                    return Ok(application);
+                }
+                return NotFound();
+            }
+            return Unauthorized();
+        }
+
         [AllowAnonymous]
         [Route("CSGORegs")]
         public IHttpActionResult GetCSGORegistrations(Guid? tournamentId = null)
