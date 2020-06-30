@@ -590,6 +590,14 @@
     <Compile Include="Migrations\202005111250300_OrderProcessing.designer.cs">
       <DependentUpon>202005111250300_OrderProcessing.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006170744459_TournamentActive.cs" />
+    <Compile Include="Migrations\202006170744459_TournamentActive.designer.cs">
+      <DependentUpon>202006170744459_TournamentActive.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202006190646469_MandatoryTournament.cs" />
+    <Compile Include="Migrations\202006190646469_MandatoryTournament.designer.cs">
+      <DependentUpon>202006190646469_MandatoryTournament.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\202006021523154_PromoCodes1.cs" />
     <Compile Include="Migrations\202006021523154_PromoCodes1.designer.cs">
       <DependentUpon>202006021523154_PromoCodes1.cs</DependentUpon>
@@ -930,6 +938,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005111250300_OrderProcessing.resx">
       <DependentUpon>202005111250300_OrderProcessing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006170744459_TournamentActive.resx">
+      <DependentUpon>202006170744459_TournamentActive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006190646469_MandatoryTournament.resx">
+      <DependentUpon>202006190646469_MandatoryTournament.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006021523154_PromoCodes1.resx">
       <DependentUpon>202006021523154_PromoCodes1.cs</DependentUpon>

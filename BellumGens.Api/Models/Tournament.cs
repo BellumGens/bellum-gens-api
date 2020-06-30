@@ -20,6 +20,8 @@ namespace BellumGens.Api.Models
 
 		public DateTimeOffset EndDate { get; set; }
 
+		public bool Active { get; set; } = false;
+
 		[JsonIgnore]
 		public virtual ICollection<TournamentCSGOMatch> CSGOMatches { get; set; } = new HashSet<TournamentCSGOMatch>();
 

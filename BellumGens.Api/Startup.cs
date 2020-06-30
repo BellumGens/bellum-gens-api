@@ -18,7 +18,7 @@ namespace BellumGens.Api
 			var migrator = new DbMigrator(configuration);
 			migrator.Update();
 
-			//ApplyEntityUpdates();
+			// ApplyEntityUpdates();
 
 			ConfigureAuth(app);
 		}
