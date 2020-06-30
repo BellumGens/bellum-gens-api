@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class PromoCodes1 : DbMigration
+    public partial class PromoCodeExpiration : DbMigration
     {
         public override void Up()
         {

@@ -7,13 +7,13 @@ namespace BellumGens.Api.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.0")]
-    public sealed partial class PromoCodes1 : IMigrationMetadata
+    public sealed partial class PromoCodeExpiration : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(PromoCodes1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(PromoCodeExpiration));
         
         string IMigrationMetadata.Id
         {
-            get { return "202006021523154_PromoCodes1"; }
+            get { return "202006301221357_PromoCodeExpiration"; }
         }
         
         string IMigrationMetadata.Source

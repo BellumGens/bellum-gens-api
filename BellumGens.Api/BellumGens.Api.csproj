@@ -598,9 +598,9 @@
     <Compile Include="Migrations\202006190646469_MandatoryTournament.designer.cs">
       <DependentUpon>202006190646469_MandatoryTournament.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202006021523154_PromoCodes1.cs" />
-    <Compile Include="Migrations\202006021523154_PromoCodes1.designer.cs">
-      <DependentUpon>202006021523154_PromoCodes1.cs</DependentUpon>
+    <Compile Include="Migrations\202006301221357_PromoCodeExpiration.cs" />
+    <Compile Include="Migrations\202006301221357_PromoCodeExpiration.designer.cs">
+      <DependentUpon>202006301221357_PromoCodeExpiration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -945,8 +945,8 @@
     <EmbeddedResource Include="Migrations\202006190646469_MandatoryTournament.resx">
       <DependentUpon>202006190646469_MandatoryTournament.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006021523154_PromoCodes1.resx">
-      <DependentUpon>202006021523154_PromoCodes1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202006301221357_PromoCodeExpiration.resx">
+      <DependentUpon>202006301221357_PromoCodeExpiration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
