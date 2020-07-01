@@ -58,6 +58,17 @@ namespace BellumGens.Api.Controllers
             return Unauthorized();
         }
 
+        [Route("Promos")]
+        public IHttpActionResult GetPromoCodes()
+        {
+            if (UserIsInRole("admin"))
+            {
+                var promos = _dbContext.PromoCodes.ToList();
+                return Ok(promos);
+            }
+            return Unauthorized();
+        }
+
         [HttpPut]
         [Route("AddUserRole")]
         public async Task<IHttpActionResult> AddUserToRole(string userid, string role)

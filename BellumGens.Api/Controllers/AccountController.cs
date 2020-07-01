@@ -39,8 +39,16 @@ namespace BellumGens.Api.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
+        // GET api/Account/Username
+        [AllowAnonymous]
+        [Route("Username")]
+        public IHttpActionResult GetUsername(string username)
+        {
+            return Ok(_dbContext.Users.Any(u => u.UserName == username));
+        }
+
         // GET api/Account/UserInfo
-		[AllowAnonymous]
+        [AllowAnonymous]
         [Route("UserInfo")]
         public async Task<UserStatsViewModel> GetUserInfo()
         {
