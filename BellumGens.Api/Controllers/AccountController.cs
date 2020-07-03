@@ -190,87 +190,87 @@ namespace BellumGens.Api.Controllers
 			return Ok("Ok");
 		}
 
-		// GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-		//[Route("ManageInfo")]
-		//public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
-		//{
-		//    IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
+        //[Route("ManageInfo")]
+        //public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
+        //{
+        //    IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
-		//    if (user == null)
-		//    {
-		//        return null;
-		//    }
+        //    if (user == null)
+        //    {
+        //        return null;
+        //    }
 
-		//    List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
+        //    List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
 
-		//    foreach (IdentityUserLogin linkedAccount in user.Logins)
-		//    {
-		//        logins.Add(new UserLoginInfoViewModel
-		//        {
-		//            LoginProvider = linkedAccount.LoginProvider,
-		//            ProviderKey = linkedAccount.ProviderKey
-		//        });
-		//    }
+        //    foreach (IdentityUserLogin linkedAccount in user.Logins)
+        //    {
+        //        logins.Add(new UserLoginInfoViewModel
+        //        {
+        //            LoginProvider = linkedAccount.LoginProvider,
+        //            ProviderKey = linkedAccount.ProviderKey
+        //        });
+        //    }
 
-		//    if (user.PasswordHash != null)
-		//    {
-		//        logins.Add(new UserLoginInfoViewModel
-		//        {
-		//            LoginProvider = LocalLoginProvider,
-		//            ProviderKey = user.UserName,
-		//        });
-		//    }
+        //    if (user.PasswordHash != null)
+        //    {
+        //        logins.Add(new UserLoginInfoViewModel
+        //        {
+        //            LoginProvider = LocalLoginProvider,
+        //            ProviderKey = user.UserName,
+        //        });
+        //    }
 
-		//    return new ManageInfoViewModel
-		//    {
-		//        LocalLoginProvider = LocalLoginProvider,
-		//        Email = user.UserName,
-		//        Logins = logins,
-		//        ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
-		//    };
-		//}
+        //    return new ManageInfoViewModel
+        //    {
+        //        LocalLoginProvider = LocalLoginProvider,
+        //        Email = user.UserName,
+        //        Logins = logins,
+        //        ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
+        //    };
+        //}
 
-		// POST api/Account/ChangePassword
-		//[Route("ChangePassword")]
-		//public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
-		//{
-		//    if (!ModelState.IsValid)
-		//    {
-		//        return BadRequest(ModelState);
-		//    }
+        // POST api/Account/ChangePassword
+        //[Route("ChangePassword")]
+        //public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-		//    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
-		//        model.NewPassword);
+        //    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
+        //        model.NewPassword);
 
-		//    if (!result.Succeeded)
-		//    {
-		//        return GetErrorResult(result);
-		//    }
+        //    if (!result.Succeeded)
+        //    {
+        //        return GetErrorResult(result);
+        //    }
 
-		//    return Ok();
-		//}
+        //    return Ok();
+        //}
 
-		// POST api/Account/SetPassword
-		//[Route("SetPassword")]
-		//public async Task<IHttpActionResult> SetPassword(SetPasswordBindingModel model)
-		//{
-		//    if (!ModelState.IsValid)
-		//    {
-		//        return BadRequest(ModelState);
-		//    }
+        // POST api/Account/SetPassword
+        [Route("SetPassword")]
+        public async Task<IHttpActionResult> SetPassword(RegisterBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-		//    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+            IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.Password).ConfigureAwait(false);
 
-		//    if (!result.Succeeded)
-		//    {
-		//        return GetErrorResult(result);
-		//    }
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
 
-		//    return Ok();
-		//}
+            return Ok();
+        }
 
-		// POST api/Account/AddExternalLogin
-		[Route("AddExternalLogin")]
+        // POST api/Account/AddExternalLogin
+        [Route("AddExternalLogin")]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [HttpGet]
 		public async Task<IHttpActionResult> AddExternalLogin(string userId)
@@ -375,26 +375,32 @@ namespace BellumGens.Api.Controllers
 
             if (!hasRegistered)
             {
-				if (externalLogin.LoginProvider == "Steam")
-				{
+				//if (externalLogin.LoginProvider == "Steam")
+				//{
 					IdentityResult x = await Register(externalLogin).ConfigureAwait(false);
 					if (!x.Succeeded)
 					{
 						return Redirect(returnHost + "/unauthorized");
 					}
 
-                    if (!returnPath.StartsWith("/tournament-signup"))
-                    {
-                        user = GetAuthUser();
-                        // Upon registration, redirect to the user's profile for information setup.
-                        returnPath = "/players/" + user.Id + "/true";
-                    }
-				}
-				else
-				{
-					return Redirect(returnHost + "/addsteam");
-				}
+                    //if (!returnPath.StartsWith("/tournament-signup"))
+                    //{
+                    //    user = GetAuthUser();
+                    //    // Upon registration, redirect to the user's profile for information setup.
+                    //    returnPath = "/players/" + user.Id + "/true";
+                    //}
+                    returnPath = "/register";
+				//}
+				//else
+				//{
+				//	return Redirect(returnHost + "/addsteam");
+				//}
 			}
+            else if (!UserManager.HasPassword(user.Id))
+            {
+                returnPath = "/register";
+            }
+
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
