@@ -32,6 +32,21 @@ namespace BellumGens.Api.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class LoginBindingModel
+    {
+        [Required]
+        [JsonProperty("username")]
+        public string UserName { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [JsonProperty("password")]
+        public string Password { get; set; }
+
+        [JsonProperty("rememberMe")]
+        public bool RememberMe { get; set; }
+    }
+
     public class RegisterBindingModel
     {
         [Required]

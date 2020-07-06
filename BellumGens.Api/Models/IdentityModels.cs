@@ -22,45 +22,9 @@ namespace BellumGens.Api.Models
             return userIdentity;
         }
 
-		public string ESEA { get; set; }
-
-        public bool SearchVisible { get; set; } = true;
-
-        public string AvatarFull { get; set; }
-
-        public string AvatarMedium { get; set; }
-
-        public string AvatarIcon { get; set; }
-
-        public string RealName { get; set; }
-
-        public string CustomUrl { get; set; }
-
-        public string Country { get; set; }
-
-        public decimal HeadshotPercentage { get; set; }
-
-        public decimal KillDeathRatio { get; set; }
-
-        public decimal Accuracy { get; set; }
-
-		public string BattleNetId { get; set; }
-
-		public string SteamID { get; set; }
-
-        public bool SteamPrivate { get; set; } = false;
-
-        public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
-
-		public DateTimeOffset LastSeen { get; set; } = DateTimeOffset.Now;
-
-		public PlaystyleRole PreferredPrimaryRole { get; set; }
-
-		public PlaystyleRole PreferredSecondaryRole { get; set; }
-
-		public virtual ICollection<Languages> LanguagesSpoken { get; set; }
-
-		public virtual ICollection<UserAvailability> Availability { get; set; } = new HashSet<UserAvailability>() {
+		public void InitializeDefaults()
+        {
+			Availability = new HashSet<UserAvailability>() {
 				new UserAvailability
 				{
 					Day = DayOfWeek.Monday
@@ -90,8 +54,7 @@ namespace BellumGens.Api.Models
 					Day = DayOfWeek.Sunday
 				}
 			};
-
-		public virtual ICollection<UserMapPool> MapPool { get; set; } = new HashSet<UserMapPool>()
+			MapPool = new HashSet<UserMapPool>()
 			{
 				new UserMapPool
 				{
@@ -130,6 +93,49 @@ namespace BellumGens.Api.Models
 					Map = CSGOMap.Cobblestone
 				}
 			};
+		}
+
+		public string ESEA { get; set; }
+
+        public bool SearchVisible { get; set; } = true;
+
+        public string AvatarFull { get; set; }
+
+        public string AvatarMedium { get; set; }
+
+        public string AvatarIcon { get; set; }
+
+        public string RealName { get; set; }
+
+        public string CustomUrl { get; set; }
+
+        public string Country { get; set; }
+
+        public decimal HeadshotPercentage { get; set; }
+
+        public decimal KillDeathRatio { get; set; }
+
+        public decimal Accuracy { get; set; }
+
+		public string BattleNetId { get; set; }
+
+		public string SteamID { get; set; }
+
+        public bool SteamPrivate { get; set; } = false;
+
+        public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
+
+		public DateTimeOffset LastSeen { get; set; } = DateTimeOffset.Now;
+
+		public PlaystyleRole PreferredPrimaryRole { get; set; }
+
+		public PlaystyleRole PreferredSecondaryRole { get; set; }
+
+		public virtual ICollection<Languages> LanguagesSpoken { get; set; }
+
+		public virtual ICollection<UserAvailability> Availability { get; set; } = new HashSet<UserAvailability>();
+
+		public virtual ICollection<UserMapPool> MapPool { get; set; } = new HashSet<UserMapPool>();
 
 		public virtual ICollection<TeamInvite> Notifications { get; set; }
 

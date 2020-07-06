@@ -15,6 +15,7 @@ using Microsoft.Owin.Security.Cookies;
 using System.Linq;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using BellumGens.Api.Models.Extensions;
 
 namespace BellumGens.Api.Controllers
 {
@@ -54,7 +55,8 @@ namespace BellumGens.Api.Controllers
         {
 			if (User.Identity.IsAuthenticated)
 			{
-                string userId = SteamServiceProvider.SteamUserId(User.Identity.GetUserId());
+                string userId = User.Identity.GetResolvedUserId();
+
                 ApplicationUser user = _dbContext.Users.Include(u => u.MemberOf).FirstOrDefault(e => e.Id == userId);
                 UserStatsViewModel model = new UserStatsViewModel(user, true);
                 if (string.IsNullOrEmpty(user.AvatarFull))
@@ -155,10 +157,32 @@ namespace BellumGens.Api.Controllers
 				return Redirect(CORSConfig.returnOrigin + "/emailconfirm");
 			}
 			return Redirect(CORSConfig.returnOrigin + "/emailconfirm/error");
-		}
+        }
 
-		// POST api/Account/Logout
-		[Route("Logout")]
+        // POST api/Account/Logout
+        [Route("Login")]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> Login(LoginBindingModel login)
+        {
+            var user = await UserManager.FindAsync(login.UserName, login.Password).ConfigureAwait(false);
+            if (user != null)
+            {
+                var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie).ConfigureAwait(false);
+                Authentication.SignIn(new AuthenticationProperties() { IsPersistent = login.RememberMe }, identity);
+                UserStatsViewModel model = new UserStatsViewModel(user, true);
+                if (string.IsNullOrEmpty(user.AvatarFull) && !Guid.TryParse(user.Id, out Guid newguid))
+                {
+                    model = await SteamServiceProvider.GetSteamUserDetails(user.Id).ConfigureAwait(false);
+                    model.SetUser(user);
+                }
+                model.externalLogins = UserManager.GetLogins(user.Id).Select(t => t.LoginProvider).ToList();
+                return Ok(model);
+            }
+            return BadRequest("Invalid username or password.");
+        }
+
+        // POST api/Account/Logout
+        [Route("Logout")]
         public IHttpActionResult Logout()
         {
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
@@ -259,11 +283,28 @@ namespace BellumGens.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.Password).ConfigureAwait(false);
+            string id = User.Identity.GetResolvedUserId();
+
+            IdentityResult result = await UserManager.AddPasswordAsync(id, model.Password).ConfigureAwait(false);
 
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
+            }
+
+            var user = await UserManager.FindByIdAsync(id).ConfigureAwait(false);
+            if (user.UserName != model.UserName)
+                user.UserName = model.UserName;
+            if (user.Email != model.Email)
+            {
+                user.Email = model.Email;
+                result = await UserManager.UpdateAsync(user).ConfigureAwait(false);
+                if (result.Succeeded)
+                {
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id).ConfigureAwait(false);
+                    var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl)).ConfigureAwait(false);
+                }
             }
 
             return Ok();
@@ -487,11 +528,12 @@ namespace BellumGens.Api.Controllers
 
         private async Task<IdentityResult> Register(ExternalLoginData info)
 		{
-			string id = SteamServiceProvider.SteamUserId(info.ProviderKey);
-
+			string id = info.LoginProvider == "Steam" ? SteamServiceProvider.SteamUserId(info.ProviderKey) : Guid.NewGuid().ToString();
+            string steamId = info.LoginProvider == "Steam" ? id : null;
 			var user = new ApplicationUser() {
-				Id = Guid.NewGuid().ToString(),
-                SteamID = id
+				Id = id,
+                UserName = User.Identity.Name,
+                SteamID = steamId
 			};
 
 			IdentityResult result = await UserManager.CreateAsync(user).ConfigureAwait(false);

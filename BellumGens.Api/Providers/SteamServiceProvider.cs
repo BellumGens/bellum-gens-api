@@ -184,7 +184,11 @@ namespace BellumGens.Api.Providers
 		{
 			string pattern = "^[0-9]{17}$",
 				   url = "^http(s)?://steamcommunity.com";
-			return Regex.IsMatch(name, url) ? new Uri(name + "/?xml=1") : Regex.IsMatch(name, pattern) ? new Uri(string.Format(_playerDetailsById, name)) : new Uri(string.Format(_playerDetailsByUrl, name));
+			return Regex.IsMatch(name, url) ?
+					new Uri(name + "/?xml=1") :
+					Regex.IsMatch(name, pattern) ?
+						new Uri(string.Format(_playerDetailsById, name)) :
+						new Uri(string.Format(_playerDetailsByUrl, name));
 		}
 
 		public static string SteamUserId(string userUri)
