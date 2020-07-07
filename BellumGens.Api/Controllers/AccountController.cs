@@ -167,8 +167,9 @@ namespace BellumGens.Api.Controllers
             var user = await UserManager.FindAsync(login.UserName, login.Password).ConfigureAwait(false);
             if (user != null)
             {
-                var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie).ConfigureAwait(false);
+                var identity = await UserManager.CreateIdentityAsync(user, CookieAuthenticationDefaults.AuthenticationType).ConfigureAwait(false);
                 Authentication.SignIn(new AuthenticationProperties() { IsPersistent = login.RememberMe }, identity);
+
                 UserStatsViewModel model = new UserStatsViewModel(user, true);
                 if (string.IsNullOrEmpty(user.AvatarFull) && !Guid.TryParse(user.Id, out Guid newguid))
                 {
