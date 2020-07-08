@@ -15,10 +15,9 @@ namespace BellumGens.Api.Models.Extensions
 
 		public static string GetResolvedUserId(this IIdentity identity)
         {
-			string userId = identity.GetUserId();
-			Guid isGuid;
-			if (!Guid.TryParse(userId, out isGuid))
-				return identity.GetSteamUserId();
+			string userId = identity.GetSteamUserId();
+			if (userId == null)
+				userId = identity.GetUserId();
 			return userId;
 		}
 
