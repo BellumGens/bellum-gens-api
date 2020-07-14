@@ -58,8 +58,14 @@ namespace BellumGens.Api.Controllers
                 string userId = User.Identity.GetResolvedUserId();
 
                 ApplicationUser user = _dbContext.Users.Include(u => u.MemberOf).FirstOrDefault(e => e.Id == userId);
+                if (user == null)
+                {
+                    Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+                    return null;
+                }
+
                 UserStatsViewModel model = new UserStatsViewModel(user, true);
-                if (string.IsNullOrEmpty(user.AvatarFull))
+                if (user.SteamID != null && string.IsNullOrEmpty(user.AvatarFull))
                 {
                     model = await SteamServiceProvider.GetSteamUserDetails(user.Id).ConfigureAwait(false);
                     model.SetUser(user);
@@ -159,7 +165,7 @@ namespace BellumGens.Api.Controllers
 			return Redirect(CORSConfig.returnOrigin + "/emailconfirm/error");
         }
 
-        // POST api/Account/Logout
+        // POST api/Account/Login
         [Route("Login")]
         [AllowAnonymous]
         public async Task<IHttpActionResult> Login(LoginBindingModel login)
@@ -276,12 +282,36 @@ namespace BellumGens.Api.Controllers
         //}
 
         // POST api/Account/SetPassword
+        [AllowAnonymous]
         [Route("SetPassword")]
         public async Task<IHttpActionResult> SetPassword(RegisterBindingModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                IdentityResult register = await Register(model).ConfigureAwait(false);
+                if (!register.Succeeded)
+                {
+                    return GetErrorResult(register);
+                }
+
+                var newUser = await UserManager.FindAsync(model.UserName, model.Password).ConfigureAwait(false);
+                string code = await UserManager.GenerateEmailConfirmationTokenAsync(newUser.Id).ConfigureAwait(false);
+                var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = newUser.Id, code });
+                try
+                {
+                    await UserManager.SendEmailAsync(newUser.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl)).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Trace.TraceError("Email confirmation send exception: " + e.Message);
+                }
+
+                return Ok();
             }
 
             string id = User.Identity.GetResolvedUserId();
@@ -546,7 +576,24 @@ namespace BellumGens.Api.Controllers
 			return await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(info.LoginProvider, info.ProviderKey)).ConfigureAwait(false);
 		}
 
-		private IAuthenticationManager Authentication
+        private async Task<IdentityResult> Register(RegisterBindingModel info)
+        {
+            var user = new ApplicationUser()
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = info.UserName,
+                Email = info.Email
+            };
+
+            IdentityResult result = await UserManager.CreateAsync(user).ConfigureAwait(false);
+            if (result.Succeeded)
+            {
+                result = await UserManager.AddPasswordAsync(user.Id, info.Password).ConfigureAwait(false);
+            }
+            return result;
+        }
+
+        private IAuthenticationManager Authentication
         {
             get { return Request.GetOwinContext().Authentication; }
         }
