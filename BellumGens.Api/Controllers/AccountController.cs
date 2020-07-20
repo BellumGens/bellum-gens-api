@@ -341,38 +341,65 @@ namespace BellumGens.Api.Controllers
             return Ok();
         }
 
-        // POST api/Account/AddExternalLogin
-        [Route("AddExternalLogin")]
+        // GET api/Account/AddExternalLogin
+        [Route("AddExternalLoginCallback")]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [HttpGet]
-		public async Task<IHttpActionResult> AddExternalLogin(string userId)
+		public async Task<IHttpActionResult> AddExternalLoginCallback(string userId, string returnUrl)
 		{
-			ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            Uri returnUri = new Uri(!string.IsNullOrEmpty(returnUrl) ? returnUrl : CORSConfig.returnOrigin);
+            string returnHost = returnUri.GetLeftPart(UriPartial.Authority);
+            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
 			if (externalLogin == null)
 			{
-				return Redirect(CORSConfig.returnOrigin + "/players/" + userId);
+				return Redirect(returnHost + "/unauthorized");
 			}
+
+            if (externalLogin.LoginProvider == "Steam")
+            {
+                string steamId = SteamServiceProvider.SteamUserId(externalLogin.ProviderKey);
+                ApplicationUser user = _dbContext.Users.FirstOrDefault(u => u.SteamID == steamId);
+                if (user != null && user.Id != userId)
+                {
+                    Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+                    return Redirect(returnHost + "/unauthorized");
+                }
+                user.SteamID = steamId;
+
+                try
+                {
+                    _dbContext.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Trace.TraceError("Email confirmation send exception: " + e.Message);
+                }
+            }
 
 			IdentityResult result = await UserManager.AddLoginAsync(userId,
 				new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey)).ConfigureAwait(false);
 
 			if (!result.Succeeded)
 			{
-				return Redirect(CORSConfig.returnOrigin + "/unauthorized");
+				return Redirect(returnHost + "/unauthorized");
 			}
 
-
-            IEnumerable<Claim> claims = externalLogin.GetClaims();
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
             Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            Authentication.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
 
-            return Redirect(CORSConfig.returnOrigin + "/players/" + userId);
+            return Redirect(returnUrl);
 		}
 
-		// POST api/Account/RemoveLogin
-		[Route("RemoveLogin")]
+        // GET api/Account/AddExternalLogin
+        [Route("AddExternalLogin", Name = "AddExternalLogin")]
+        [HttpGet]
+        public IHttpActionResult AddExternalLogin(string provider, string returnUrl)
+        {
+            return new ChallengeResult(provider, this, Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLoginCallback", userId = User.Identity.GetUserId(), returnUrl = returnUrl })); ;
+        }
+
+        // POST api/Account/RemoveLogin
+        [Route("RemoveLogin")]
         public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -428,45 +455,18 @@ namespace BellumGens.Api.Controllers
                 return Redirect(returnHost + "/unauthorized");
 			}
 
-            if (externalLogin.LoginProvider != provider)
-            {
-				Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-				if (provider == "Steam")
-				{
-					return new ChallengeResult(provider, this);
-				}
-				else
-				{
-					return new ChallengeResult(provider, this, Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLogin", userId = GetAuthUser().Id }));
-				}
-            }
-
 			ApplicationUser user = GetAuthUser();
 
 			bool hasRegistered = user != null;
 
             if (!hasRegistered)
             {
-				//if (externalLogin.LoginProvider == "Steam")
-				//{
-					IdentityResult x = await Register(externalLogin).ConfigureAwait(false);
-					if (!x.Succeeded)
-					{
-						return Redirect(returnHost + "/unauthorized");
-					}
-
-                    //if (!returnPath.StartsWith("/tournament-signup"))
-                    //{
-                    //    user = GetAuthUser();
-                    //    // Upon registration, redirect to the user's profile for information setup.
-                    //    returnPath = "/players/" + user.Id + "/true";
-                    //}
-                    returnPath = "/register";
-				//}
-				//else
-				//{
-				//	return Redirect(returnHost + "/addsteam");
-				//}
+				IdentityResult x = await Register(externalLogin).ConfigureAwait(false);
+				if (!x.Succeeded)
+				{
+					return Redirect(returnHost + "/unauthorized");
+				}
+                returnPath = "/register";
 			}
             else if (!UserManager.HasPassword(user.Id))
             {
@@ -479,10 +479,51 @@ namespace BellumGens.Api.Controllers
             Authentication.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
 
             return Redirect(returnHost + returnPath);
-
 		}
-		// GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
-		[AllowAnonymous]
+
+        // GET api/Account/AddExternalLogins?returnUrl=%2F&generateState=true
+        [Route("AddExternalLogins")]
+        [AllowAnonymous]
+        public IEnumerable<ExternalLoginViewModel> GetAddExternalLogins(string returnUrl, bool generateState = false)
+        {
+            IEnumerable<AuthenticationDescription> descriptions = Authentication.GetExternalAuthenticationTypes();
+            List<ExternalLoginViewModel> logins = new List<ExternalLoginViewModel>();
+
+            string state;
+
+            if (generateState)
+            {
+                const int strengthInBits = 256;
+                state = RandomOAuthStateGenerator.Generate(strengthInBits);
+            }
+            else
+            {
+                state = null;
+            }
+
+            foreach (AuthenticationDescription description in descriptions)
+            {
+                ExternalLoginViewModel login = new ExternalLoginViewModel
+                {
+                    Name = description.Caption,
+                    Url = Url.Route("AddExternalLogin", new
+                    {
+                        provider = description.AuthenticationType,
+                        response_type = "token",
+                        client_id = Startup.PublicClientId,
+                        redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
+                        state
+                    }),
+                    State = state
+                };
+                logins.Add(login);
+            }
+
+            return logins;
+        }
+
+        // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
+        [AllowAnonymous]
         [Route("ExternalLogins")]
         public IEnumerable<ExternalLoginViewModel> GetExternalLogins(string returnUrl, bool generateState = false)
         {
