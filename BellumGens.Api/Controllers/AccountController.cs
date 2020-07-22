@@ -270,8 +270,7 @@ namespace BellumGens.Api.Controllers
         //        return BadRequest(ModelState);
         //    }
 
-        //    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
-        //        model.NewPassword);
+        //    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetResolvedUserId(), model.OldPassword, model.NewPassword);
 
         //    if (!result.Succeeded)
         //    {
@@ -363,8 +362,13 @@ namespace BellumGens.Api.Controllers
                 if (user != null && user.Id != userId)
                 {
                     Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                    return Redirect(returnHost + "/unauthorized");
+                    return Redirect(returnHost + "/unauthorized/Steam account already associated with another user");
                 }
+                if (user == null)
+                {
+                    user = _dbContext.Users.Find(userId);
+                }
+
                 user.SteamID = steamId;
 
                 try
@@ -373,7 +377,7 @@ namespace BellumGens.Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    System.Diagnostics.Trace.TraceError("Email confirmation send exception: " + e.Message);
+                    System.Diagnostics.Trace.TraceError("Setting user steam id exception: " + e.Message);
                 }
             }
 
@@ -464,7 +468,7 @@ namespace BellumGens.Api.Controllers
 				IdentityResult x = await Register(externalLogin).ConfigureAwait(false);
 				if (!x.Succeeded)
 				{
-					return Redirect(returnHost + "/unauthorized");
+					return Redirect(returnHost + "/unauthorized/Something went wrong");
 				}
                 returnPath = "/register";
 			}
