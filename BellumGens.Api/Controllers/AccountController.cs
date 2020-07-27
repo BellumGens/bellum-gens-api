@@ -67,7 +67,7 @@ namespace BellumGens.Api.Controllers
                 UserStatsViewModel model = new UserStatsViewModel(user, true);
                 if (user.SteamID != null && string.IsNullOrEmpty(user.AvatarFull))
                 {
-                    model = await SteamServiceProvider.GetSteamUserDetails(user.Id).ConfigureAwait(false);
+                    model = await SteamServiceProvider.GetSteamUserDetails(user.SteamID).ConfigureAwait(false);
                     model.SetUser(user);
                 }
                 model.externalLogins = UserManager.GetLogins(user.Id).Select(t => t.LoginProvider).ToList();
@@ -299,10 +299,10 @@ namespace BellumGens.Api.Controllers
                 }
 
                 var newUser = await UserManager.FindAsync(model.UserName, model.Password).ConfigureAwait(false);
-                string code = await UserManager.GenerateEmailConfirmationTokenAsync(newUser.Id).ConfigureAwait(false);
-                var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = newUser.Id, code });
                 try
                 {
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(newUser.Id).ConfigureAwait(false);
+                    var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = newUser.Id, code });
                     await UserManager.SendEmailAsync(newUser.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl)).ConfigureAwait(false);
                 }
                 catch (Exception e)
@@ -331,9 +331,16 @@ namespace BellumGens.Api.Controllers
                 result = await UserManager.UpdateAsync(user).ConfigureAwait(false);
                 if (result.Succeeded)
                 {
-                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id).ConfigureAwait(false);
-                    var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl)).ConfigureAwait(false);
+                    try
+                    {
+                        string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id).ConfigureAwait(false);
+                        var callbackUrl = Url.Link("ActionApi", new { controller = "Account", action = "ConfirmEmail", userId = user.Id, code });
+                        await UserManager.SendEmailAsync(user.Id, "Confirm your email", string.Format(emailConfirmation, callbackUrl)).ConfigureAwait(false);
+                    }
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Trace.TraceError("Email confirmation send exception: " + e.Message);
+                    }
                 }
             }
 
