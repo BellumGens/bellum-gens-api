@@ -1,7 +1,6 @@
 ﻿using BellumGens.Api.Models;
-using BellumGens.Api.Providers;
+using BellumGens.Api.Models.Extensions;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.Cookies;
 using System.Net.Http;
@@ -40,12 +39,12 @@ namespace BellumGens.Api.Controllers
 
 		protected ApplicationUser GetAuthUser()
 		{
-			return User.Identity.IsAuthenticated ? UserManager.FindById(SteamServiceProvider.SteamUserId(User.Identity.GetUserId())) : null;
+			return User.Identity.IsAuthenticated ? UserManager.FindById(User.Identity.GetResolvedUserId()) : null;
 		}
 
 		protected bool UserIsInRole(string role)
 		{
-			return UserManager.IsInRole(SteamServiceProvider.SteamUserId(User.Identity.GetUserId()), role);
+			return UserManager.IsInRole(User.Identity.GetResolvedUserId(), role);
 		}
 
 		protected override void Dispose(bool disposing)

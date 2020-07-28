@@ -4,7 +4,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin.Security.Providers.Steam;
-using Owin.Security.Providers.Twitch;
+// using Owin.Security.Providers.Twitch;
 using Owin;
 using BellumGens.Api.Providers;
 using BellumGens.Api.Models;
@@ -34,7 +34,7 @@ namespace BellumGens.Api
 				ExpireTimeSpan = TimeSpan.FromDays(14),
                 CookieSameSite = SameSiteMode.None,
                 CookieSecure = CookieSecureOption.SameAsRequest
-			});
+            });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Configure the application for OAuth based flow

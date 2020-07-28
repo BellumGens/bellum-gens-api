@@ -28,42 +28,89 @@ namespace BellumGens.Api.Models
         public IEnumerable<ExternalLoginViewModel> ExternalLoginProviders { get; set; }
     }
 
-    public class UserInfoViewModel
+
+
+    public class UserSummaryViewModel
     {
-        private List<CSGOTeamSummaryViewModel> _teams;
-        private List<CSGOTeam> _teamAdmin;
-        protected ApplicationUser _user;
-        protected bool _isAuthUser;
+        protected ApplicationUser user;
 
-		public UserInfoViewModel() { }
+        public UserSummaryViewModel() { }
 
-        public UserInfoViewModel(ApplicationUser user, bool isAuthUser = false)
+        public UserSummaryViewModel(ApplicationUser user)
         {
-            _user = user;
-            _isAuthUser = isAuthUser;
+            this.user = user;
         }
-
-		public bool registered
-		{
-			get { return _user != null; }
-		}
 
         public string id
         {
             get
             {
-                return _user?.Id;
+                return user?.Id;
             }
         }
+        public string steamId
+        {
+            get
+            {
+                return user?.SteamID;
+            }
+        }
+        public string username
+        {
+            get
+            {
+                return user?.UserName;
+            }
+        }
+        public string avatarMedium
+        {
+            get
+            {
+                return user?.AvatarMedium;
+            }
+        }
+        public string customURL
+        {
+            get
+            {
+                return user?.CustomUrl;
+            }
+        }
+        public string battleNetId
+        {
+            get
+            {
+                return user?.BattleNetId;
+            }
+        }
+    }
+
+    public class UserInfoViewModel : UserSummaryViewModel
+    {
+        private List<CSGOTeamSummaryViewModel> _teams;
+        private List<CSGOTeam> _teamAdmin;
+        protected bool _isAuthUser;
+
+		public UserInfoViewModel() : base() { }
+
+        public UserInfoViewModel(ApplicationUser user, bool isAuthUser = false) : base(user)
+        {
+            _isAuthUser = isAuthUser;
+        }
+
+		public bool registered
+		{
+			get { return user != null; }
+		}
 
         public List<CSGOTeamSummaryViewModel> teams
         {
             get
             {
-                if (_teams == null && _user != null)
+                if (_teams == null && user != null)
                 {
                     _teams = new List<CSGOTeamSummaryViewModel>();
-                    foreach (TeamMember memberof in _user.MemberOf)
+                    foreach (TeamMember memberof in user.MemberOf)
                     {
                         _teams.Add(new CSGOTeamSummaryViewModel(memberof.Team));
                     }
@@ -76,10 +123,10 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                if (_isAuthUser && _teamAdmin == null && _user != null)
+                if (_isAuthUser && _teamAdmin == null && user != null)
                 {
                     _teamAdmin = new List<CSGOTeam>();
-                    foreach (TeamMember memberof in _user.MemberOf)
+                    foreach (TeamMember memberof in user.MemberOf)
                     {
                         if (memberof.IsAdmin)
 							_teamAdmin.Add(memberof.Team);
@@ -93,51 +140,50 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _isAuthUser ? _user?.Notifications.OrderByDescending(n => n.Sent).ToList() : null;
+                return _isAuthUser ? user?.Notifications.OrderByDescending(n => n.Sent).ToList() : null;
             }
         }
         public List<string> externalLogins { get; set; }
-
         public bool? steamPrivate
         {
             get
             {
-                return _user?.SteamPrivate;
+                return user?.SteamPrivate;
             }
         }
         public decimal? headshotPercentage
         {
             get
             {
-                return _user?.HeadshotPercentage;
+                return user?.HeadshotPercentage;
             }
         }
         public decimal? killDeathRatio
         {
             get
             {
-                return _user?.KillDeathRatio;
+                return user?.KillDeathRatio;
             }
         }
         public decimal? accuracy
         {
             get
             {
-                return _user?.Accuracy;
+                return user?.Accuracy;
             }
         }
         public string email
         {
             get
             {
-                return _isAuthUser ? _user?.Email : null;
+                return _isAuthUser ? user?.Email : null;
             }
         }
         public bool? searchVisible
         {
             get
             {
-                return _user?.SearchVisible;
+                return user?.SearchVisible;
             }
         }
 
@@ -145,15 +191,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _user?.AvatarIcon;
-            }
-        }
-
-        public string avatarMedium
-        {
-            get
-            {
-                return _user?.AvatarMedium;
+                return user?.AvatarIcon;
             }
         }
 
@@ -161,15 +199,7 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _user?.AvatarFull;
-            }
-        }
-
-        public string username
-        {
-            get
-            {
-                return _user?.UserName;
+                return user?.AvatarFull;
             }
         }
 
@@ -177,95 +207,42 @@ namespace BellumGens.Api.Models
         {
             get
             {
-                return _user?.RealName;
-            }
-        }
-        public string customURL
-        {
-            get
-            {
-                return _user?.CustomUrl;
+                return user?.RealName;
             }
         }
         public string country
         {
             get
             {
-                return _user?.Country;
+                return user?.Country;
             }
         }
         public ICollection<UserAvailability> availability
         {
             get
             {
-                return _user?.Availability;
+                return user?.Availability;
             }
         }
         public PlaystyleRole? primaryRole
         {
             get
             {
-                return _user?.PreferredPrimaryRole;
+                return user?.PreferredPrimaryRole;
             }
         }
         public PlaystyleRole? secondaryRole
         {
             get
             {
-                return _user?.PreferredSecondaryRole;
+                return user?.PreferredSecondaryRole;
             }
         }
         public ICollection<UserMapPool> mapPool
         {
             get
             {
-                return _user?.MapPool;
-            }
-        }
-    }
-
-    public class UserSummaryViewModel
-    {
-        private ApplicationUser user;
-
-        public UserSummaryViewModel(ApplicationUser user)
-        {
-            this.user = user;
-        }
-
-        public string id
-        {
-            get
-            {
-                return user.Id;
-            }
-        }
-        public string username
-        {
-            get
-            {
-                return user.UserName;
-            }
-        }
-        public string avatarMedium
-        {
-            get
-            {
-                return user.AvatarMedium;
-            }
-        }
-        public string customURL
-        {
-            get
-            {
-                return user.CustomUrl;
-            }
-        }
-        public string battleNetId
-        {
-            get
-            {
-                return user.BattleNetId;
+                return user?.MapPool;
             }
         }
     }

@@ -8,7 +8,6 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 
 [assembly: OwinStartup(typeof(BellumGens.Api.Startup))]
-
 namespace BellumGens.Api
 {
     public partial class Startup
@@ -19,7 +18,7 @@ namespace BellumGens.Api
 			var migrator = new DbMigrator(configuration);
 			migrator.Update();
 
-			// ApplyEntityUpdates();
+			ApplyEntityUpdates();
 
 			ConfigureAuth(app);
 		}
@@ -28,12 +27,15 @@ namespace BellumGens.Api
 		{
 			using (BellumGensDbContext context = new BellumGensDbContext())
 			{
-				Tournament tournament = context.Tournaments.FirstOrDefault();
-				if (tournament != null)
-				{
-					tournament.CSGOMatches = context.TournamentCSGOMatches.ToList();
-					tournament.SC2Matches = context.TournamentSC2Matches.ToList();
-				}
+				List<ApplicationUser> users = context.Users.ToList();
+
+				foreach (ApplicationUser user in users)
+                {
+					if (user.SteamID == null)
+                    {
+						user.SteamID = user.Id;
+                    }
+                }
 
 				try
 				{

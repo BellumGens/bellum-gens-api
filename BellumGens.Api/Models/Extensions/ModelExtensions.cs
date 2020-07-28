@@ -1,9 +1,26 @@
-﻿using System.Linq;
+﻿using Microsoft.AspNet.Identity;
+using System;
+using System.Linq;
+using System.Security.Principal;
 
 namespace BellumGens.Api.Models.Extensions
 {
 	public static class ModelExtensions
 	{
+		public static string GetSteamUserId(this IIdentity identity)
+		{
+			var parts = identity.GetUserId().Split('/');
+			return parts.Length >= 6 ? parts[5] : null;
+		}
+
+		public static string GetResolvedUserId(this IIdentity identity)
+        {
+			string userId = identity.GetSteamUserId();
+			if (userId == null)
+				userId = identity.GetUserId();
+			return userId;
+		}
+
 		public static double GetTotalAvailability(this ApplicationUser user)
 		{
 			double total = 0;

@@ -21,13 +21,13 @@ namespace BellumGens.Api.Models
 
         public void SetUser(ApplicationUser user)
         {
-            _user = user;
+            this.user = user;
             RefreshAppUserValues();
         }
 
         public async Task<UserStatsViewModel> GetSteamUserDetails()
 		{
-			UserStatsViewModel model = await SteamServiceProvider.GetSteamUserDetails(this.id);
+			UserStatsViewModel model = await SteamServiceProvider.GetSteamUserDetails(id).ConfigureAwait(false);
 			steamUser = model.steamUser;
 			steamUserException = model.steamUserException;
 			userStats = model.userStats;
@@ -39,61 +39,61 @@ namespace BellumGens.Api.Models
         private void RefreshAppUserValues()
         {
             bool changes = false;
-            if (steamUser?.avatarFull != _user.AvatarFull)
+            if (steamUser?.avatarFull != user.AvatarFull)
             {
-                _user.AvatarFull = steamUser.avatarFull;
+                user.AvatarFull = steamUser.avatarFull;
                 changes = true;
             }
-            if (steamUser?.steamID != _user.UserName)
+            if (steamUser?.steamID != user.UserName)
             {
-                _user.UserName = steamUser.steamID;
+                user.UserName = steamUser.steamID;
                 changes = true;
             }
-            if (steamUser?.avatarIcon != _user.AvatarIcon)
+            if (steamUser?.avatarIcon != user.AvatarIcon)
             {
-                _user.AvatarIcon = steamUser.avatarIcon;
+                user.AvatarIcon = steamUser.avatarIcon;
                 changes = true;
             }
-            if (steamUser?.realname != _user.RealName)
+            if (steamUser?.realname != user.RealName)
             {
-                _user.RealName = steamUser.realname;
+                user.RealName = steamUser.realname;
                 changes = true;
             }
-            if (steamUser?.avatarMedium != _user.AvatarMedium)
+            if (steamUser?.avatarMedium != user.AvatarMedium)
             {
-                _user.AvatarMedium = steamUser.avatarMedium;
+                user.AvatarMedium = steamUser.avatarMedium;
                 changes = true;
             }
-            if (steamUser?.customURL != _user.CustomUrl)
+            if (steamUser?.customURL != user.CustomUrl)
             {
-                _user.CustomUrl = steamUser.customURL;
+                user.CustomUrl = steamUser.customURL;
                 changes = true;
             }
-            if (steamUser?.country != _user.Country)
+            if (steamUser?.country != user.Country)
             {
-                _user.Country = steamUser.country;
+                user.Country = steamUser.country;
                 changes = true;
             }
-            if (userStatsException != _user.SteamPrivate)
+            if (userStatsException != user.SteamPrivate)
             {
-                _user.SteamPrivate = userStatsException;
+                user.SteamPrivate = userStatsException;
                 changes = true;
             }
             if (!userStatsException)
             {
-                if (userStats?.headshotPercentage != _user.HeadshotPercentage)
+                if (userStats?.headshotPercentage != user.HeadshotPercentage)
                 {
-                    _user.HeadshotPercentage = userStats.headshotPercentage;
+                    user.HeadshotPercentage = userStats.headshotPercentage;
                     changes = true;
                 }
-                if (userStats?.killDeathRatio != _user.KillDeathRatio)
+                if (userStats?.killDeathRatio != user.KillDeathRatio)
                 {
-                    _user.KillDeathRatio = userStats.killDeathRatio;
+                    user.KillDeathRatio = userStats.killDeathRatio;
                     changes = true;
                 }
-                if (userStats?.accuracy != _user.Accuracy)
+                if (userStats?.accuracy != user.Accuracy)
                 {
-                    _user.Accuracy = userStats.accuracy;
+                    user.Accuracy = userStats.accuracy;
                     changes = true;
                 }
             }
@@ -103,8 +103,8 @@ namespace BellumGens.Api.Models
                 {
                     try
                     {
-                        ApplicationUser user = context.Users.Find(_user.Id);
-                        context.Entry(user).CurrentValues.SetValues(_user);
+                        ApplicationUser appuser = context.Users.Find(user.Id);
+                        context.Entry(appuser).CurrentValues.SetValues(user);
                         context.SaveChanges();
                     }
                     catch

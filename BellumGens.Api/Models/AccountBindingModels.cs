@@ -32,21 +32,41 @@ namespace BellumGens.Api.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class LoginBindingModel
+    {
+        [Required]
+        [JsonProperty("username")]
+        public string UserName { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [JsonProperty("password")]
+        public string Password { get; set; }
+
+        [JsonProperty("rememberMe")]
+        public bool RememberMe { get; set; }
+    }
+
     public class RegisterBindingModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [JsonProperty("username")]
+        public string UserName { get; set; }
+
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [JsonProperty("email")]
         public string Email { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [JsonProperty("password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [JsonProperty("confirmPassword")]
         public string ConfirmPassword { get; set; }
     }
 

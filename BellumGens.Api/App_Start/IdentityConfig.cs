@@ -5,11 +5,12 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using BellumGens.Api.Models;
 using BellumGens.Api.Providers;
+using System.Data.Entity;
+using System.Linq;
 
 namespace BellumGens.Api
 {
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
-
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
         public ApplicationUserManager(IUserStore<ApplicationUser> store, IIdentityMessageService emailService)
@@ -27,16 +28,12 @@ namespace BellumGens.Api
 				AllowOnlyAlphanumericUserNames = false,
 				RequireUniqueEmail = false
 			};
-			//// Configure validation logic for passwords
-			//manager.PasswordValidator = new PasswordValidator
-			//{
-			//    RequiredLength = 6,
-			//    RequireNonLetterOrDigit = true,
-			//    RequireDigit = true,
-			//    RequireLowercase = true,
-			//    RequireUppercase = true,
-			//};
-			var dataProtectionProvider = options.DataProtectionProvider;
+            // Configure validation logic for passwords
+            manager.PasswordValidator = new PasswordValidator
+            {
+                RequiredLength = 6
+            };
+            var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
                 manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
