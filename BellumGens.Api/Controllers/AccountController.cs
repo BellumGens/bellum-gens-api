@@ -205,10 +205,21 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("User account mismatch...");
 			}
-			Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+
+            List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == userid).ToList();
+            foreach (var sub in subs)
+            {
+                _dbContext.PushSubscriptions.Remove(sub);
+            }
+            List<TeamInvite> invites = _dbContext.TeamInvites.Where(i => i.InvitedUserId == userid || i.InvitingUserId == userid).ToList();
+            foreach (var invite in invites)
+            {
+                _dbContext.TeamInvites.Remove(invite);
+            }
             ApplicationUser user = _dbContext.Users.Find(userid);
 			_dbContext.Users.Remove(user);
+
 			try
 			{
 				_dbContext.SaveChanges();
