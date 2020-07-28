@@ -490,10 +490,6 @@ namespace BellumGens.Api.Controllers
 				}
                 returnPath = "/register";
 			}
-            else if (!UserManager.HasPassword(user.Id))
-            {
-                returnPath = "/register";
-            }
 
             IEnumerable<Claim> claims = externalLogin.GetClaims();
             ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
