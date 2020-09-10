@@ -14,7 +14,8 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Shop")]
     public class ShopController : BaseController
     {
-        private const int baseJerseyPrice = 40;
+        private const int baseJerseyPrice = 60;
+        private const decimal baseDiscount = .5M;
 
         [HttpGet]
         [Route("Promo")]
@@ -87,10 +88,10 @@ namespace BellumGens.Api.Controllers
                 {
                     await _dbContext.Entry(order).Reference(o => o.Promo).LoadAsync().ConfigureAwait(false);
 
-                    decimal discount = 0;
+                    decimal discount = baseDiscount;
                     if (order.Promo != null)
                     {
-                        discount = order.Promo.Discount;
+                        discount += order.Promo.Discount;
                     }
 
                     StringBuilder builder = new StringBuilder();
