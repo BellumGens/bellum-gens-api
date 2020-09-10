@@ -14,7 +14,7 @@ namespace BellumGens.Api.Controllers
     [RoutePrefix("api/Shop")]
     public class ShopController : BaseController
     {
-        private const int baseJerseyPrice = 40;
+        private const int baseJerseyPrice = 30;
 
         [HttpGet]
         [Route("Promo")]
