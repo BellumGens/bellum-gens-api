@@ -40,6 +40,10 @@ namespace BellumGens.Api.Controllers
                     {
                         return BadRequest($"Вече има направена регистрация с battle tag {application.BattleNetId}!");
                     }
+                    if (user.BattleNetId == null || user.BattleNetId != application.BattleNetId)
+                    {
+                        _dbContext.Users.Find(user.Id).BattleNetId = application.BattleNetId;
+                    }
                 }
                 else
                 {
