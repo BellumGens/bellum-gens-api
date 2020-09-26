@@ -27,14 +27,11 @@ namespace BellumGens.Api
 		{
 			using (BellumGensDbContext context = new BellumGensDbContext())
 			{
-				List<ApplicationUser> users = context.Users.ToList();
+				List<TournamentApplication> applications = context.TournamentApplications.Where(a => a.Game == Game.StarCraft2).ToList();
 
-				foreach (ApplicationUser user in users)
+				foreach (TournamentApplication application in applications)
                 {
-					if (user.SteamID == null)
-                    {
-						user.SteamID = user.Id;
-                    }
+					application.User.BattleNetId = application.BattleNetId;
                 }
 
 				try
