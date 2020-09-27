@@ -307,9 +307,7 @@ namespace BellumGens.Api.Controllers
                 }
                 else
                 {
-                    Tournament tournament = _dbContext.Tournaments.FirstOrDefault();
-                    if (tournament != null)
-                        group.TournamentId = tournament.ID;
+                    group.TournamentId = _dbContext.Tournaments.Where(t => t.Active).First().ID;
                     _dbContext.TournamentCSGOGroups.Add(group);
                 }
 
@@ -340,7 +338,7 @@ namespace BellumGens.Api.Controllers
                 }
                 else
                 {
-                    group.TournamentId = _dbContext.Tournaments.First().ID;
+                    group.TournamentId = _dbContext.Tournaments.Where(t => t.Active).First().ID;
                     _dbContext.TournamentSC2Groups.Add(group);
                 }
 
@@ -530,23 +528,24 @@ namespace BellumGens.Api.Controllers
 
         [HttpPut]
         [Route("csgomatch")]
-        public IHttpActionResult SubmitCSGOMatch(Guid? id, TournamentCSGOMatch match)
+        public async Task<IHttpActionResult> SubmitCSGOMatch(Guid? id, TournamentCSGOMatch match)
         {
             if (UserIsInRole("event-admin"))
             {
                 TournamentCSGOMatch entity = _dbContext.TournamentCSGOMatches.Find(id);
-                if (match.TournamentId == null)
-                {
-                    match.TournamentId = _dbContext.Tournaments.First().ID;
-                }
 
                 if (entity != null)
                 {
                     _dbContext.Entry(entity).CurrentValues.SetValues(match);
+                    match = entity;
                 }
                 else
                 {
-                    entity = _dbContext.TournamentCSGOMatches.Add(match);
+                    if (match.TournamentId == null)
+                    {
+                        match.TournamentId = _dbContext.Tournaments.Where(t => t.Active).First().ID;
+                    }
+                    _dbContext.TournamentCSGOMatches.Add(match);
                 }
 
                 try
@@ -558,7 +557,13 @@ namespace BellumGens.Api.Controllers
                     System.Diagnostics.Trace.TraceError("Tournament CS:GO match update exception: " + e.Message);
                     return BadRequest("Something went wrong...");
                 }
-                return Ok(entity);
+                if (entity == null)
+                {
+                    await _dbContext.Entry(match).Reference(m => m.Team1).LoadAsync().ConfigureAwait(false);
+                    await _dbContext.Entry(match).Reference(m => m.Team2).LoadAsync().ConfigureAwait(false);
+                }
+
+                return Ok(match);
             }
             return Unauthorized();
         }
@@ -641,7 +646,7 @@ namespace BellumGens.Api.Controllers
 
         [HttpPut]
         [Route("sc2match")]
-        public IHttpActionResult SubmitSC2Match(Guid? id, TournamentSC2Match match)
+        public async Task<IHttpActionResult> SubmitSC2Match(Guid? id, TournamentSC2Match match)
         {
             if (UserIsInRole("event-admin"))
             {
@@ -649,10 +654,15 @@ namespace BellumGens.Api.Controllers
                 if (entity != null)
                 {
                     _dbContext.Entry(entity).CurrentValues.SetValues(match);
+                    match = entity;
                 }
                 else
                 {
-                    entity = _dbContext.TournamentSC2Matches.Add(match);
+                    if (match.TournamentId == null)
+                    {
+                        match.TournamentId = _dbContext.Tournaments.Where(t => t.Active).First().ID;
+                    }
+                    _dbContext.TournamentSC2Matches.Add(match);
                 }
 
                 try
@@ -664,7 +674,12 @@ namespace BellumGens.Api.Controllers
                     System.Diagnostics.Trace.TraceError("Tournament StarCraft II match update exception: " + e.Message);
                     return BadRequest("Something went wrong...");
                 }
-                return Ok(entity);
+                if (entity == null)
+                {
+                    await _dbContext.Entry(match).Reference(m => m.Player1).LoadAsync().ConfigureAwait(false);
+                    await _dbContext.Entry(match).Reference(m => m.Player2).LoadAsync().ConfigureAwait(false);
+                }
+                return Ok(match);
             }
             return Unauthorized();
         }
