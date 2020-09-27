@@ -65,7 +65,14 @@ namespace BellumGens.Api.Models
         EternalEmpireLE,
         GoldenWallLE,
         PurityAndIndustryLE,
-        EverDreamLE
+        EverDreamLE,
+        SubmarineLE,
+        DeathauraLE,
+        PillarsofGoldLE,
+        OxideLE,
+        LightshadeLE,
+        RomanticideLE,
+        JagannathaLE
     }
 
     public enum TShirtSize
