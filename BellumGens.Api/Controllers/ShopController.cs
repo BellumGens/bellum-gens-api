@@ -35,8 +35,6 @@ namespace BellumGens.Api.Controllers
             return Unauthorized();
         }
 
-
-
         [Authorize]
         [HttpPut]
         [Route("Edit")]

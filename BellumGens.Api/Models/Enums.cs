@@ -72,17 +72,8 @@ namespace BellumGens.Api.Models
         OxideLE,
         LightshadeLE,
         RomanticideLE,
-        JagannathaLE
-    }
-
-    public enum TShirtSize
-    {
-        XS,
-        S,
-        M,
-        L,
-        XL,
-        XXL
+        JagannathaLE,
+        IceAndChromeLE
     }
 
     public enum TournamentApplicationState
