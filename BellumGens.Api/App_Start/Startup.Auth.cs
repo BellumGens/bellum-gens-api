@@ -8,6 +8,7 @@ using Owin.Security.Providers.Steam;
 using Owin;
 using BellumGens.Api.Providers;
 using BellumGens.Api.Models;
+using Owin.Security.Providers.BattleNet;
 
 namespace BellumGens.Api
 {
@@ -53,26 +54,39 @@ namespace BellumGens.Api
 		
 			app.UseSteamAuthentication(AppInfo.Config.steamApiKey);
 
-			//app.UseTwitchAuthentication(AppInfo.Config.twitchClientId, AppInfo.Config.twitchSecret);
+            var battleNetAuthOptions = new BattleNetAuthenticationOptions()
+            {
+                ClientId = AppInfo.Config.battleNetClientId,
+                ClientSecret = AppInfo.Config.battleNetClientSecret,
+                Region = Region.Europe,
+            };
 
-			// Uncomment the following lines to enable logging in with third party login providers
-			//app.UseMicrosoftAccountAuthentication(
-			//    clientId: "",
-			//    clientSecret: "");
+            battleNetAuthOptions.Scope.Clear();
+            battleNetAuthOptions.Scope.Add("sc2.profile");
+            // battleNetAuthOptions.CallbackPath = new PathString("/api/Account/ExternalLogin");
 
-			//app.UseTwitterAuthentication(
-			//    consumerKey: "",
-			//    consumerSecret: "");
+            app.UseBattleNetAuthentication(battleNetAuthOptions);
 
-			//app.UseFacebookAuthentication(
-			//    appId: "",
-			//    appSecret: "");
+            //app.UseTwitchAuthentication(AppInfo.Config.twitchClientId, AppInfo.Config.twitchSecret);
 
-			//app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-			//{
-			//    ClientId = "",
-			//    ClientSecret = ""
-			//});
-		}
+            // Uncomment the following lines to enable logging in with third party login providers
+            //app.UseMicrosoftAccountAuthentication(
+            //    clientId: "",
+            //    clientSecret: "");
+
+            //app.UseTwitterAuthentication(
+            //    consumerKey: "",
+            //    consumerSecret: "");
+
+            //app.UseFacebookAuthentication(
+            //    appId: "",
+            //    appSecret: "");
+
+            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            //{
+            //    ClientId = "",
+            //    ClientSecret = ""
+            //});
+        }
     }
 }
