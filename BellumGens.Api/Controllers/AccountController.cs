@@ -457,7 +457,7 @@ namespace BellumGens.Api.Controllers
 
         // GET api/Account/ExternalLogin
         [OverrideAuthentication]
-		[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
+		[HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
         public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null, string returnUrl = "")
