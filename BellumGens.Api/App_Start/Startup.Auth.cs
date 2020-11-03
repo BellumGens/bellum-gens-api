@@ -4,7 +4,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin.Security.Providers.Steam;
-// using Owin.Security.Providers.Twitch;
+using Owin.Security.Providers.Twitch;
 using Owin;
 using BellumGens.Api.Providers;
 using BellumGens.Api.Models;
@@ -32,14 +32,14 @@ namespace BellumGens.Api
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
 			{
-				ExpireTimeSpan = TimeSpan.FromDays(14),
+				ExpireTimeSpan = TimeSpan.FromDays(30),
                 CookieSameSite = SameSiteMode.None,
                 CookieSecure = CookieSecureOption.SameAsRequest
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Configure the application for OAuth based flow
-            PublicClientId = "bellum gens api";
+            PublicClientId = "bellum-gens-api";
             OAuthOptions = new OAuthAuthorizationServerOptions
             {
                 TokenEndpointPath = new PathString("/Token"),
@@ -58,16 +58,22 @@ namespace BellumGens.Api
             {
                 ClientId = AppInfo.Config.battleNetClientId,
                 ClientSecret = AppInfo.Config.battleNetClientSecret,
-                Region = Region.Europe,
+                Region = Region.Europe
             };
 
             battleNetAuthOptions.Scope.Clear();
             battleNetAuthOptions.Scope.Add("sc2.profile");
-            // battleNetAuthOptions.CallbackPath = new PathString("/api/Account/ExternalLogin");
+            // battleNetAuthOptions.CallbackPath = new PathString("/signin-battlenet");
 
             app.UseBattleNetAuthentication(battleNetAuthOptions);
 
-            //app.UseTwitchAuthentication(AppInfo.Config.twitchClientId, AppInfo.Config.twitchSecret);
+            var twitchAuthOptions = new TwitchAuthenticationOptions()
+            {
+                ClientId = AppInfo.Config.twitchClientId,
+                ClientSecret = AppInfo.Config.twitchSecret
+            };
+
+            app.UseTwitchAuthentication(twitchAuthOptions);
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
