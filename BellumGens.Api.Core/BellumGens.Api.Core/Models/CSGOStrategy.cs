@@ -1,4 +1,5 @@
 ﻿using BellumGens.Api.Common;
+using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,12 +8,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Web.Hosting;
 
-namespace BellumGens.Api.Models
+namespace BellumGens.Api.Core.Models
 {
 	public class CSGOStrategy
 	{
+		private IWebHostEnvironment _hostEnvironment;
+		public CSGOStrategy(IWebHostEnvironment environment)
+		{
+			_hostEnvironment = environment;
+		}
+
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
@@ -37,7 +43,7 @@ namespace BellumGens.Api.Models
 
 		public string EditorMetadata { get; set; }
 
-		public bool Visible { get; set; } = false;
+		public bool Visible { get; set; }
 
 		[JsonIgnore]
 		public string PrivateShareLink { get; set; }
@@ -45,7 +51,6 @@ namespace BellumGens.Api.Models
 		public DateTimeOffset LastUpdated { get; set; } = DateTimeOffset.Now;
 
 		[MaxLength(64)]
-		[Index(IsUnique = true)]
 		public string CustomUrl { get; set; }
 
 		[NotMapped]
@@ -106,11 +111,12 @@ namespace BellumGens.Api.Models
 				using (MemoryStream ms = new MemoryStream(bytes))
 				{
 					image = Image.FromStream(ms);
-					if (!Directory.Exists(HostingEnvironment.MapPath("~/Content/Strats")))
+					string path = Path.Combine(_hostEnvironment.WebRootPath, "/Content/Strats");
+					if (!Directory.Exists(path))
 					{
-						Directory.CreateDirectory(HostingEnvironment.MapPath("~/Content/Strats"));
+						Directory.CreateDirectory(path);
 					}
-					string path = Path.Combine(HostingEnvironment.MapPath("~/Content/Strats/"), $"{CustomUrl}.png");
+					path = Path.Combine(path, $"{CustomUrl}.png");
 					image.Save(path);
 					StratImage = CORSConfig.apiDomain + $"/Content/Strats/{CustomUrl}.png";
 				}

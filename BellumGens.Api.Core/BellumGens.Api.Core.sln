@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BellumGens.Api.Core", "BellumGens.Api.Core\BellumGens.Api.Core.csproj", "{6794CAD0-5EEC-4D98-A953-AF30AE668212}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6794CAD0-5EEC-4D98-A953-AF30AE668212}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6794CAD0-5EEC-4D98-A953-AF30AE668212}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6794CAD0-5EEC-4D98-A953-AF30AE668212}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6794CAD0-5EEC-4D98-A953-AF30AE668212}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {54FACF76-07F7-4328-BC4E-F7DF563D8771}
+	EndGlobalSection
+EndGlobal
