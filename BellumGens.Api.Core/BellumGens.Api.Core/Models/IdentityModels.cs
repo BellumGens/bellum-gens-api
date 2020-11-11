@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace BellumGens.Api.Core.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-		public ApplicationUser() : base() { }
-
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
-        {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
-            var userIdentity = await manager.CreateIdentityAsync(this, authenticationType).ConfigureAwait(false);
-            // Add custom user claims here
-            return userIdentity;
-        }
-
 		public void InitializeDefaults()
         {
 			Availability = new HashSet<UserAvailability>() {
@@ -149,7 +139,7 @@ namespace BellumGens.Api.Core.Models
 	{
 		public DbSet<UserAvailability> UserAvailabilities { get; set; }
 
-		public DbSet<Languages> Languages { get; set; }
+		//public DbSet<Languages> Languages { get; set; }
 
 		public DbSet<UserMapPool> UserMapPool { get; set; }
 
@@ -197,31 +187,26 @@ namespace BellumGens.Api.Core.Models
 
 		public DbSet<Promo> PromoCodes { get; set; }
 
-        public BellumGensDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+        public BellumGensDbContext(DbContextOptions<BellumGensDbContext> options)
+            : base(options)
         {
-        }
-        
-        public static BellumGensDbContext Create()
-        {
-            return new BellumGensDbContext();
         }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 
-			//modelBuilder.Entity<ApplicationUser>()
-			//			.HasMany(e => e.LanguagesSpoken)
-			//			.WithMany(e => e.Users)
-			//			.Map(e =>
-			//			{
-			//				e.MapLeftKey("UserId");
-			//				e.MapRightKey("LanguageId");
-			//				e.ToTable("UserLanguages");
-			//			});
+            //modelBuilder.Entity<ApplicationUser>()
+            //            .HasMany(e => e.LanguagesSpoken)
+            //            .WithMany(e => e.Users)
+            //            .Map(e =>
+            //            {
+            //                e.MapLeftKey("UserId");
+            //                e.MapRightKey("LanguageId");
+            //                e.ToTable("UserLanguages");
+            //            });
 
-			modelBuilder.Entity<ApplicationUser>()
+            modelBuilder.Entity<ApplicationUser>()
 						.HasMany(e => e.Notifications)
 						.WithOne(e => e.InvitedUser);
 
@@ -243,6 +228,14 @@ namespace BellumGens.Api.Core.Models
 
 			modelBuilder.Entity<CSGOStrategy>()
 						.HasIndex(c => c.CustomUrl)
+						.IsUnique();
+
+			modelBuilder.Entity<CSGOTeam>()
+						.HasIndex(c => c.CustomUrl)
+						.IsUnique();
+
+			modelBuilder.Entity<Promo>()
+						.HasIndex(c => c.Code)
 						.IsUnique();
 		}
 	}

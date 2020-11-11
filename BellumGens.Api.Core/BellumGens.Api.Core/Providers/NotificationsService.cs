@@ -1,4 +1,4 @@
-﻿using BellumGens.Api.Models;
+﻿using BellumGens.Api.Core.Models;
 using System;
 using System.Collections.Generic;
 using WebPush;

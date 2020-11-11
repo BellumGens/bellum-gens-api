@@ -1,8 +1,6 @@
-﻿using BellumGens.Api.Providers;
+﻿using BellumGens.Api.Core.Providers;
 using SteamModels;
 using SteamModels.CSGO;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Threading.Tasks;
 
 namespace BellumGens.Api.Core.Models
@@ -19,24 +17,24 @@ namespace BellumGens.Api.Core.Models
 		public CSGOPlayerStats userStats { get; set; }
 		public bool userStatsException { get; set; }
 
-        public void SetUser(ApplicationUser user)
+        public void SetUser(ApplicationUser user, BellumGensDbContext context)
         {
             this.user = user;
-            RefreshAppUserValues();
+            RefreshAppUserValues(context);
         }
 
-        public async Task<UserStatsViewModel> GetSteamUserDetails()
+        public async Task<UserStatsViewModel> GetSteamUserDetails(BellumGensDbContext context)
 		{
 			UserStatsViewModel model = await SteamServiceProvider.GetSteamUserDetails(id).ConfigureAwait(false);
 			steamUser = model.steamUser;
 			steamUserException = model.steamUserException;
 			userStats = model.userStats;
 			userStatsException = model.userStatsException;
-            RefreshAppUserValues();
+            RefreshAppUserValues(context);
 			return this;
 		}
 
-        private void RefreshAppUserValues()
+        private void RefreshAppUserValues(BellumGensDbContext context)
         {
             bool changes = false;
             if (steamUser?.avatarFull != user.AvatarFull)
@@ -99,18 +97,15 @@ namespace BellumGens.Api.Core.Models
             }
             if (changes)
             {
-                using (BellumGensDbContext context = new BellumGensDbContext())
+                try
                 {
-                    try
-                    {
-                        ApplicationUser appuser = context.Users.Find(user.Id);
-                        context.Entry(appuser).CurrentValues.SetValues(user);
-                        context.SaveChanges();
-                    }
-                    catch
-                    {
+                    ApplicationUser appuser = context.Users.Find(user.Id);
+                    context.Entry(appuser).CurrentValues.SetValues(user);
+                    context.SaveChanges();
+                }
+                catch
+                {
 
-                    }
                 }
             }
         }

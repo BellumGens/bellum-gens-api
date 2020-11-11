@@ -8,7 +8,6 @@ namespace BellumGens.Api.Core.Models
     public class Promo
     {
         [Key]
-        [Index(IsUnique = true)]
         [JsonProperty("code")]
         public string Code { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using BellumGens.Api.Providers;
+﻿using BellumGens.Api.Core.Providers;
 using BellumGens.Api.Common;
 using Newtonsoft.Json;
 using SteamModels;
@@ -132,7 +132,6 @@ namespace BellumGens.Api.Core.Models
 		public bool Visible { get; set; } = true;
 
 		[MaxLength(64)]
-		[Index(IsUnique = true)]
 		public string CustomUrl { get; set; }
 
 		[JsonIgnore]
