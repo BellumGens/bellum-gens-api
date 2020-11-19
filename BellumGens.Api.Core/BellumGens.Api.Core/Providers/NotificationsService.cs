@@ -5,19 +5,25 @@ using WebPush;
 
 namespace BellumGens.Api.Core.Providers
 {
-	public static class NotificationsService
+	public class NotificationsService : INotificationService
 	{
-		private static string _publicVapidKey = AppInfo.Config.publicVapidKey;
-		private static string _privateVapidKey = AppInfo.Config.privateVapidKey;
+		private string _publicVapidKey;
+		private string _privateVapidKey;
 
-		public static void SendNotification(List<BellumGensPushSubscription> subs, TeamInvite notification)
+		public NotificationsService(AppConfiguration appInfo)
+        {
+			_publicVapidKey = appInfo.Config.publicVapidKey;
+			_privateVapidKey = appInfo.Config.privateVapidKey;
+		}
+
+		public void SendNotification(List<BellumGensPushSubscription> subs, TeamInvite notification)
 		{
 			var subject = @"https://bellumgens.com";
 
 			foreach (BellumGensPushSubscription sub in subs)
 			{
 				var subscription = new PushSubscription(sub.endpoint, sub.p256dh, sub.auth);
-				var vapidDetails = new VapidDetails(subject, NotificationsService._publicVapidKey, NotificationsService._privateVapidKey);
+				var vapidDetails = new VapidDetails(subject, _publicVapidKey, _privateVapidKey);
 
 				var webPushClient = new WebPushClient();
 				var payload = new BellumGensNotificationWrapper(notification);
@@ -32,14 +38,14 @@ namespace BellumGens.Api.Core.Providers
 			}
 		}
 
-		public static void SendNotification(List<BellumGensPushSubscription> subs, TeamInvite notification, NotificationState state)
+		public void SendNotification(List<BellumGensPushSubscription> subs, TeamInvite notification, NotificationState state)
 		{
 			var subject = @"https://bellumgens.com";
 
 			foreach (BellumGensPushSubscription sub in subs)
 			{
 				var subscription = new PushSubscription(sub.endpoint, sub.p256dh, sub.auth);
-				var vapidDetails = new VapidDetails(subject, NotificationsService._publicVapidKey, NotificationsService._privateVapidKey);
+				var vapidDetails = new VapidDetails(subject, _publicVapidKey, _privateVapidKey);
 
 				var webPushClient = new WebPushClient();
 				var payload = new BellumGensNotificationWrapper(notification, state);
@@ -54,14 +60,14 @@ namespace BellumGens.Api.Core.Providers
 			}
 		}
 
-		public static void SendNotification(List<BellumGensPushSubscription> subs, TeamApplication notification)
+		public void SendNotification(List<BellumGensPushSubscription> subs, TeamApplication notification)
 		{
 			var subject = @"https://bellumgens.com";
 
 			foreach (BellumGensPushSubscription sub in subs)
 			{
 				var subscription = new PushSubscription(sub.endpoint, sub.p256dh, sub.auth);
-				var vapidDetails = new VapidDetails(subject, NotificationsService._publicVapidKey, NotificationsService._privateVapidKey);
+				var vapidDetails = new VapidDetails(subject, _publicVapidKey, _privateVapidKey);
 
 				var webPushClient = new WebPushClient();
 				var payload = new BellumGensNotificationWrapper(notification);
@@ -76,14 +82,14 @@ namespace BellumGens.Api.Core.Providers
 			}
 		}
 
-		public static void SendNotification(List<BellumGensPushSubscription> subs, TeamApplication notification, NotificationState state)
+		public void SendNotification(List<BellumGensPushSubscription> subs, TeamApplication notification, NotificationState state)
 		{
 			var subject = @"https://bellumgens.com";
 
 			foreach (BellumGensPushSubscription sub in subs)
 			{
 				var subscription = new PushSubscription(sub.endpoint, sub.p256dh, sub.auth);
-				var vapidDetails = new VapidDetails(subject, NotificationsService._publicVapidKey, NotificationsService._privateVapidKey);
+				var vapidDetails = new VapidDetails(subject, _publicVapidKey, _privateVapidKey);
 
 				var webPushClient = new WebPushClient();
 				var payload = new BellumGensNotificationWrapper(notification, state);
@@ -98,14 +104,14 @@ namespace BellumGens.Api.Core.Providers
 			}
 		}
 
-		public static void SendNotification(List<BellumGensPushSubscription> subs, StrategyComment comment)
+		public void SendNotification(List<BellumGensPushSubscription> subs, StrategyComment comment)
 		{
 			var subject = @"https://bellumgens.com";
 
 			foreach (BellumGensPushSubscription sub in subs)
 			{
 				var subscription = new PushSubscription(sub.endpoint, sub.p256dh, sub.auth);
-				var vapidDetails = new VapidDetails(subject, NotificationsService._publicVapidKey, NotificationsService._privateVapidKey);
+				var vapidDetails = new VapidDetails(subject, _publicVapidKey, _privateVapidKey);
 
 				var webPushClient = new WebPushClient();
 				var payload = new BellumGensNotificationWrapper(comment);

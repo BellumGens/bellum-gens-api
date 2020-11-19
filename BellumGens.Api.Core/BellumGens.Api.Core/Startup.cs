@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
+using BellumGens.Api.Core.Providers;
 
 namespace BellumGens.Api.Core
 {
@@ -28,6 +29,10 @@ namespace BellumGens.Api.Core
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<BellumGensDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<AppConfiguration>();
+            services.AddScoped<ISteamService, SteamServiceProvider>();
+            services.AddScoped<INotificationService, NotificationsService>();
 
             services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Optimal);
             services.AddResponseCompression(options =>
@@ -64,7 +69,33 @@ namespace BellumGens.Api.Core
             }
 
             app.UseHttpsRedirection();
-            app.UseCors();
+            
+            if (env.IsDevelopment())
+            {
+                app.UseCors(o => o.AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  .AllowCredentials()
+                                  .WithOrigins(new string[] {
+                                      "http://localhost:4200",
+                                      "http://localhost:4000",
+                                      "http://localhost:4201",
+                                      "http://localhost:4001"
+                                  }));
+            }
+            else
+            {
+                app.UseCors(o => o.AllowAnyHeader()
+                                  .AllowAnyMethod()
+                                  .AllowCredentials()
+                                  .WithOrigins(new string[] { 
+                                      "https://bellumgens.com",
+                                      "https://www.bellumgens.com",
+                                      "https://eb-league.com",
+                                      "https://www.eb-league.com",
+                                      "http://staging.bellumgens.com",
+                                      "http://staging.eb-league.com" 
+                                  }));
+            }
 
             app.UseRouting();
 

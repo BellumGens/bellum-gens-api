@@ -12,8 +12,6 @@ namespace BellumGens.Api.Core.Models
 {
 	public class CSGOTeam
 	{
-		private SteamGroup _steamGroup;
-
 		public void InitializeDefaults()
 		{
 			PracticeSchedule = new HashSet<TeamAvailability>() {
@@ -150,17 +148,17 @@ namespace BellumGens.Api.Core.Models
 		[JsonIgnore]
 		public virtual ICollection<TeamMapPool> MapPool { get; set; }
 
-		[NotMapped]
-		public virtual SteamGroup SteamGroup
-		{
-			get
-			{
-				if (SteamGroupId != null && _steamGroup == null)
-				{
-					_steamGroup = SteamServiceProvider.GetSteamGroup(SteamGroupId);
-				}
-				return _steamGroup;
-			}
-		}
+		//[NotMapped]
+		//public virtual SteamGroup SteamGroup
+		//{
+		//	get
+		//	{
+		//		if (SteamGroupId != null && _steamGroup == null)
+		//		{
+		//			_steamGroup = _steamService.GetSteamGroup(SteamGroupId).Result;
+		//		}
+		//		return _steamGroup;
+		//	}
+		//}
 	}
 }

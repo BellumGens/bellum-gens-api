@@ -1,10 +1,8 @@
-﻿using AngleSharp;
-using Microsoft.IdentityModel.Protocols;
-using System.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace BellumGens.Api.Core
 {
-	public class AppInfoDescriptior
+	public class AppKeysDescriptior
 	{
 		public string steamApiKey { get; set; }
 		public string battleNetClientId { get; set; }
@@ -23,43 +21,37 @@ namespace BellumGens.Api.Core
         public string bankAccount { get; set; }
 	}
 
-	public static class AppInfo
+	public class AppConfiguration
 	{
-		private static AppInfoDescriptior _config;
+		private AppKeysDescriptior _config;
 
-		public static AppInfoDescriptior Config
+		public AppConfiguration(IConfiguration configuration)
+        {
+			_config = new AppKeysDescriptior()
+			{
+				steamApiKey = configuration["steamApiKey"],
+				battleNetClientId = configuration["battleNetClientId"],
+				battleNetClientSecret = configuration["battleNetClientSecret"],
+				twitchClientId = configuration["twitchClientId"],
+				twitchSecret = configuration["twitchSecret"],
+				publicVapidKey = configuration["publicVapidKey"],
+				privateVapidKey = configuration["privateVapidKey"],
+				email = configuration["email"],
+				emailUsername = configuration["emailUsername"],
+				emailPassword = configuration["emailPassword"],
+				bank = configuration["bank"],
+				bankAccountOwner = configuration["bankAccountOwner"],
+				bic = configuration["bic"],
+				bankAccount = configuration["bankAccount"]
+			};
+		}
+
+		public AppKeysDescriptior Config
 		{
 			get
 			{
-				if (_config == null)
-				{
-					_config = Initialize();
-				}
 				return _config;
 			}
 		}
-
-		private static AppInfoDescriptior Initialize()
-		{
-			return new AppInfoDescriptior()
-			{
-				steamApiKey = ConfigurationManager.AppSettings["steamApiKey"],
-				battleNetClientId = ConfigurationManager.AppSettings["battleNetClientId"],
-				battleNetClientSecret = ConfigurationManager.AppSettings["battleNetClientSecret"],
-				csgoGameId = ConfigurationManager.AppSettings["gameId"],
-				twitchClientId = ConfigurationManager.AppSettings["twitchClientId"],
-				twitchSecret = ConfigurationManager.AppSettings["twitchSecret"],
-				publicVapidKey = ConfigurationManager.AppSettings["publicVapidKey"],
-				privateVapidKey = ConfigurationManager.AppSettings["privateVapidKey"],
-				email = ConfigurationManager.AppSettings["email"],
-				emailUsername = ConfigurationManager.AppSettings["emailUsername"],
-				emailPassword = ConfigurationManager.AppSettings["emailPassword"],
-                bank = ConfigurationManager.AppSettings["bank"],
-                bankAccountOwner = ConfigurationManager.AppSettings["bankAccountOwner"],
-                bic = ConfigurationManager.AppSettings["bic"],
-                bankAccount = ConfigurationManager.AppSettings["bankAccount"]
-            };
-		}
-
 	}
 }
