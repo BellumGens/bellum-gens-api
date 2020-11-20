@@ -7,12 +7,8 @@ namespace BellumGens.Api.Core.Models
 {
 	public class TeamAvailability : Availability
 	{
-		[Key]
-		[Column(Order = 0)]
 		public Guid TeamId { get; set; }
 
-		[Key]
-		[Column(Order = 1)]
 		public DayOfWeek Day { get; set; }
 
 		[JsonIgnore]

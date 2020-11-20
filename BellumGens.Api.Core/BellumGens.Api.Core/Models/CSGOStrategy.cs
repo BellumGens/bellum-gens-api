@@ -1,24 +1,15 @@
 ﻿using BellumGens.Api.Common;
-using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace BellumGens.Api.Core.Models
 {
 	public class CSGOStrategy
 	{
-		private IWebHostEnvironment _hostEnvironment;
-		public CSGOStrategy(IWebHostEnvironment environment)
-		{
-			_hostEnvironment = environment;
-		}
-
 		[Key]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public Guid Id { get; set; }
@@ -100,27 +91,27 @@ namespace BellumGens.Api.Core.Models
 			}
 		}
 
-		public void SaveStrategyImage()
-		{
-			if (!string.IsNullOrEmpty(StratImage) && !Uri.IsWellFormedUriString(StratImage, UriKind.Absolute))
-			{
-				string base64 = StratImage.Substring(StratImage.IndexOf(',') + 1);
-				byte[] bytes = Convert.FromBase64String(base64);
+		//public void SaveStrategyImage()
+		//{
+		//	if (!string.IsNullOrEmpty(StratImage) && !Uri.IsWellFormedUriString(StratImage, UriKind.Absolute))
+		//	{
+		//		string base64 = StratImage.Substring(StratImage.IndexOf(',') + 1);
+		//		byte[] bytes = Convert.FromBase64String(base64);
 
-				Image image;
-				using (MemoryStream ms = new MemoryStream(bytes))
-				{
-					image = Image.FromStream(ms);
-					string path = Path.Combine(_hostEnvironment.WebRootPath, "/Content/Strats");
-					if (!Directory.Exists(path))
-					{
-						Directory.CreateDirectory(path);
-					}
-					path = Path.Combine(path, $"{CustomUrl}.png");
-					image.Save(path);
-					StratImage = CORSConfig.apiDomain + $"/Content/Strats/{CustomUrl}.png";
-				}
-			}
-		}
+		//		Image image;
+		//		using (MemoryStream ms = new MemoryStream(bytes))
+		//		{
+		//			image = Image.FromStream(ms);
+		//			string path = Path.Combine(_hostEnvironment.WebRootPath, "/Content/Strats");
+		//			if (!Directory.Exists(path))
+		//			{
+		//				Directory.CreateDirectory(path);
+		//			}
+		//			path = Path.Combine(path, $"{CustomUrl}.png");
+		//			image.Save(path);
+		//			StratImage = CORSConfig.apiDomain + $"/Content/Strats/{CustomUrl}.png";
+		//		}
+		//	}
+		//}
 	}
 }

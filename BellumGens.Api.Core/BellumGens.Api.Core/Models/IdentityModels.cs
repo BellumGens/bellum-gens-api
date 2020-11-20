@@ -187,8 +187,8 @@ namespace BellumGens.Api.Core.Models
 
 		public DbSet<Promo> PromoCodes { get; set; }
 
-        public BellumGensDbContext()
-            : base()
+        public BellumGensDbContext(DbContextOptions<BellumGensDbContext> options)
+            : base(options)
         {
         }
 
@@ -196,17 +196,33 @@ namespace BellumGens.Api.Core.Models
 		{
 			base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<ApplicationUser>()
-            //            .HasMany(e => e.LanguagesSpoken)
-            //            .WithMany(e => e.Users)
-            //            .Map(e =>
-            //            {
-            //                e.MapLeftKey("UserId");
-            //                e.MapRightKey("LanguageId");
-            //                e.ToTable("UserLanguages");
-            //            });
+			//modelBuilder.Entity<ApplicationUser>()
+			//            .HasMany(e => e.LanguagesSpoken)
+			//            .WithMany(e => e.Users)
+			//            .Map(e =>
+			//            {
+			//                e.MapLeftKey("UserId");
+			//                e.MapRightKey("LanguageId");
+			//                e.ToTable("UserLanguages");
+			//            });
 
-            modelBuilder.Entity<ApplicationUser>()
+			modelBuilder.Entity<ApplicationUser>()
+						.Property(p => p.Accuracy)
+						.HasPrecision(3, 2);
+
+			modelBuilder.Entity<ApplicationUser>()
+						.Property(p => p.HeadshotPercentage)
+						.HasPrecision(5, 2);
+
+			modelBuilder.Entity<ApplicationUser>()
+						.Property(p => p.KillDeathRatio)
+						.HasPrecision(4, 2);
+
+			modelBuilder.Entity<Promo>()
+						.Property(p => p.Discount)
+						.HasPrecision(3, 2);
+
+			modelBuilder.Entity<ApplicationUser>()
 						.HasMany(e => e.Notifications)
 						.WithOne(e => e.InvitedUser);
 
@@ -237,6 +253,33 @@ namespace BellumGens.Api.Core.Models
 			modelBuilder.Entity<Promo>()
 						.HasIndex(c => c.Code)
 						.IsUnique();
+
+			modelBuilder.Entity<BellumGensPushSubscription>()
+						.HasKey(c => new { c.p256dh, c.auth });
+
+			modelBuilder.Entity<StrategyVote>()
+						.HasKey(c => new { c.StratId, c.UserId });
+
+			modelBuilder.Entity<TeamApplication>()
+						.HasKey(c => new { c.ApplicantId, c.TeamId });
+
+			modelBuilder.Entity<TeamAvailability>()
+						.HasKey(c => new { c.TeamId, c.Day });
+
+			modelBuilder.Entity<UserAvailability>()
+						.HasKey(c => new { c.UserId, c.Day });
+
+			modelBuilder.Entity<TeamMapPool>()
+						.HasKey(c => new { c.TeamId, c.Map });
+
+			modelBuilder.Entity<UserMapPool>()
+						.HasKey(c => new { c.UserId, c.Map });
+
+			modelBuilder.Entity<TeamMember>()
+						.HasKey(c => new { c.TeamId, c.UserId });
+
+			modelBuilder.Entity<TeamInvite>()
+						.HasKey(c => new { c.InvitingUserId, c.InvitedUserId, c.TeamId });
 		}
 	}
 }

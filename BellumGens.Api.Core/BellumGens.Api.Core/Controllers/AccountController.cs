@@ -7,7 +7,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using BellumGens.Api.Core.Models;
 using BellumGens.Api.Core.Providers;
 using Microsoft.AspNetCore.Identity;
@@ -15,23 +14,21 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using BellumGens.Api.Core.Models.Extensions;
 using Microsoft.EntityFrameworkCore;
 using BellumGens.Api.Core;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace BellumGens.Api.Controllers
 {
 	[Authorize]
-    [ApiController]
-	[Route("[controller]")]
     public class AccountController : BaseController
     {
         private const string LocalLoginProvider = "Local";
 		private const string emailConfirmation = "Greetings,<br /><br />You have updated your account information on <a href='https://bellumgens.com' target='_blank'>bellumgens.com</a> with your email address.<br /><br />To confirm your email address click on this <a href='{0}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>";
         private readonly ISteamService _steamService;
 
-		public AccountController(ISteamService steamService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IEmailSender sender, BellumGensDbContext context)
-            : base(userManager, roleManager, sender, context)
+		public AccountController(ISteamService steamService, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IEmailSender sender, BellumGensDbContext context)
+            : base(userManager, roleManager, signInManager, sender, context)
         {
             _steamService = steamService;
-            
         }
 
         // GET api/Account/Username
@@ -54,7 +51,7 @@ namespace BellumGens.Api.Controllers
                 ApplicationUser user = _dbContext.Users.Include(u => u.MemberOf).FirstOrDefault(e => e.Id == userId);
                 if (user == null)
                 {
-                    Authentication.SignOut();
+                    await _signInManager.SignOutAsync();
                     return null;
                 }
 
@@ -172,8 +169,7 @@ namespace BellumGens.Api.Controllers
             var user = await _userManager.FindByLoginAsync(login.UserName, login.Password);
             if (user != null)
             {
-                var identity = await _userManager.CreateAsync(user);
-                Authentication.SignIn(new AuthenticationProperties() { IsPersistent = login.RememberMe }, identity);
+                await _signInManager.SignInAsync(user, login.RememberMe);
 
                 UserStatsViewModel model = new UserStatsViewModel(user, true);
                 if (string.IsNullOrEmpty(user.AvatarFull) && !Guid.TryParse(user.Id, out Guid newguid))
@@ -190,9 +186,9 @@ namespace BellumGens.Api.Controllers
 
         // POST api/Account/Logout
         [Route("Logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            Authentication.SignOut();
+            await _signInManager.SignOutAsync();
             return Ok();
         }
 
@@ -207,7 +203,7 @@ namespace BellumGens.Api.Controllers
 			{
 				return BadRequest("User account mismatch...");
 			}
-            Authentication.SignOut();
+            await _signInManager.SignOutAsync();
 
             List<BellumGensPushSubscription> subs = _dbContext.PushSubscriptions.Where(s => s.userId == userid).ToList();
             foreach (var sub in subs)
@@ -377,18 +373,16 @@ namespace BellumGens.Api.Controllers
 				return Redirect(returnHost + "/unauthorized");
 			}
 
+            ApplicationUser user = await GetAuthUser();
+
             if (externalLogin.LoginProvider == "Steam")
             {
                 string steamId = _steamService.SteamUserId(externalLogin.ProviderKey);
-                ApplicationUser user = _dbContext.Users.FirstOrDefault(u => u.SteamID == steamId);
-                if (user != null && user.Id != userId)
+                ApplicationUser steamuser = _dbContext.Users.FirstOrDefault(u => u.SteamID == steamId);
+                if (steamuser != null && steamuser.Id != userId)
                 {
-                    Authentication.SignOut();
+                    await _signInManager.SignOutAsync();
                     return Redirect(returnHost + "/unauthorized/Steam account already associated with another user");
-                }
-                if (user == null)
-                {
-                    user = _dbContext.Users.Find(userId);
                 }
 
                 user.SteamID = steamId;
@@ -403,7 +397,7 @@ namespace BellumGens.Api.Controllers
                 }
             }
 
-			IdentityResult result = await _userManager.AddLoginAsync(userId,
+			IdentityResult result = await _userManager.AddLoginAsync(user,
 				new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey, externalLogin.LoginProvider));
 
 			if (!result.Succeeded)
@@ -411,23 +405,21 @@ namespace BellumGens.Api.Controllers
 				return Redirect(returnHost + "/unauthorized");
 			}
 
-            Authentication.SignOut();
-
             return Redirect(returnUrl);
 		}
 
         // GET api/Account/AddExternalLogin
         [Route("AddExternalLogin", Name = "AddExternalLogin")]
         [HttpGet]
-        public IHttpActionResult AddExternalLogin(string provider, string returnUrl)
+        public IActionResult AddExternalLogin(string provider, string returnUrl)
         {
-            string link = Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLoginCallback", userId = User.Identity.GetResolvedUserId(), returnUrl = returnUrl });
-            return new ChallengeResult(provider, this, link); ;
+            string link = Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLoginCallback", userId = User.GetResolvedUserId(), returnUrl = returnUrl });
+            return new ChallengeResult(provider, new AuthenticationProperties() { RedirectUri = link }); ;
         }
 
         // POST api/Account/RemoveLogin
         [Route("RemoveLogin")]
-        public async Task<IHttpActionResult> RemoveLogin(RemoveLoginBindingModel model)
+        public async Task<IActionResult> RemoveLogin(RemoveLoginBindingModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -438,12 +430,11 @@ namespace BellumGens.Api.Controllers
 
             if (model.LoginProvider == LocalLoginProvider)
             {
-                result = await UserManager.RemovePasswordAsync(GetAuthUser().Id);
+                result = await _userManager.RemovePasswordAsync(await GetAuthUser());
             }
             else
             {
-                result = await UserManager.RemoveLoginAsync(GetAuthUser().Id,
-                    new UserLoginInfo(model.LoginProvider, model.ProviderKey));
+                result = await _userManager.RemoveLoginAsync(await GetAuthUser(), model.LoginProvider, model.ProviderKey);
             }
 
             if (!result.Succeeded)
@@ -455,11 +446,9 @@ namespace BellumGens.Api.Controllers
         }
 
         // GET api/Account/ExternalLogin
-        [OverrideAuthentication]
-		[HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
-        public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null, string returnUrl = "")
+        public async Task<IActionResult> GetExternalLogin(string provider, string error = null, string returnUrl = "")
         {
             Uri returnUri = new Uri(!string.IsNullOrEmpty(returnUrl) ? returnUrl : CORSConfig.returnOrigin);
             string returnHost = returnUri.GetLeftPart(UriPartial.Authority);
@@ -472,7 +461,7 @@ namespace BellumGens.Api.Controllers
 
             if (!User.Identity.IsAuthenticated)
             {
-                return new ChallengeResult(provider, this);
+                return new ChallengeResult(provider);
             }
 
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
@@ -482,7 +471,7 @@ namespace BellumGens.Api.Controllers
                 return Redirect(returnHost + "/unauthorized");
 			}
 
-			ApplicationUser user = GetAuthUser();
+			ApplicationUser user = await GetAuthUser();
 
 			bool hasRegistered = user != null;
 
@@ -496,10 +485,8 @@ namespace BellumGens.Api.Controllers
                 returnPath = "/register";
 			}
 
-            IEnumerable<Claim> claims = externalLogin.GetClaims();
-            ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationType);
-            Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            Authentication.SignIn(new AuthenticationProperties() { IsPersistent = true }, identity);
+            await _signInManager.SignOutAsync();
+            await _signInManager.SignInAsync(user, true);
 
             return Redirect(returnHost + returnPath);
 		}
@@ -507,9 +494,9 @@ namespace BellumGens.Api.Controllers
         // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
         [AllowAnonymous]
         [Route("ExternalLogins")]
-        public IEnumerable<ExternalLoginViewModel> GetExternalLogins(string returnUrl, string routeName = "ExternalLogin", bool generateState = false)
+        public async Task<IEnumerable<ExternalLoginViewModel>> GetExternalLogins(string returnUrl, string routeName = "ExternalLogin", bool generateState = false)
         {
-            IEnumerable<AuthenticationDescription> descriptions = Authentication.GetExternalAuthenticationTypes();
+            IEnumerable<AuthenticationScheme> descriptions = await _signInManager.GetExternalAuthenticationSchemesAsync();
             List<ExternalLoginViewModel> logins = new List<ExternalLoginViewModel>();
 
             string state;
@@ -524,19 +511,19 @@ namespace BellumGens.Api.Controllers
                 state = null;
             }
 
-            foreach (AuthenticationDescription description in descriptions)
+            foreach (AuthenticationScheme description in descriptions)
             {
                 ExternalLoginViewModel login = new ExternalLoginViewModel
                 {
-                    Name = description.Caption,
-                    Url = Url.Route(routeName, new
+                    Name = description.DisplayName,
+                    Url = Url.RouteUrl(routeName, new
                     {
-                        provider = description.AuthenticationType,
+                        provider = description.Name,
                         response_type = "token",
                         client_id = Startup.PublicClientId,
-                        redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
+                        redirect_uri = new Uri(new Uri(Request.GetDisplayUrl()), returnUrl).AbsoluteUri,
                         state
-                    }),
+                    }, Request.Scheme),
                     State = state
                 };
                 logins.Add(login);
@@ -582,7 +569,7 @@ namespace BellumGens.Api.Controllers
 
         private async Task<IdentityResult> Register(ExternalLoginData info)
 		{
-			string id = info.LoginProvider == "Steam" ? SteamServiceProvider.SteamUserId(info.ProviderKey) : Guid.NewGuid().ToString();
+			string id = info.LoginProvider == "Steam" ? _steamService.SteamUserId(info.ProviderKey) : Guid.NewGuid().ToString();
             string steamId = info.LoginProvider == "Steam" ? id : null;
 			var user = new ApplicationUser() {
 				Id = id,
@@ -590,13 +577,13 @@ namespace BellumGens.Api.Controllers
                 SteamID = steamId
 			};
 
-			IdentityResult result = await UserManager.CreateAsync(user);
+			IdentityResult result = await _userManager.CreateAsync(user);
 			if (!result.Succeeded)
 			{
 				return result;
 			}
 		
-			return await UserManager.AddLoginAsync(user.Id, new UserLoginInfo(info.LoginProvider, info.ProviderKey));
+			return await _userManager.AddLoginAsync(user, new UserLoginInfo(info.LoginProvider, info.ProviderKey, info.LoginProvider));
 		}
 
         private async Task<IdentityResult> Register(RegisterBindingModel info)
@@ -608,33 +595,23 @@ namespace BellumGens.Api.Controllers
                 Email = info.Email
             };
 
-            IdentityResult result = await UserManager.CreateAsync(user);
+            IdentityResult result = await _userManager.CreateAsync(user);
             if (result.Succeeded)
             {
-                result = await UserManager.AddPasswordAsync(user.Id, info.Password);
+                result = await _userManager.AddPasswordAsync(user, info.Password);
             }
             return result;
         }
 
-        private IAuthenticationManager Authentication
+        private IActionResult GetErrorResult(IdentityResult result)
         {
-            get { return Request.GetOwinContext().Authentication; }
-        }
-
-        private IHttpActionResult GetErrorResult(IdentityResult result)
-        {
-            if (result == null)
-            {
-                return InternalServerError();
-            }
-
             if (!result.Succeeded)
             {
                 if (result.Errors != null)
                 {
-                    foreach (string error in result.Errors)
+                    foreach (IdentityError error in result.Errors)
                     {
-                        ModelState.AddModelError("", error);
+                        ModelState.AddModelError("", error.Description);
                     }
                 }
 
@@ -695,7 +672,7 @@ namespace BellumGens.Api.Controllers
                 {
                     LoginProvider = providerKeyClaim.Issuer,
                     ProviderKey = providerKeyClaim.Value,
-                    UserName = identity.FindFirstValue(ClaimTypes.Name)
+                    UserName = identity.FindFirst(ClaimTypes.Name).Value
                 };
             }
         }
@@ -717,7 +694,7 @@ namespace BellumGens.Api.Controllers
 
                 byte[] data = new byte[strengthInBytes];
                 _random.GetBytes(data);
-                return HttpServerUtility.UrlTokenEncode(data);
+                return Base64UrlTextEncoder.Encode(data);
             }
         }
 

@@ -17,9 +17,12 @@ namespace BellumGens.Api.Core
 {
     public class Startup
     {
+        public static string PublicClientId { get; private set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            PublicClientId = Configuration["publicClientId"];
         }
 
         public IConfiguration Configuration { get; }
@@ -32,6 +35,35 @@ namespace BellumGens.Api.Core
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<BellumGensDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.ExpireTimeSpan = TimeSpan.FromDays(14);
+
+                options.SlidingExpiration = true;
+            });
+
+            services.AddMemoryCache();
+
+            services.AddAuthentication()
+                .AddBattleNet(options =>
+                {
+                    options.ClientId = Configuration["battleNetClientId"];
+                    options.ClientSecret = Configuration["battleNetClientSecret"];
+                })
+                .AddTwitch(options =>
+                {
+                    options.ClientId = Configuration["twitchClientId"];
+                    options.ClientSecret = Configuration["twitchSecret"];
+                })
+                .AddSteam(options =>
+                {
+                    options.ApplicationKey = Configuration["steamApiKey"];
+                });
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -52,21 +84,11 @@ namespace BellumGens.Api.Core
                 options.User.RequireUniqueEmail = false;
             });
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                // Cookie settings
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-                options.ExpireTimeSpan = TimeSpan.FromDays(14);
-
-                options.SlidingExpiration = true;
-            });
-
             services.AddSingleton<AppConfiguration>();
             services.AddSingleton<ISteamService, SteamServiceProvider>();
             services.AddSingleton<INotificationService, NotificationsService>();
             services.AddSingleton<IEmailSender, EmailServiceProvider>();
+            services.AddScoped<IFileService, FileService>();
 
             services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Optimal);
             services.AddResponseCompression(options =>
@@ -100,6 +122,13 @@ namespace BellumGens.Api.Core
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<BellumGensDbContext>();
+                context.Database.EnsureCreated();
+                context.Database.Migrate();
             }
 
             app.UseHttpsRedirection();

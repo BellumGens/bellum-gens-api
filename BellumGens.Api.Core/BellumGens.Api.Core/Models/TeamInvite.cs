@@ -1,41 +1,25 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BellumGens.Api.Core.Models
 {
 	public class TeamInvite : Application
 	{
-		private CSGOTeam _teamInfo;
+		private CSGOTeamSummaryViewModel _teamInfo;
 
-		[Key]
-		[Column(Order = 0)]
 		public string InvitingUserId { get; set; }
-
-		[Key]
-		[Column(Order = 1)]
 		public string InvitedUserId { get; set; }
-
-		[Key]
-		[Column(Order = 2)]
 		public Guid TeamId { get; set; }
 
 		[NotMapped]
-		public CSGOTeam TeamInfo
+		public CSGOTeamSummaryViewModel TeamInfo
 		{
 			get
 			{
 				if (_teamInfo == null && Team != null)
 				{
-					_teamInfo = new CSGOTeam()
-					{
-						TeamId = Team.TeamId,
-						TeamName = Team.TeamName,
-						TeamAvatar = Team.TeamAvatar,
-						CustomUrl = Team.CustomUrl
-					};
+					_teamInfo = new CSGOTeamSummaryViewModel(Team);
 				}
 				return _teamInfo;
 			}

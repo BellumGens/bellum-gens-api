@@ -7,12 +7,8 @@ namespace BellumGens.Api.Core.Models
 {
 	public class StrategyVote
 	{
-		[Key]
-		[Column(Order = 0)]
 		public Guid StratId { get; set; }
 
-		[Key]
-		[Column(Order = 1)]
 		public string UserId { get; set; }
 
 		public VoteDirection Vote { get; set; }
