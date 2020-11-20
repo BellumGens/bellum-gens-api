@@ -23,16 +23,16 @@ namespace BellumGens.Api.Core.Models
             RefreshAppUserValues(context);
         }
 
-        public async Task<UserStatsViewModel> GetSteamUserDetails(BellumGensDbContext context)
-		{
-			UserStatsViewModel model = await SteamServiceProvider.GetSteamUserDetails(id).ConfigureAwait(false);
-			steamUser = model.steamUser;
-			steamUserException = model.steamUserException;
-			userStats = model.userStats;
-			userStatsException = model.userStatsException;
-            RefreshAppUserValues(context);
-			return this;
-		}
+  //      public async Task<UserStatsViewModel> GetSteamUserDetails(BellumGensDbContext context)
+		//{
+		//	UserStatsViewModel model = await SteamServiceProvider.GetSteamUserDetails(id);
+		//	steamUser = model.steamUser;
+		//	steamUserException = model.steamUserException;
+		//	userStats = model.userStats;
+		//	userStatsException = model.userStatsException;
+  //          RefreshAppUserValues(context);
+		//	return this;
+		//}
 
         private void RefreshAppUserValues(BellumGensDbContext context)
         {

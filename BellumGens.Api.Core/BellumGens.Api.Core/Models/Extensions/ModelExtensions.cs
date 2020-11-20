@@ -1,24 +1,35 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace BellumGens.Api.Core.Models.Extensions
 {
 	public static class ModelExtensions
 	{
-		//public static string GetSteamUserId(this IIdentity identity)
-		//{
-		//	var parts = identity.GetUserId().Split('/');
-		//	return parts.Length >= 6 ? parts[5] : null;
-		//}
+		public static string GetUserId(this ClaimsPrincipal principal)
+		{
+			if (principal == null)
+				throw new ArgumentNullException(nameof(principal));
 
-		//public static string GetResolvedUserId(this IIdentity identity)
-  //      {
-		//	string userId = identity.GetSteamUserId();
-		//	if (userId == null)
-		//		userId = identity.GetUserId();
-		//	return userId;
-		//}
+			return principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		}
 
-		public static double GetTotalAvailability(this ApplicationUser user)
+		public static string GetSteamUserId(this ClaimsPrincipal identity)
+        {
+            var parts = identity.GetUserId().Split('/');
+            return parts.Length >= 6 ? parts[5] : null;
+        }
+
+        public static string GetResolvedUserId(this ClaimsPrincipal identity)
+        {
+            string userId = identity.GetSteamUserId();
+            if (userId == null)
+                userId = identity.GetUserId();
+            return userId;
+        }
+
+        public static double GetTotalAvailability(this ApplicationUser user)
 		{
 			double total = 0;
 			foreach (Availability availability in user.Availability.Where(a => a.Available))

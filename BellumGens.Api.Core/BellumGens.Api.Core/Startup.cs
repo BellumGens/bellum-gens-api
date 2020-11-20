@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 using BellumGens.Api.Core.Providers;
+using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace BellumGens.Api.Core
 {
@@ -30,9 +33,40 @@ namespace BellumGens.Api.Core
                 .AddEntityFrameworkStores<BellumGensDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<AppConfiguration>();
-            services.AddScoped<ISteamService, SteamServiceProvider>();
-            services.AddScoped<INotificationService, NotificationsService>();
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings.
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+
+                // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings.
+                options.User.RequireUniqueEmail = false;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.ExpireTimeSpan = TimeSpan.FromDays(14);
+
+                options.SlidingExpiration = true;
+            });
+
+            services.AddSingleton<AppConfiguration>();
+            services.AddSingleton<ISteamService, SteamServiceProvider>();
+            services.AddSingleton<INotificationService, NotificationsService>();
+            services.AddSingleton<IEmailSender, EmailServiceProvider>();
 
             services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Optimal);
             services.AddResponseCompression(options =>
