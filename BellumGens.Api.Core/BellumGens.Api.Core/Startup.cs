@@ -12,6 +12,7 @@ using BellumGens.Api.Core.Providers;
 using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BellumGens.Api.Core
 {
@@ -36,20 +37,21 @@ namespace BellumGens.Api.Core
                 .AddEntityFrameworkStores<BellumGensDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.ConfigureApplicationCookie(options =>
-            {
-                // Cookie settings
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-                options.ExpireTimeSpan = TimeSpan.FromDays(14);
-
-                options.SlidingExpiration = true;
-            });
-
             services.AddMemoryCache();
 
-            services.AddAuthentication()
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie(options =>
+                {
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                    options.ExpireTimeSpan = TimeSpan.FromDays(14);
+                    options.SlidingExpiration = true;
+                })
                 .AddBattleNet(options =>
                 {
                     options.ClientId = Configuration["battleNetClientId"];
@@ -59,6 +61,7 @@ namespace BellumGens.Api.Core
                 {
                     options.ClientId = Configuration["twitchClientId"];
                     options.ClientSecret = Configuration["twitchSecret"];
+                    options.CallbackPath = "/signin-twitch";
                 })
                 .AddSteam(options =>
                 {
@@ -127,7 +130,6 @@ namespace BellumGens.Api.Core
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<BellumGensDbContext>();
-                context.Database.EnsureCreated();
                 context.Database.Migrate();
             }
 

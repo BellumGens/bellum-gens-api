@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BellumGens.Api.Core.Migrations
 {
     [DbContext(typeof(BellumGensDbContext))]
-    [Migration("20201120161725_Initial")]
+    [Migration("20201123163925_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

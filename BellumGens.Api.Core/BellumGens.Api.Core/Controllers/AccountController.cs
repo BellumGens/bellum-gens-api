@@ -445,6 +445,17 @@ namespace BellumGens.Api.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
+        [Route("Twitch", Name = "TwitchCallback")]
+        public async Task<IActionResult> TwitchCallback(string error = null, string returnUrl = "")
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            //var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var username = info.Principal.FindFirstValue(ClaimTypes.Name);
+            return Ok();
+        }
+
         // GET api/Account/ExternalLogin
         [AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
@@ -459,9 +470,11 @@ namespace BellumGens.Api.Controllers
                 return Redirect(returnHost + "/unauthorized");
 			}
 
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, Url.Action(nameof(TwitchCallback), "Account", new { returnUrl }));
+
             if (!User.Identity.IsAuthenticated)
             {
-                return new ChallengeResult(provider);
+                return Challenge(properties, provider);
             }
 
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
