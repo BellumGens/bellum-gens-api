@@ -4,20 +4,37 @@ using BellumGens.Api.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BellumGens.Api.Core.Migrations
 {
     [DbContext(typeof(BellumGensDbContext))]
-    partial class BellumGensDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201124144722_TwitchId")]
+    partial class TwitchId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("ApplicationUserLanguages", b =>
+                {
+                    b.Property<string>("LanguagesSpokenId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LanguagesSpokenId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ApplicationUserLanguages");
+                });
 
             modelBuilder.Entity("BellumGens.Api.Core.Models.ApplicationUser", b =>
                 {
@@ -396,6 +413,20 @@ namespace BellumGens.Api.Core.Migrations
                     b.HasIndex("PromoCode");
 
                     b.ToTable("JerseyOrders");
+                });
+
+            modelBuilder.Entity("BellumGens.Api.Core.Models.Languages", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("BellumGens.Api.Core.Models.Promo", b =>
@@ -1050,6 +1081,21 @@ namespace BellumGens.Api.Core.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("ApplicationUserLanguages", b =>
+                {
+                    b.HasOne("BellumGens.Api.Core.Models.Languages", null)
+                        .WithMany()
+                        .HasForeignKey("LanguagesSpokenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BellumGens.Api.Core.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BellumGens.Api.Core.Models.BellumGensPushSubscription", b =>

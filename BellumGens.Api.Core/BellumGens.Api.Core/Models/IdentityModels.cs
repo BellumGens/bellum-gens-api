@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -111,7 +109,9 @@ namespace BellumGens.Api.Core.Models
 
 		public string SteamID { get; set; }
 
-        public bool SteamPrivate { get; set; } = false;
+		public string TwitchId { get; set; }
+
+		public bool SteamPrivate { get; set; } = false;
 
         public DateTimeOffset RegisteredOn { get; set; } = DateTimeOffset.Now;
 
@@ -139,7 +139,7 @@ namespace BellumGens.Api.Core.Models
 	{
 		public DbSet<UserAvailability> UserAvailabilities { get; set; }
 
-		//public DbSet<Languages> Languages { get; set; }
+		// public DbSet<Languages> Languages { get; set; }
 
 		public DbSet<UserMapPool> UserMapPool { get; set; }
 

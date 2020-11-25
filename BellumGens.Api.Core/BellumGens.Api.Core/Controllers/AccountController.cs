@@ -446,14 +446,47 @@ namespace BellumGens.Api.Controllers
         }
 
         [AllowAnonymous]
-        [Route("Twitch", Name = "TwitchCallback")]
-        public async Task<IActionResult> TwitchCallback(string error = null, string returnUrl = "")
+        [Route("Twitch", Name = "ExternalCallback")]
+        public async Task<IActionResult> ExternalCallback(string error = null, string returnUrl = "", string userId = null)
         {
             var info = await _signInManager.GetExternalLoginInfoAsync();
-            //var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var username = info.Principal.FindFirstValue(ClaimTypes.Name);
-            return Ok();
+            string returnPath = "";
+            if (error != null)
+            {
+                return Redirect(returnUrl + "/unauthorized");
+            }
+            ApplicationUser user;
+
+            if (userId != null)
+            {
+                user = await _userManager.FindByIdAsync(userId);
+                IdentityResult result = await _userManager.AddLoginAsync(user,
+                    new UserLoginInfo(info.LoginProvider, info.ProviderKey, info.ProviderDisplayName));
+                if (!result.Succeeded)
+                {
+                    return Redirect(returnUrl + "/unauthorized");
+                }
+                return Redirect(returnUrl);
+            }
+                
+            user = await _userManager.GetUserAsync(info.Principal);
+
+            if (user == null)
+            {
+                var result = await Register(info);
+                if (!result.Succeeded)
+                {
+                    return Redirect(returnUrl + "/unauthorized");
+                }
+                returnPath = "/register";
+            }
+
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (!signInResult.Succeeded)
+            {
+                return Unauthorized(returnUrl + "/unauthorized");
+            }
+            return Redirect(returnUrl + returnPath);
         }
 
         // GET api/Account/ExternalLogin
@@ -462,46 +495,49 @@ namespace BellumGens.Api.Controllers
         public async Task<IActionResult> GetExternalLogin(string provider, string error = null, string returnUrl = "")
         {
             Uri returnUri = new Uri(!string.IsNullOrEmpty(returnUrl) ? returnUrl : CORSConfig.returnOrigin);
-            string returnHost = returnUri.GetLeftPart(UriPartial.Authority);
-            string returnPath = returnUri.AbsolutePath;
+            returnUrl = returnUri.GetLeftPart(UriPartial.Authority);
 
             if (error != null)
             {
-                return Redirect(returnHost + "/unauthorized");
+                return Redirect(returnUrl + "/unauthorized");
 			}
 
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, Url.Action(nameof(TwitchCallback), "Account", new { returnUrl }));
+            ApplicationUser user = await GetAuthUser();
+            string userId = null;
 
-            if (!User.Identity.IsAuthenticated)
+            if (user != null)
             {
-                return Challenge(properties, provider);
+                userId = user.Id;
             }
 
-            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, Url.Action("ExternalCallback", "Account", new { returnUrl }), userId);
+            return Challenge(properties, provider);
 
-            if (externalLogin == null)
-            {
-                return Redirect(returnHost + "/unauthorized");
-			}
+   //         ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-			ApplicationUser user = await GetAuthUser();
+   //         if (externalLogin == null)
+   //         {
+   //             return Redirect(returnHost + "/unauthorized");
+			//}
 
-			bool hasRegistered = user != null;
+			//ApplicationUser user = await GetAuthUser();
 
-            if (!hasRegistered)
-            {
-				IdentityResult x = await Register(externalLogin);
-				if (!x.Succeeded)
-				{
-					return Redirect(returnHost + "/unauthorized/Something went wrong");
-				}
-                returnPath = "/register";
-			}
+			//bool hasRegistered = user != null;
 
-            await _signInManager.SignOutAsync();
-            await _signInManager.SignInAsync(user, true);
+   //         if (!hasRegistered)
+   //         {
+			//	IdentityResult x = await Register(externalLogin);
+			//	if (!x.Succeeded)
+			//	{
+			//		return Redirect(returnHost + "/unauthorized/Something went wrong");
+			//	}
+   //             returnPath = "/register";
+			//}
 
-            return Redirect(returnHost + returnPath);
+   //         await _signInManager.SignOutAsync();
+   //         await _signInManager.SignInAsync(user, true);
+
+   //         return Redirect(returnHost + returnPath);
 		}
 
         // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
@@ -580,15 +616,44 @@ namespace BellumGens.Api.Controllers
 
         #region Helpers
 
-        private async Task<IdentityResult> Register(ExternalLoginData info)
+        private async Task<IdentityResult> Register(ExternalLoginInfo info)
 		{
-			string id = info.LoginProvider == "Steam" ? _steamService.SteamUserId(info.ProviderKey) : Guid.NewGuid().ToString();
-            string steamId = info.LoginProvider == "Steam" ? id : null;
-			var user = new ApplicationUser() {
-				Id = id,
-                UserName = User.Identity.Name,
-                SteamID = steamId
-			};
+            ApplicationUser user = null;
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var username = info.Principal.FindFirstValue(ClaimTypes.Name);
+            var providerId = info.ProviderKey;
+            switch (info.LoginProvider)
+            {
+                case "Twitch":
+                    user = new ApplicationUser()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UserName = username,
+                        Email = email,
+                        TwitchId = providerId
+                    };
+                    break;
+                case "Steam":
+                    user = new ApplicationUser()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UserName = username,
+                        Email = email,
+                        SteamID = _steamService.SteamUserId(providerId)
+                    };
+                    break;
+                case "BattleNet":
+                    user = new ApplicationUser()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UserName = username,
+                        Email = email,
+                        SteamID = _steamService.SteamUserId(providerId)
+                    };
+                    break;
+                default:
+                    break;
+            }
 
 			IdentityResult result = await _userManager.CreateAsync(user);
 			if (!result.Succeeded)
