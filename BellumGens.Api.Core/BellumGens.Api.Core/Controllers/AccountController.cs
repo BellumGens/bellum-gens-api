@@ -468,8 +468,8 @@ namespace BellumGens.Api.Controllers
                 }
                 return Redirect(returnUrl);
             }
-                
-            user = await _userManager.GetUserAsync(info.Principal);
+
+            user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
 
             if (user == null)
             {
@@ -480,11 +480,15 @@ namespace BellumGens.Api.Controllers
                 }
                 returnPath = "/register";
             }
+            else if (!user.EmailConfirmed)
+            {
+                user.EmailConfirmed = true;
+            }
 
-            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: true, bypassTwoFactor: true);
             if (!signInResult.Succeeded)
             {
-                return Unauthorized(returnUrl + "/unauthorized");
+                return Redirect(returnUrl + "/unauthorized");
             }
             return Redirect(returnUrl + returnPath);
         }
@@ -630,6 +634,7 @@ namespace BellumGens.Api.Controllers
                         Id = Guid.NewGuid().ToString(),
                         UserName = username,
                         Email = email,
+                        EmailConfirmed = true,
                         TwitchId = providerId
                     };
                     break;
@@ -639,6 +644,7 @@ namespace BellumGens.Api.Controllers
                         Id = Guid.NewGuid().ToString(),
                         UserName = username,
                         Email = email,
+                        EmailConfirmed = true,
                         SteamID = _steamService.SteamUserId(providerId)
                     };
                     break;
@@ -648,6 +654,7 @@ namespace BellumGens.Api.Controllers
                         Id = Guid.NewGuid().ToString(),
                         UserName = username,
                         Email = email,
+                        EmailConfirmed = true,
                         SteamID = _steamService.SteamUserId(providerId)
                     };
                     break;

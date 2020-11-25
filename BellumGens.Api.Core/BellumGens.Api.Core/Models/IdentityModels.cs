@@ -83,7 +83,7 @@ namespace BellumGens.Api.Core.Models
 			};
 		}
 
-		public string ESEA { get; set; }
+        public string ESEA { get; set; }
 
         public bool SearchVisible { get; set; } = true;
 
@@ -127,10 +127,10 @@ namespace BellumGens.Api.Core.Models
 
 		public virtual ICollection<UserMapPool> MapPool { get; set; } = new HashSet<UserMapPool>();
 
-		public virtual ICollection<TeamInvite> Notifications { get; set; }
+		public virtual ICollection<TeamInvite> Notifications { get; set; } = new HashSet<TeamInvite>();
 
-        [JsonIgnore]
-		public ICollection<TeamMember> MemberOf { get; set; } = new HashSet<TeamMember>();
+		[JsonIgnore]
+		public virtual ICollection<TeamMember> MemberOf { get; set; } = new HashSet<TeamMember>();
 
 		public virtual ICollection<TeamApplication> TeamApplications { get; set; }
     }
