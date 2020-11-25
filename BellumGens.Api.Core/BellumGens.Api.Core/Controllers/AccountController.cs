@@ -21,7 +21,6 @@ namespace BellumGens.Api.Controllers
 	[Authorize]
     public class AccountController : BaseController
     {
-        private const string LocalLoginProvider = "Local";
 		private const string emailConfirmation = "Greetings,<br /><br />You have updated your account information on <a href='https://bellumgens.com' target='_blank'>bellumgens.com</a> with your email address.<br /><br />To confirm your email address click on this <a href='{0}' target='_blank'>link</a>.<br /><br />The Bellum Gens team<br /><br /><a href='https://bellumgens.com' target='_blank'>https://bellumgens.com</a>";
         private readonly ISteamService _steamService;
 
@@ -229,65 +228,6 @@ namespace BellumGens.Api.Controllers
 			return Ok("Ok");
 		}
 
-        // GET api/Account/ManageInfo?returnUrl=%2F&generateState=true
-        //[Route("ManageInfo")]
-        //public async Task<ManageInfoViewModel> GetManageInfo(string returnUrl, bool generateState = false)
-        //{
-        //    IdentityUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-
-        //    if (user == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
-
-        //    foreach (IdentityUserLogin linkedAccount in user.Logins)
-        //    {
-        //        logins.Add(new UserLoginInfoViewModel
-        //        {
-        //            LoginProvider = linkedAccount.LoginProvider,
-        //            ProviderKey = linkedAccount.ProviderKey
-        //        });
-        //    }
-
-        //    if (user.PasswordHash != null)
-        //    {
-        //        logins.Add(new UserLoginInfoViewModel
-        //        {
-        //            LoginProvider = LocalLoginProvider,
-        //            ProviderKey = user.UserName,
-        //        });
-        //    }
-
-        //    return new ManageInfoViewModel
-        //    {
-        //        LocalLoginProvider = LocalLoginProvider,
-        //        Email = user.UserName,
-        //        Logins = logins,
-        //        ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
-        //    };
-        //}
-
-        // POST api/Account/ChangePassword
-        //[Route("ChangePassword")]
-        //public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetResolvedUserId(), model.OldPassword, model.NewPassword);
-
-        //    if (!result.Succeeded)
-        //    {
-        //        return GetErrorResult(result);
-        //    }
-
-        //    return Ok();
-        //}
-
         // POST api/Account/SetPassword
         [AllowAnonymous]
         [Route("SetPassword")]
@@ -349,97 +289,6 @@ namespace BellumGens.Api.Controllers
                         System.Diagnostics.Trace.TraceError("Email confirmation send exception: " + e.Message);
                     }
                 }
-            }
-
-            return Ok();
-        }
-
-        // GET api/Account/AddExternalLogin
-        [Route("AddExternalLoginCallback")]
-        [HttpGet]
-		public async Task<IActionResult> AddExternalLoginCallback(string userId, string error = null, string returnUrl = "")
-		{
-            Uri returnUri = new Uri(!string.IsNullOrEmpty(returnUrl) ? returnUrl : CORSConfig.returnOrigin);
-            string returnHost = returnUri.GetLeftPart(UriPartial.Authority);
-            ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
-            if (error != null)
-            {
-                return Redirect(returnHost + "/unauthorized");
-            }
-
-            if (externalLogin == null)
-			{
-				return Redirect(returnHost + "/unauthorized");
-			}
-
-            ApplicationUser user = await GetAuthUser();
-
-            if (externalLogin.LoginProvider == "Steam")
-            {
-                string steamId = _steamService.SteamUserId(externalLogin.ProviderKey);
-                ApplicationUser steamuser = _dbContext.Users.FirstOrDefault(u => u.SteamID == steamId);
-                if (steamuser != null && steamuser.Id != userId)
-                {
-                    await _signInManager.SignOutAsync();
-                    return Redirect(returnHost + "/unauthorized/Steam account already associated with another user");
-                }
-
-                user.SteamID = steamId;
-
-                try
-                {
-                    _dbContext.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.Trace.TraceError("Setting user steam id exception: " + e.Message);
-                }
-            }
-
-			IdentityResult result = await _userManager.AddLoginAsync(user,
-				new UserLoginInfo(externalLogin.LoginProvider, externalLogin.ProviderKey, externalLogin.LoginProvider));
-
-			if (!result.Succeeded)
-			{
-				return Redirect(returnHost + "/unauthorized");
-			}
-
-            return Redirect(returnUrl);
-		}
-
-        // GET api/Account/AddExternalLogin
-        [Route("AddExternalLogin", Name = "AddExternalLogin")]
-        [HttpGet]
-        public IActionResult AddExternalLogin(string provider, string returnUrl)
-        {
-            string link = Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLoginCallback", userId = User.GetResolvedUserId(), returnUrl = returnUrl });
-            return new ChallengeResult(provider, new AuthenticationProperties() { RedirectUri = link }); ;
-        }
-
-        // POST api/Account/RemoveLogin
-        [Route("RemoveLogin")]
-        public async Task<IActionResult> RemoveLogin(RemoveLoginBindingModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            IdentityResult result;
-
-            if (model.LoginProvider == LocalLoginProvider)
-            {
-                result = await _userManager.RemovePasswordAsync(await GetAuthUser());
-            }
-            else
-            {
-                result = await _userManager.RemoveLoginAsync(await GetAuthUser(), model.LoginProvider, model.ProviderKey);
-            }
-
-            if (!result.Succeeded)
-            {
-                return GetErrorResult(result);
             }
 
             return Ok();
@@ -516,32 +365,6 @@ namespace BellumGens.Api.Controllers
 
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, Url.Action("ExternalCallback", "Account", new { returnUrl }), userId);
             return Challenge(properties, provider);
-
-   //         ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
-
-   //         if (externalLogin == null)
-   //         {
-   //             return Redirect(returnHost + "/unauthorized");
-			//}
-
-			//ApplicationUser user = await GetAuthUser();
-
-			//bool hasRegistered = user != null;
-
-   //         if (!hasRegistered)
-   //         {
-			//	IdentityResult x = await Register(externalLogin);
-			//	if (!x.Succeeded)
-			//	{
-			//		return Redirect(returnHost + "/unauthorized/Something went wrong");
-			//	}
-   //             returnPath = "/register";
-			//}
-
-   //         await _signInManager.SignOutAsync();
-   //         await _signInManager.SignInAsync(user, true);
-
-   //         return Redirect(returnHost + returnPath);
 		}
 
         // GET api/Account/ExternalLogins?returnUrl=%2F&generateState=true
@@ -584,39 +407,6 @@ namespace BellumGens.Api.Controllers
 
             return logins;
         }
-
-        // POST api/Account/RegisterExternal
-        //[OverrideAuthentication]
-        //[HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        //[Route("RegisterExternal")]
-        //public async Task<IHttpActionResult> RegisterExternal(RegisterExternalBindingModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    var info = await Authentication.GetExternalLoginInfoAsync();
-        //    if (info == null)
-        //    {
-        //        return InternalServerError();
-        //    }
-
-        //    var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
-        //    IdentityResult result = await UserManager.CreateAsync(user);
-        //    if (!result.Succeeded)
-        //    {
-        //        return GetErrorResult(result);
-        //    }
-
-        //    result = await UserManager.AddLoginAsync(user.Id, info.Login);
-        //    if (!result.Succeeded)
-        //    {
-        //        return GetErrorResult(result); 
-        //    }
-        //    return Ok();
-        //}
 
         #region Helpers
 
