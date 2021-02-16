@@ -35,6 +35,10 @@ namespace BellumGens.Api.Controllers
 			{
 				return _roleManager ?? Request.GetOwinContext().Get<ApplicationRoleManager>();
 			}
+			set
+            {
+				_roleManager = value;
+            }
 		}
 
 		protected ApplicationUser GetAuthUser()
