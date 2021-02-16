@@ -37,7 +37,7 @@ namespace BellumGens.Api.Models
 
 		public string EditorMetadata { get; set; }
 
-		public bool Visible { get; set; } = false;
+		public bool Visible { get; set; }
 
 		[JsonIgnore]
 		public string PrivateShareLink { get; set; }

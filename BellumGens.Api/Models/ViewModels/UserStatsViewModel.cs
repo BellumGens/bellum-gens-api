@@ -15,9 +15,9 @@ namespace BellumGens.Api.Models
 			: base(user, isAuthUser) { }
 
         public SteamUser steamUser { get; set; }
-        public bool steamUserException { get; set; } = false;
+        public bool steamUserException { get; set; }
 		public CSGOPlayerStats userStats { get; set; }
-		public bool userStatsException { get; set; } = false;
+		public bool userStatsException { get; set; }
 
         public void SetUser(ApplicationUser user)
         {

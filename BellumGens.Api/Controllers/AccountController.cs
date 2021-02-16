@@ -32,9 +32,11 @@ namespace BellumGens.Api.Controllers
         }
 
         public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+                                 ApplicationRoleManager roleManager,
+                                 ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
+            RoleManager = roleManager;
             AccessTokenFormat = accessTokenFormat;
         }
 
@@ -362,13 +364,18 @@ namespace BellumGens.Api.Controllers
         [Route("AddExternalLoginCallback")]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [HttpGet]
-		public async Task<IHttpActionResult> AddExternalLoginCallback(string userId, string returnUrl)
+		public async Task<IHttpActionResult> AddExternalLoginCallback(string userId, string error = null, string returnUrl = "")
 		{
             Uri returnUri = new Uri(!string.IsNullOrEmpty(returnUrl) ? returnUrl : CORSConfig.returnOrigin);
             string returnHost = returnUri.GetLeftPart(UriPartial.Authority);
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
 
-			if (externalLogin == null)
+            if (error != null)
+            {
+                return Redirect(returnHost + "/unauthorized");
+            }
+
+            if (externalLogin == null)
 			{
 				return Redirect(returnHost + "/unauthorized");
 			}
@@ -417,7 +424,8 @@ namespace BellumGens.Api.Controllers
         [HttpGet]
         public IHttpActionResult AddExternalLogin(string provider, string returnUrl)
         {
-            return new ChallengeResult(provider, this, Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLoginCallback", userId = User.Identity.GetUserId(), returnUrl = returnUrl })); ;
+            string link = Url.Link("ActionApi", new { controller = "Account", action = "AddExternalLoginCallback", userId = User.Identity.GetResolvedUserId(), returnUrl = returnUrl });
+            return new ChallengeResult(provider, this, link); ;
         }
 
         // POST api/Account/RemoveLogin
@@ -452,7 +460,7 @@ namespace BellumGens.Api.Controllers
         // GET api/Account/ExternalLogin
         [OverrideAuthentication]
 		[HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
-		[AllowAnonymous]
+        [AllowAnonymous]
         [Route("ExternalLogin", Name = "ExternalLogin")]
         public async Task<IHttpActionResult> GetExternalLogin(string provider, string error = null, string returnUrl = "")
         {
